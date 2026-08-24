@@ -14,4 +14,4 @@ export default defineConfig({
       '@widgets': path.resolve(import.meta.dirname, 'src/widgets'),
     },
   },
-})
+});
