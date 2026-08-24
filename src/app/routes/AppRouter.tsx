@@ -1,6 +1,6 @@
 import { Routes, Route } from 'react-router';
 import { ROUTES } from './routes';
-import Layout from '../layout/Layout';
+import Layout from '@app/layout';
 
 import HomePage from '@/pages/HomePage';
 import SignInPage from '@/pages/SingInPage';
