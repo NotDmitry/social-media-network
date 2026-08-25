@@ -1,0 +1,21 @@
+.error-page-container {
+  text-align: center;
+}
+
+.error-page-icon {
+  width: clamp(42px, 10vw, 95px);
+  fill: var(--icon-dark);
+}
+
+.error-page-title {
+  color: var(--component-text-dark);
+  font-family: var(--second-family);
+  font-size: clamp(1.25rem, 5vw, 3.75rem);
+  font-weight: 600;
+  letter-spacing: -1%;
+  line-height: 150%;
+
+  & span {
+    display: block;
+  }
+}
