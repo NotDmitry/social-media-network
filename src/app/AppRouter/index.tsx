@@ -1,13 +1,13 @@
 import { Routes, Route } from 'react-router';
-import { ROUTES } from './routes';
-import Layout from '@app/layout';
+import { ROUTES } from '@app/routes';
+import Layout from '@app/Layout';
 
-import HomePage from '@/pages/HomePage';
-import SignInPage from '@/pages/SingInPage';
-import SignUpPage from '@/pages/SignUpPage';
-import ProfilePage from '@/pages/ProfilePage';
-import ErrorPage from '@/pages/ErrorPage';
-import NotFoundPage from '@/pages/NotFoundPage';
+import HomePage from '@pages/HomePage';
+import SignInPage from '@pages/SingInPage';
+import SignUpPage from '@pages/SignUpPage';
+import ProfilePage from '@pages/ProfilePage';
+import ErrorPage from '@pages/ErrorPage';
+import NotFoundPage from '@pages/NotFoundPage';
 
 function AppRouter() {
   return (
