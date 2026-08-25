@@ -1,0 +1,11 @@
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-color: var(--background-fill-surface);
+  color: var(--component-text-positive);
+  font-family: var(--font-family);
+  font-size: clamp(0.875rem, 3.5vw, 1.125rem);
+  font-weight: 400;
+}
