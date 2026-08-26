@@ -4,6 +4,7 @@
   --second-family: "Inter", sans-serif;
 
   /* Color Palette */
+  --color-brand-primary-25: #f81;
   --color-neutral-white: #fff;
   --color-neutral-gray-soft-25: #fafafa;
   --color-neutral-gray-strong-700: #1b2037;
@@ -12,6 +13,7 @@
 
   /* Colors by place */
   --background-fill-surface: var(--color-neutral-gray-soft-25);
+  --component-fill-primary-soft: var(--color-brand-primary-25);
   --component-fill-reversed: var(--color-neutral-gray-strong-800);
   --component-text-dark: var(--color-neutral-gray-strong-700);
   --component-text-positive: var(--color-feedback-positive-500);
