@@ -13,14 +13,21 @@ function Header({ variant }: HeaderProps) {
   return (
     <header className='header'>
       <Logo />
-      {variant === 'guest' && <div></div>}
+      <nav className='nav-panel'>
+        {variant === 'guest' &&
+          <>
+            <Link className='link' to={ROUTES.signUp}>Sign Up</Link>
+            <Link className='link' to={ROUTES.signIn}>Sign In</Link>
+          </>
+        }
 
-      {variant === 'user' &&
-        <Link className='link' to={ROUTES.profile}>
-          <img className='avatar' src={userImage} width={24} height={24} />
-          Name Surname
-        </Link>
-      }
+        {variant === 'user' &&
+          <Link className='link' to={ROUTES.profile}>
+            <img className='avatar' src={userImage} width={24} height={24} />
+            Name Surname
+          </Link>
+        }
+      </nav>
     </header>
   );
 }

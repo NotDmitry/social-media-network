@@ -5,3 +5,9 @@
   padding: clamp(6px, 1.6vw, 12px) 24px;
   background-color: var(--background-fill-surface);
 }
+
+.nav-panel {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
