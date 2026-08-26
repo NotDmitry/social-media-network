@@ -1,0 +1,11 @@
+.logo {
+  width: clamp(48px, 12vw, 96px);
+}
+
+.logo-text {
+  fill: var(--component-fill-reversed);
+}
+
+.logo-icon {
+  fill: var(--color-brand-primary-25);
+}
