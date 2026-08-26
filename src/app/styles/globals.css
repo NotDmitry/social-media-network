@@ -3,6 +3,9 @@
 
 /* Navigation links */
 .link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 8px;
   color: var(--component-text-dark);
   font-family: var(--font-family);
@@ -24,4 +27,10 @@
   &:hover {
     color: var(--component-text-dark);
   }
+}
+
+/* Avatar */
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
 }
