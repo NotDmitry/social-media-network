@@ -2,22 +2,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px;
+  padding: clamp(6px, 1.6vw, 12px) 24px;
   background-color: var(--background-fill-surface);
-}
-
-.footer-link {
-  padding: 6px;
-  color: var(--component-text-positive);
-  font-family: var(--font-family);
-  font-size: clamp(0.875rem, 3.5vw, 1.125rem);
-  font-weight: 400;
-  text-decoration: none;
-  transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out;
-
-  &:hover {
-    background-color: var(--component-fill-primary-soft);
-    color: var(--component-text-dark);
-    text-decoration: underline;
-  }
 }
