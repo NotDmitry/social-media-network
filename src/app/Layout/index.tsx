@@ -1,6 +1,6 @@
 import { Outlet } from 'react-router';
-import type { HeaderVariant } from '@widgets/Header/types';
-import Header from '@widgets/Header';
+import type { HeaderVariant } from './Header/types';
+import Header from './Header';
 import Footer from './Footer';
 import './style.css';
 
