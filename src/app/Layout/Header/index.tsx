@@ -25,7 +25,7 @@ function Header({ variant }: HeaderProps) {
 
         {variant === 'user' &&
           <Link className='link' to={ROUTES.profile}>
-            <img className='avatar' src={userImage} width={24} height={24} />
+            <img className='avatar' src={userImage} alt={'User\'s profile picture'} width={24} height={24} />
             Name Surname
           </Link>
         }
