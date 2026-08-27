@@ -3,7 +3,7 @@ import userAvatar from '@assets/images/test_user_1.jpg';
 
 function Post() {
   return (
-    <article>
+    <article className='post-card'>
       <header className='post-header'>
         <img
           className='avatar post-avatar'
