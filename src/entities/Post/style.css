@@ -1,0 +1,33 @@
+.post-header {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 12px;
+}
+
+.post-avatar {
+  grid-row: 1 / 3;
+}
+
+.post-author,
+.post-time {
+  overflow: hidden;
+  font-family: var(--second-family);
+  font-size: 1rem;
+  line-height: 150%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.post-author {
+  grid-column: 2;
+  grid-row: 1;
+  color: var(--component-text-dark);
+  font-weight: 500;
+}
+
+.post-time {
+  grid-column: 2;
+  grid-row: 2;
+  color: var(--component-text-gray);
+  font-weight: 400;
+}
