@@ -12,7 +12,9 @@ interface HeaderProps {
 function Header({ variant }: HeaderProps) {
   return (
     <header className='header'>
-      <Logo />
+      <a href="https://sidekick-software.com/" target='_blank' rel='noreferrer'>
+        <Logo />
+      </a>
       <nav className='nav-panel'>
         {variant === 'guest' &&
           <>
