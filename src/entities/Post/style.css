@@ -52,3 +52,9 @@
   font-size: clamp(0.875rem, 3.5vw, 1.25rem);
   font-weight: 400;
 }
+
+.post-image {
+  width: 100%;
+  height: clamp(150px, 40vw, 458px);
+  object-fit: cover;
+}

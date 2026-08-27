@@ -1,5 +1,6 @@
 import './style.css';
 import userAvatar from '@assets/images/test_user_1.jpg';
+import postImage from '@assets/images/test_post_1.jpg';
 
 function Post() {
   return (
@@ -16,7 +17,7 @@ function Post() {
         <time className='post-time' dateTime='PT3M'>3 min ago</time>
       </header>
 
-      <img />
+      <img className='post-image' src={postImage} width={500} alt={'Post\'s attached image'} />
 
       <p className='post-description'>
         Body text for a post. Since it's a social app, sometimes it's an observation,
