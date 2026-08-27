@@ -18,11 +18,16 @@
 }
 
 .post-author,
+.post-time,
+.post-description {
+  font-family: var(--second-family);
+  line-height: 150%;
+}
+
+.post-author,
 .post-time {
   overflow: hidden;
-  font-family: var(--second-family);
   font-size: 1rem;
-  line-height: 150%;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -38,5 +43,12 @@
   grid-column: 2;
   grid-row: 2;
   color: var(--component-text-gray);
+  font-weight: 400;
+}
+
+.post-description {
+  margin: 0;
+  color: var(--component-text-dark);
+  font-size: clamp(0.875rem, 3.5vw, 1.25rem);
   font-weight: 400;
 }

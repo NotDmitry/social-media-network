@@ -18,7 +18,10 @@ function Post() {
 
       <img />
 
-      <p></p>
+      <p className='post-description'>
+        Body text for a post. Since it's a social app, sometimes it's an observation,
+        and sometimes it's seeking recommendations.
+      </p>
 
       <menu>
         <li></li>
