@@ -8,6 +8,10 @@
   border: 2px solid var(--component-stroke-dark-soft);
 }
 
+.post-card+.post-card {
+  border-top: none;
+}
+
 .post-header {
   display: grid;
   grid-template-columns: auto 1fr;
