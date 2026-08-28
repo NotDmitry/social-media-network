@@ -19,15 +19,16 @@
 
 .post-author,
 .post-time,
-.post-description {
+.post-description,
+.post-menu-label {
   font-family: var(--second-family);
   line-height: 150%;
 }
 
 .post-author,
-.post-time {
+.post-time,
+.post-menu-label {
   overflow: hidden;
-  font-size: 1rem;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -36,6 +37,7 @@
   grid-column: 2;
   grid-row: 1;
   color: var(--component-text-dark);
+  font-size: 1rem;
   font-weight: 500;
 }
 
@@ -43,6 +45,7 @@
   grid-column: 2;
   grid-row: 2;
   color: var(--component-text-gray);
+  font-size: 1rem;
   font-weight: 400;
 }
 
@@ -57,4 +60,41 @@
   width: 100%;
   height: clamp(150px, 40vw, 458px);
   object-fit: cover;
+}
+
+.post-menu {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(0, max-content);
+  gap: 16px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.post-menu-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+
+  &:hover .post-menu-like-icon {
+    stroke: var(--color-feedback-negative-600);
+  }
+}
+
+.post-menu-like-icon,
+.post-menu-comment-icon {
+  flex: 0 0 24px;
+  stroke: var(--component-text-dark);
+  transition: all 0.2s ease-in-out;
+}
+
+.post-menu-label {
+  font-size: clamp(0.75rem, 3vw, 1rem);
+  font-weight: 500;
+  color: var(--component-text-dark);
 }
