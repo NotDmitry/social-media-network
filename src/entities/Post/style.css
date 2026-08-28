@@ -87,12 +87,16 @@
   cursor: pointer;
   transition: all 0.2s ease-in-out;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background: var(--component-hover-primary-soft);
   }
 
   &:hover .post-menu-like-icon {
     stroke: var(--color-feedback-negative-600);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
   }
 }
 

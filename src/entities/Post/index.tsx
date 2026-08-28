@@ -44,6 +44,7 @@ function Post() {
         <li>
           <button
             className='post-menu-button'
+            disabled={!isAuthenticated}
             aria-label='Open / close comments section'
             onClick={() => { setIsCommentsOpen((isOpen) => !isOpen) }}
           >
