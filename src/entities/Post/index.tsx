@@ -12,9 +12,10 @@ interface PostProps {
   post: PostModel;
   comments: CommentModel[];
   author: UserModel;
+  authenticatedUserId: string;
 }
 
-function Post({ post, comments, author }: PostProps) {
+function Post({ post, comments, author, authenticatedUserId }: PostProps) {
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
@@ -89,7 +90,10 @@ function Post({ post, comments, author }: PostProps) {
         <ol className='post-comments-list'>
           {comments.map((comment) => (
             <li key={comment.id}>
-              <Comment text={comment.content} />
+              <Comment
+                text={comment.content}
+                canDelete={comment.authorId === authenticatedUserId}
+              />
             </li>
           ))}
         </ol>
