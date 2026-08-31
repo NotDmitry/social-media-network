@@ -1,5 +1,5 @@
 import './style.css';
-import userAvatar from '@assets/images/test_user_1.jpg';
+import userAvatar from '@assets/images/test_user_walter.jpg';
 import postImage from '@assets/images/test_post_1.jpg';
 import { useAuthMock } from '@shared/mocks/useAuthMock';
 import CreateCommentForm from '@features/CreateCommentForm';

@@ -3,7 +3,7 @@ import { ROUTES } from '@app/routes';
 import { Link } from 'react-router';
 import Logo from '@shared/ui/Logo';
 import './style.css';
-import userImage from '@assets/images/test_user_1.jpg';
+import userImage from '@assets/images/test_user_walter.jpg';
 
 interface HeaderProps {
   variant: HeaderVariant;
