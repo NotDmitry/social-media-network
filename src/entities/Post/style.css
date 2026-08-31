@@ -107,6 +107,11 @@
   transition: all 0.2s ease-in-out;
 }
 
+.post-menu-like-icon_active {
+  fill: var(--color-feedback-negative-600);
+  stroke: var(--color-feedback-negative-600);
+}
+
 .chevron-icon {
   flex: 0 0 24px;
   fill: var(--component-text-dark);
