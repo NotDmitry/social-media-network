@@ -1,3 +1,3 @@
 export function useAuthMock() {
-  return false;
+  return true;
 }
