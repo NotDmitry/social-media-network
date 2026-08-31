@@ -1,5 +1,4 @@
 import './style.css';
-import { useAuthMock } from '@shared/mocks/useAuthMock';
 import CreateCommentForm from '@features/CreateCommentForm';
 import Comment from '@entities/Comment';
 import { useState } from 'react';
@@ -19,7 +18,7 @@ function Post({ post, comments, author, authenticatedUserId }: PostProps) {
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
-  const isAuthenticated = useAuthMock();
+  const isAuthenticated = authenticatedUserId.length > 0;
 
   const commentsButtonLabel = `${String(comments.length)} ${comments.length === 1 ? 'comment' : 'comments'}`;
 
