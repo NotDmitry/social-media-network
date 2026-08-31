@@ -1,9 +1,9 @@
 import userWalter from '@assets/images/test_user_walter.jpg';
 import userJesse from '@assets/images/test_user_jesse.jpg';
 import userGus from '@assets/images/test_user_gus.jpg';
-import type { User } from './types';
+import type { UserModel } from './types';
 
-export const MOCK_USERS: User[] = [
+export const MOCK_USERS: UserModel[] = [
   {
     id: 'user-1',
     fullName: 'Walter White',

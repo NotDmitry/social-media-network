@@ -1,4 +1,4 @@
-export interface Post {
+export interface PostModel {
   id: string;
   authorId: string;
   imageUrl?: string;

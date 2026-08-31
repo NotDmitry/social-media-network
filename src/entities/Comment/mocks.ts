@@ -1,6 +1,6 @@
-import type { Comment } from './types';
+import type { CommentModel } from './types';
 
-export const MOCK_COMMENTS: Comment[] = [
+export const MOCK_COMMENTS: CommentModel[] = [
   {
     id: 'comment-1',
     postId: 'post-1',

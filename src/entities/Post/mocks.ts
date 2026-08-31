@@ -1,9 +1,9 @@
 import postImage1 from '@assets/images/test_post_1.jpg';
 import postImage2 from '@assets/images/test_post_2.jpg';
 import postImage3 from '@assets/images/test_post_3.jpg';
-import type { Post } from './types';
+import type { PostModel } from './types';
 
-export const MOCK_POSTS: Post[] = [
+export const MOCK_POSTS: PostModel[] = [
   {
     id: 'post-1',
     authorId: 'user-1',
