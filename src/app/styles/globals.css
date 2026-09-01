@@ -1,0 +1,36 @@
+@import './modern-normalize.css';
+@import './variables.css';
+
+/* Navigation links */
+.link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  color: var(--component-text-dark);
+  font-family: var(--font-family);
+  font-size: clamp(0.875rem, 3.5vw, 1.125rem);
+  font-weight: 400;
+  line-height: 156%;
+  text-decoration: none;
+  transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out;
+
+  &:hover {
+    background-color: var(--component-fill-primary-soft);
+    text-decoration: underline;
+  }
+}
+
+.link_external {
+  color: var(--component-text-positive);
+
+  &:hover {
+    color: var(--component-text-dark);
+  }
+}
+
+/* Avatar */
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+}
