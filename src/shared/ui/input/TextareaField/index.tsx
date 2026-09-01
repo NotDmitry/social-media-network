@@ -3,7 +3,7 @@ import type { ComponentProps, ReactNode } from 'react';
 import { PencilIcon, InfoIcon } from '@shared/icons';
 import './style.css';
 
-type TextareaFieldStatus = 'default' | 'error';
+type TextareaFieldStatus = 'default' | 'invalid';
 
 interface TextareaFieldProps extends ComponentProps<'textarea'> {
   label: string;
@@ -29,7 +29,8 @@ function TextareaField({
 }: TextareaFieldProps) {
   const privateId = useId();
   const textareaId = id ?? privateId;
-  const isInvalid = status === 'error';
+
+  const isInvalid = status === 'invalid';
 
   let validationMessage = '';
   if (isInvalid && errorMessage) {
@@ -41,7 +42,7 @@ function TextareaField({
   return (
     <div className='input-field-wrapper'>
       <label
-        className={`input-field-label-wrapper ${disabled ? `input-field-label-wrapper_disabled` : ''}`}
+        className={`input-field-label ${disabled ? `input-field-label_disabled` : ''}`}
         htmlFor={textareaId}
       >
         {labelIcon}
@@ -50,7 +51,7 @@ function TextareaField({
 
       <textarea
         {...restProps}
-        className={`textarea-field ${isInvalid ? 'textarea-field_invalid' : ''} ${className}`}
+        className={`input-field textarea-input-field ${isInvalid ? 'input-field_invalid' : ''} ${className}`}
         disabled={disabled}
         id={textareaId}
         maxLength={maxLength}
@@ -59,9 +60,9 @@ function TextareaField({
       />
 
       {!disabled && validationMessage &&
-        <div className={`input-field-validation-wrapper ${isInvalid ? 'input-field-validation-wrapper_invalid' : ''}`}>
+        <div className={`input-field-validation ${isInvalid ? 'input-field-validation_invalid' : ''}`}>
           <InfoIcon />
-          <span className='input-field-validation-text'>{validationMessage}</span>
+          <span>{validationMessage}</span>
         </div>
       }
     </div>

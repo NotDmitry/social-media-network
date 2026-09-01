@@ -55,16 +55,6 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: var(--component-text-dark);
-  font-family: var(--font-family);
-  font-size: 0.875rem;
-  font-weight: 500;
-  line-height: 143%;
-}
-
-.input-field-validation-wrapper {
-  color: var(--component-text-gray);
-  font-weight: 400;
 }
 
 .input-field-label,
@@ -72,10 +62,21 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  width: max-content;
+  color: var(--component-text-dark);
+  font-family: var(--font-family);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 143%;
 }
 
 .input-field-label {
   cursor: pointer;
+}
+
+.input-field-validation {
+  color: var(--component-text-gray);
+  font-weight: 400;
 }
 
 .input-field-label_disabled {
