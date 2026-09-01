@@ -43,6 +43,8 @@
   --component-text-negative: var(--color-feedback-negative-500);
   --component-text-positive: var(--color-feedback-positive-500);
   --icon-dark: var(--color-neutral-gray-strong-800);
+  --icon-disabled: var(--color-neutral-gray-strong-50);
   --icon-negative: var(--color-feedback-negative-500);
+  --icon-positive: var(--color-feedback-positive-500);
   --typography-body-light: var(--color-neutral-white);
 }
