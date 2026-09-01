@@ -1,0 +1,35 @@
+.comment {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.comment-text {
+  margin: 0;
+  color: var(--component-text-dark);
+  font-family: var(--second-family);
+  font-size: clamp(0.875rem, 3vw, 1rem);
+  font-weight: 500;
+  line-height: 150%;
+}
+
+.comment-delete-button {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  color: var(--icon-dark);
+
+  &:hover {
+    color: var(--color-feedback-negative-600);
+  }
+}

@@ -1,0 +1,32 @@
+.shared-button {
+  padding: clamp(8px, 2vw, 12px) clamp(24px, 6vw, 48px);
+  border: none;
+  background-color: var(--component-fill-positive);
+  color: var(--typography-body-light);
+  cursor: pointer;
+  transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out;
+
+  &:hover {
+    background-color: var(--component-hover-positive);
+  }
+
+  &:active {
+    outline: 4px solid var(--component-hover-primary-soft);
+    background-color: var(--component-hover-primary);
+  }
+
+  &:disabled {
+    outline: 1px solid var(--component-stroke-disabled);
+    background-color: var(--component-fill-disabled);
+    color: var(--component-text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.shared-button-text {
+  font-family: var(--font-family);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 143%;
+  text-align: center;
+}

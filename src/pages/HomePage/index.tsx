@@ -1,5 +1,7 @@
+import PostsFeed from "@widgets/PostsFeed";
+
 function HomePage() {
-  return <div>Home Page</div>;
+  return <PostsFeed />;
 }
 
 export default HomePage;

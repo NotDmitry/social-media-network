@@ -1,0 +1,5 @@
+.posts-feed {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-fill-surface);
+}

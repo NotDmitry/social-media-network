@@ -1,0 +1,41 @@
+.create-comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.create-comment-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--component-text-dark);
+  font-family: var(--font-family);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 143%;
+  cursor: pointer;
+}
+
+.create-comment-textarea {
+  padding: 14px 14px 24px;
+  border: 1px solid var(--component-stroke-dark-soft);
+  background-color: var(--component-fill-light);
+  color: var(--component-text-gray);
+  font-family: var(--font-family);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 143%;
+  field-sizing: content;
+  overflow-wrap: anywhere;
+  resize: none;
+
+  &::placeholder {
+    color: var(--component-text-gray);
+  }
+
+  &:focus-visible {
+    outline: 1px solid var(--component-stroke-primary);
+    color: var(--component-text-dark);
+  }
+}
