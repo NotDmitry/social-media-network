@@ -68,9 +68,11 @@ body {
 
 .input-field-label-wrapper,
 .input-field-validation-wrapper {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, max-content) max-content;
   align-items: center;
   justify-content: space-between;
+  gap: 8px
 }
 
 .input-field-label,
@@ -78,12 +80,18 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  width: max-content;
   color: var(--component-text-dark);
   font-family: var(--font-family);
   font-size: 0.875rem;
   font-weight: 500;
   line-height: 143%;
+}
+
+.input-field-label-text,
+.input-field-validation-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .input-field-label {

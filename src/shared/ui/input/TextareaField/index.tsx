@@ -41,13 +41,16 @@ function TextareaField({
 
   return (
     <div className='input-field-wrapper'>
-      <label
-        className={`input-field-label ${disabled ? `input-field-label_disabled` : ''}`}
-        htmlFor={textareaId}
-      >
-        {labelIcon}
-        <span>{label}</span>
-      </label>
+      <div className='input-field-label-wrapper'>
+        <label
+          className={`input-field-label ${disabled ? `input-field-label_disabled` : ''}`}
+          htmlFor={textareaId}
+          title={label}
+        >
+          {labelIcon}
+          <span className='input-field-label-text'>{label}</span>
+        </label>
+      </div>
 
       <textarea
         {...restProps}
@@ -60,9 +63,12 @@ function TextareaField({
       />
 
       {!disabled && validationMessage &&
-        <div className={`input-field-validation ${isInvalid ? 'input-field-validation_invalid' : ''}`}>
+        <div
+          className={`input-field-validation ${isInvalid ? 'input-field-validation_invalid' : ''}`}
+          title={validationMessage}
+        >
           <InfoIcon />
-          <span>{validationMessage}</span>
+          <span className='input-field-validation-text'>{validationMessage}</span>
         </div>
       }
     </div>
