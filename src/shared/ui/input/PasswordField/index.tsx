@@ -72,9 +72,10 @@ function PasswordField({
         <label
           className={`input-field-label ${disabled ? `input-field-label_disabled` : ''}`}
           htmlFor={passwordInputId}
+          title={label}
         >
           {labelIcon}
-          <span>{label}</span>
+          <span className='input-field-label-text'>{label}</span>
         </label>
         {!disabled && statusIcon}
       </div>
@@ -97,9 +98,9 @@ function PasswordField({
 
       {!disabled && validationMessage &&
         <div className={`input-field-validation-wrapper`}>
-          <div className={validationClassName}>
+          <div className={validationClassName} title={validationMessage}>
             {isInvalid ? <InfoIcon /> : <ThumbUpIcon />}
-            <span>{validationMessage}</span>
+            <span className='input-field-validation-text'>{validationMessage}</span>
           </div>
           {tooltipMessage && isInvalid &&
             <span title={tooltipMessage} className='input-field-tooltip-icon'>
