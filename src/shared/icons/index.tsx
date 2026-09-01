@@ -2,9 +2,9 @@ interface IconProps {
   className?: string;
 }
 
-export function EnvelopeIcon({ className }: IconProps) {
+export function EnvelopeIcon({ className = '' }: IconProps) {
   return (
-    <svg className={className} viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <svg className={`icon ${className}`} viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path
         d='M12.6667 0.666748H3.33333C2.4496 0.667807 1.60237 1.01934 0.97748 1.64423C0.352588 2.26912
         0.00105857 3.11635 0 4.00008L0 12.0001C0.00105857 12.8838 0.352588 13.731 0.97748 14.3559C1.60237
@@ -24,9 +24,9 @@ export function EnvelopeIcon({ className }: IconProps) {
   );
 }
 
-export function CheckIcon({ className }: IconProps) {
+export function CheckIcon({ className = '' }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className={`icon ${className}`} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M0.205671 9.96052L3.25834 13.0132C4.11676 13.8713 5.50826 13.8713 6.36669 13.0132L15.7943
         3.58555C16.0755 3.29446 16.0674 2.83059 15.7763 2.54945C15.4923 2.27518 15.0421 2.27518 14.7582
@@ -38,9 +38,9 @@ export function CheckIcon({ className }: IconProps) {
   );
 }
 
-export function CrossIcon({ className }: IconProps) {
+export function CrossIcon({ className = '' }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className={`icon ${className}`} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M12 3.99988C11.875 3.8749 11.7054 3.80469 11.5287 3.80469C11.3519 3.80469 11.1824 3.8749 11.0573
         3.99988L8 7.05721L4.94267 3.99988C4.81765 3.8749 4.64811 3.80469 4.47133 3.80469C4.29456 3.80469 4.12502
@@ -57,9 +57,9 @@ export function CrossIcon({ className }: IconProps) {
   );
 }
 
-export function InfoIcon({ className }: IconProps) {
+export function InfoIcon({ className = '' }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className={`icon ${className}`} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M8 16C9.58225 16 11.129 15.5308 12.4446 14.6518C13.7602 13.7727 14.7855 12.5233 15.391
         11.0615C15.9965 9.59966 16.155 7.99113 15.8463 6.43928C15.5376 4.88743 14.7757 3.46197 13.6569 2.34315C12.538
@@ -81,9 +81,9 @@ export function InfoIcon({ className }: IconProps) {
   );
 }
 
-export function InfoTooltipIcon({ className }: IconProps) {
+export function InfoTooltipIcon({ className = '' }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className={`icon ${className}`} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M8 0C6.41775 0 4.87104 0.469192 3.55544 1.34824C2.23985 2.22729 1.21447 3.47672 0.608967 4.93853C0.00346629
         6.40034 -0.15496 8.00887 0.153721 9.56072C0.462403 11.1126 1.22433 12.538 2.34315 13.6569C3.46197 14.7757
@@ -114,9 +114,9 @@ export function InfoTooltipIcon({ className }: IconProps) {
   );
 }
 
-export function ThumbUpIcon({ className }: IconProps) {
+export function ThumbUpIcon({ className = '' }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className={`icon ${className}`} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M15.182 5.1475C14.8694 4.78724 14.4831 4.49836 14.0491 4.30041C13.6151 4.10246 13.1437 4.00007 12.6667
         4.00017H10.0074L10.2314 2.6395C10.3106 2.16034 10.215 1.66866 9.96195 1.25413C9.70889 0.839599 9.31525 0.529845
@@ -136,9 +136,9 @@ export function ThumbUpIcon({ className }: IconProps) {
   );
 }
 
-export function KeyboardIcon({ className }: IconProps) {
+export function KeyboardIcon({ className = '' }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className={`icon ${className}`} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M12.6667 3.99992H8.66667V1.99992C8.66667 1.82311 8.59643 1.65354 8.4714 1.52851C8.34638 1.40349 8.17681
         1.33325 8 1.33325C7.82319 1.33325 7.65362 1.40349 7.5286 1.52851C7.40357 1.65354 7.33333 1.82311 7.33333
@@ -195,9 +195,9 @@ export function KeyboardIcon({ className }: IconProps) {
   );
 }
 
-export function EyeIcon({ className }: IconProps) {
+export function EyeIcon({ className = '' }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className={`icon ${className}`} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M15.5137 6.27886C14.4797 4.59486 12.1277 1.76953 7.99967 1.76953C3.87167 1.76953 1.51967 4.59486
         0.485668 6.27886C0.16602 6.79587 -0.0032959 7.39169 -0.0032959 7.99953C-0.0032959 8.60737 0.16602 9.20319
@@ -225,9 +225,9 @@ export function EyeIcon({ className }: IconProps) {
   );
 }
 
-export function EyeCrossedIcon({ className }: IconProps) {
+export function EyeCrossedIcon({ className = '' }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className={`icon ${className}`} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M15.5137 6.27948C14.9118 5.29396 14.1527 4.41365 13.2663 3.67348L15.133 1.80681C15.2544 1.68108 15.3216
         1.51267 15.3201 1.33788C15.3186 1.16308 15.2485 0.99587 15.1249 0.872264C15.0013 0.748659 14.8341 0.678546
@@ -259,9 +259,9 @@ export function EyeCrossedIcon({ className }: IconProps) {
   );
 }
 
-export function PencilIcon({ className }: IconProps) {
+export function PencilIcon({ className = '' }: IconProps) {
   return (
-    <svg className={className} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className={`icon ${className}`} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
         d="M15.2353 0.765302C14.7821 0.312767 14.1678 0.0585938 13.5273 0.0585938C12.8869 0.0585938 12.2726
         0.312767 11.8193 0.765302L0.976677 11.608C0.666178 11.9167 0.419985 12.284 0.252342 12.6885C0.0846994 13.093
