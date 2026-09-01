@@ -34,3 +34,10 @@
   border-radius: 50%;
   object-fit: cover;
 }
+
+.icon {
+  flex: 0 0 16px;
+  display: block;
+  width: 16px;
+  height: 16px;
+}
