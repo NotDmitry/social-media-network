@@ -167,3 +167,47 @@ input::-ms-clear {
   border: none;
   margin: 0;
 }
+
+/* Auth page */
+.auth-page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 375px;
+  width: 100%;
+  padding: 0 24px;
+  text-align: center;
+}
+
+.auth-page-title {
+  margin: 0 0 2px;
+  color: var(--component-text-dark);
+  font-family: var(--font-family);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 156%;
+}
+
+.auth-page-text {
+  margin: 0;
+  color: var(--component-text-dark);
+  font-family: var(--font-family);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 143%;
+
+  & span {
+    display: block;
+  }
+}
+
+.auth-page-link {
+  color: var(--component-text-dark);
+  text-decoration: underline;
+  text-decoration-skip-ink: none;
+  transition: color 0.25s ease-in-out;
+
+  &:hover {
+    color: var(--component-text-positive);
+  }
+}
