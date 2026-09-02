@@ -91,7 +91,11 @@ function PasswordField({
         />
         {status !== 'default' &&
           <button className='toggle-password-button' onClick={togglePasswordVisibility}>
-            {isPasswordVisible ? <EyeCrossedIcon /> : <EyeIcon />}
+            {isPasswordVisible ? (
+              <EyeCrossedIcon aria-label='Hide password' />
+            ) : (
+              <EyeIcon aria-label='Show password' />
+            )}
           </button>
         }
       </div>
@@ -103,7 +107,7 @@ function PasswordField({
             <span className='input-field-validation-text'>{validationMessage}</span>
           </div>
           {tooltipMessage && isInvalid &&
-            <span title={tooltipMessage} className='input-field-tooltip-icon'>
+            <span title={tooltipMessage} className='input-field-tooltip-icon' aria-label='Tooltip icon'>
               <InfoTooltipIcon />
             </span>
           }

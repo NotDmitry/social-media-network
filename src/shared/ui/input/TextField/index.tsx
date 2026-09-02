@@ -74,7 +74,7 @@ function TextField({
             <span className='input-field-validation-text'>{validationMessage}</span>
           </div>
           {tooltipMessage &&
-            <span title={tooltipMessage} className='input-field-tooltip-icon'>
+            <span title={tooltipMessage} className='input-field-tooltip-icon' aria-label='Tooltip icon'>
               <InfoTooltipIcon />
             </span>
           }
