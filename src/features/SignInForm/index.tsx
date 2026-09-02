@@ -21,9 +21,11 @@ function SignInForm() {
   }
 
   function changeFieldValue(name: keyof SignInFormFields, event: React.ChangeEvent<HTMLInputElement>) {
+    const value = event.currentTarget.value;
+
     setFormFields((currentFields) => ({
       ...currentFields,
-      [name]: event.currentTarget.value,
+      [name]: value,
     }));
   }
 
