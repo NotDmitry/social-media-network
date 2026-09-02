@@ -6,7 +6,7 @@ import PrivateRoutes from '@app/PrivateRoutes';
 import { useAuth } from '@/entities/auth/useAuth';
 
 import HomePage from '@pages/HomePage';
-import SignInPage from '@pages/SingInPage';
+import SignInPage from '@pages/SignInPage';
 import SignUpPage from '@pages/SignUpPage';
 import ProfileInfoPage from '@pages/ProfileInfoPage';
 import ProfileStatisticsPage from '@pages/ProfileStatisticsPage';
