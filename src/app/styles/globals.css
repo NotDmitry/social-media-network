@@ -150,3 +150,20 @@ input::-ms-clear {
   outline: 1px solid var(--component-stroke-negative);
   color: var(--component-text-negative);
 }
+
+/* Auth forms */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+}
+
+.auth-form-fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0;
+  border: none;
+  margin: 0;
+}
