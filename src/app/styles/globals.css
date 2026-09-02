@@ -1,6 +1,12 @@
 @import './modern-normalize.css';
 @import './variables.css';
 
+/* Hide native password visibility button in MS Edge */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
 /* Navigation links */
 .link {
   display: flex;
