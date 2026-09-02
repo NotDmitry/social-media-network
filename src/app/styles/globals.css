@@ -175,7 +175,7 @@ input::-ms-clear {
   gap: 24px;
   max-width: 375px;
   width: 100%;
-  padding: 0 24px;
+  padding: 24px;
   text-align: center;
 }
 
@@ -209,5 +209,25 @@ input::-ms-clear {
 
   &:hover {
     color: var(--component-text-positive);
+  }
+}
+
+.auth-page-agreement-text {
+  color: var(--component-text-gray);
+  font-family: var(--second-family);
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 150%;
+}
+
+.auth-page-external-link {
+  color: var(--component-text-dark);
+  text-decoration: none;
+  transition: all 0.25s ease-in-out;
+
+  &:hover {
+    color: var(--component-text-positive);
+    text-decoration: underline;
+    text-decoration-skip-ink: none;
   }
 }
