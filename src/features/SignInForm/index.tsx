@@ -39,6 +39,7 @@ function SignInForm() {
           onChange={(event) => { changeFieldValue('email', event) }}
           placeholder='Enter email'
           status='default'
+          type='email'
           value={formFields.email}
         />
         <PasswordField
