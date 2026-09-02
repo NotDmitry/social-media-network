@@ -63,12 +63,14 @@ function TextareaField({
       />
 
       {!disabled && validationMessage &&
-        <div
-          className={`input-field-validation ${isInvalid ? 'input-field-validation_invalid' : ''}`}
-          title={validationMessage}
-        >
-          <InfoIcon />
-          <span className='input-field-validation-text'>{validationMessage}</span>
+        <div className={`input-field-validation-wrapper`}>
+          <div
+            className={`input-field-validation ${isInvalid ? 'input-field-validation_invalid' : ''}`}
+            title={validationMessage}
+          >
+            <InfoIcon />
+            <span className='input-field-validation-text'>{validationMessage}</span>
+          </div>
         </div>
       }
     </div>
