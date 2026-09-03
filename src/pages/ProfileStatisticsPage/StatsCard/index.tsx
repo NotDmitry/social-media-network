@@ -1,6 +1,6 @@
 import './style.css';
 
-interface StatsCardProps {
+export interface StatsCardProps {
   title?: string;
   data?: string;
   trendText?: string;

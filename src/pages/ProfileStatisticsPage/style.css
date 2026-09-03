@@ -2,12 +2,14 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  max-width: 1200px;
+  width: 100%;
   padding: 12px;
 }
 
 .profile-statistics-cards-wrapper {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(12px, 3vw, 32px);
 }
 
@@ -36,6 +38,7 @@
   display: flex;
   flex-direction: column;
   gap: clamp(12px, 3vw, 24px);
+  width: 100%;
 }
 
 .data-view-title {
@@ -47,11 +50,13 @@
   line-height: 150%;
 }
 
-@media screen and (width <=480px) {
+@media screen and (width <= 480px) {
   .profile-statistics-cards-wrapper {
-    flex-direction: column;
+    grid-template-columns: 1fr;
   }
+}
 
+@media screen and (width <= 780px) {
   .data-views-wrapper {
     grid-template-columns: 1fr;
     gap: 24px;
