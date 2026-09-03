@@ -1,5 +1,7 @@
+import { Outlet } from 'react-router';
+
 function ProfilePage() {
-  return <div>Profile Page</div>;
+  return <Outlet />;
 }
 
 export default ProfilePage;

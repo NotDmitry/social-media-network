@@ -8,6 +8,8 @@ import HomePage from '@pages/HomePage';
 import SignInPage from '@pages/SingInPage';
 import SignUpPage from '@pages/SignUpPage';
 import ProfilePage from '@pages/ProfilePage';
+import ProfileInfoPage from '@pages/ProfileInfoPage';
+import ProfileStatisticsPage from '@pages/ProfileStatisticsPage';
 import ErrorPage from '@pages/ErrorPage';
 import NotFoundPage from '@pages/NotFoundPage';
 
@@ -30,7 +32,10 @@ function AppRouter() {
 
       <Route element={<PrivateRoutes />}>
         <Route element={<Layout headerVariant='user' />}>
-          <Route path={ROUTES.profile} element={<ProfilePage />} />
+          <Route path={ROUTES.profile} element={<ProfilePage />}>
+            <Route index element={<ProfileInfoPage />} />
+            <Route path={ROUTES.statistics} element={<ProfileStatisticsPage />} />
+          </Route>
         </Route>
       </Route>
 
