@@ -1,0 +1,42 @@
+  .toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 28px;
+    border-radius: 9999px;
+    background-color: var(--component-fill-dark-soft);
+    cursor: pointer;
+
+    &::before {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: var(--component-fill-light);
+      box-shadow: 0 2px 2px 2px rgba(0, 0, 0, 0.16);
+      content: "";
+      transition: all 0.25s ease;
+    }
+  }
+
+  .toggle-switch_toggled::before {
+    background-color: var(--component-fill-positive);
+    transform: translateX(20px);
+  }
+
+  .toggle-switch:has(:focus-visible) {
+    outline: 2px solid var(--component-stroke-primary);
+    outline-offset: 2px;
+  }
+
+  .toggle-switch-input {
+    position: absolute;
+    top: 4px;
+    left: 20px;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    cursor: pointer;
+  }
