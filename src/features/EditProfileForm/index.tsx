@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import type { UserModel } from '@entities/User/types';
 import Button from '@shared/ui/Button';
 import './style.css';
@@ -7,9 +8,32 @@ interface EditProfileFormProps {
 }
 
 function EditProfileForm({ user }: EditProfileFormProps) {
+  const [selectedAvatarUrl, setSelectedAvatarUrl] = useState<string | null>(null);
+
   function submitForm(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
   }
+
+  function handleAvatarChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+
+    if (!file?.type.startsWith('image')) {
+      return;
+    }
+
+    const newAvatarUrl = URL.createObjectURL(file);
+    setSelectedAvatarUrl(newAvatarUrl);
+  }
+
+  useEffect(() => {
+    if (selectedAvatarUrl === null) {
+      return;
+    }
+
+    return () => {
+      URL.revokeObjectURL(selectedAvatarUrl);
+    }
+  }, [selectedAvatarUrl]);
 
   return (
     <form className='profile-update-form' onSubmit={submitForm}>
@@ -17,7 +41,7 @@ function EditProfileForm({ user }: EditProfileFormProps) {
       <div className='change-avatar-container'>
         <img
           className='avatar change-avatar-photo'
-          src={user.avatarUrl}
+          src={selectedAvatarUrl ?? user.avatarUrl}
           alt={`Profile picture of ${user.fullName}`}
           width={64}
           height={64}
@@ -26,9 +50,11 @@ function EditProfileForm({ user }: EditProfileFormProps) {
         <label className='change-avatar-label'>
           Change profile photo
           <input
+            accept='image/*'
             className='change-avatar-file-input'
             type='file'
             name='avatar'
+            onChange={handleAvatarChange}
           />
         </label>
       </div>
