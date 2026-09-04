@@ -36,7 +36,7 @@ function ProfileInfoPage() {
         </section>
         <section className='profile-info-actions-section profile-info-section'>
           <h2 className='profile-info-title'>Actions</h2>
-          <Button>Logout</Button>
+          <Button type='button'>Logout</Button>
         </section>
       </div>
     </div>
