@@ -214,6 +214,7 @@ input::-ms-clear {
 }
 
 .auth-page-agreement-text {
+  margin: 0;
   color: var(--component-text-gray);
   font-family: var(--second-family);
   font-size: 0.75rem;
