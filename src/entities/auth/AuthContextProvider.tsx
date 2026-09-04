@@ -32,7 +32,6 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [currentUser, setCurrentUser] = useState<UserModel | null>(() => getCurrentUserFromStorage());
 
   function updateCurrentUser(user: UserModel | null) {
-
     try {
       if (user === null) {
         localStorage.removeItem(CURRENT_USER_STORAGE_KEY);
