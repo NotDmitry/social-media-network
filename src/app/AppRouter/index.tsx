@@ -5,7 +5,7 @@ import PrivateRoutes from '@app/PrivateRoutes';
 import { useAuthMock } from '@shared/mocks/useAuthMock';
 
 import HomePage from '@pages/HomePage';
-import SignInPage from '@pages/SingInPage';
+import SignInPage from '@pages/SignInPage';
 import SignUpPage from '@pages/SignUpPage';
 import ProfilePage from '@pages/ProfilePage';
 import ErrorPage from '@pages/ErrorPage';
