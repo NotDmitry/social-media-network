@@ -5,8 +5,8 @@ import type { UserModel } from '@entities/User/types';
 interface AuthContextData {
   currentUser: UserModel | null;
   isUserAuthenticated: boolean;
-  signIn: (user: SignInPayload) => void;
-  signUp: (user: SignUpPayload) => void;
+  signIn: (signInPayload: SignInPayload) => void;
+  signUp: (signUpPayload: SignUpPayload) => void;
   signOut: () => void;
 }
 
