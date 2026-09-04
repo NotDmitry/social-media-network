@@ -1,0 +1,6 @@
+.input-field.textarea-input-field {
+  padding: 14px 14px 24px;
+  field-sizing: content;
+  overflow-wrap: anywhere;
+  resize: none;
+}

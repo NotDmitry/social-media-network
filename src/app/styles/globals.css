@@ -1,6 +1,12 @@
 @import './modern-normalize.css';
 @import './variables.css';
 
+/* Hide native password visibility button in MS Edge */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
+
 /* Navigation links */
 .link {
   display: flex;
@@ -33,4 +39,114 @@
 .avatar {
   border-radius: 50%;
   object-fit: cover;
+}
+
+.icon {
+  flex: 0 0 16px;
+  display: block;
+  width: 16px;
+  height: 16px;
+}
+
+/* Input fields */
+.input-field-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.input-field-label-wrapper,
+.input-field-validation-wrapper {
+  display: grid;
+  grid-template-columns: minmax(0, max-content) max-content;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px
+}
+
+.input-field-label,
+.input-field-validation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--component-text-dark);
+  font-family: var(--font-family);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 143%;
+}
+
+.input-field-label-text,
+.input-field-validation-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.input-field-label {
+  cursor: pointer;
+}
+
+.input-field-validation {
+  color: var(--component-text-gray);
+  font-weight: 400;
+}
+
+.input-field-label_disabled {
+  color: var(--component-text-disabled);
+  cursor: default;
+}
+
+.input-field-validation_valid {
+  color: var(--component-text-positive);
+}
+
+.input-field-validation_invalid {
+  color: var(--component-text-negative);
+}
+
+.input-field-status-icon_valid {
+  color: var(--icon-positive);
+}
+
+.input-field-status-icon_invalid {
+  color: var(--icon-negative);
+}
+
+.input-field-tooltip-icon {
+  color: var(--icon-disabled);
+}
+
+.input-field {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--component-stroke-dark-soft);
+  background-color: var(--component-fill-light);
+  color: var(--component-text-gray);
+  font-family: var(--font-family);
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 143%;
+
+  &::placeholder {
+    color: var(--component-text-gray);
+  }
+
+  &:focus-visible {
+    outline: 1px solid var(--component-stroke-primary);
+    color: var(--component-text-dark);
+  }
+
+  &:disabled {
+    outline: 1px solid var(--component-stroke-disabled);
+    background-color: var(--component-fill-disabled);
+    color: var(--component-text-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.input-field_invalid {
+  outline: 1px solid var(--component-stroke-negative);
+  color: var(--component-text-negative);
 }
