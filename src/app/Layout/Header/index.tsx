@@ -3,14 +3,14 @@ import { ROUTES } from '@app/routes';
 import { Link } from 'react-router';
 import Logo from '@shared/ui/Logo';
 import './style.css';
-import { getAuthUserMock } from '@entities/User/mocks';
+import { useAuth } from '@/entities/auth/useAuth';
 
 interface HeaderProps {
   variant: HeaderVariant;
 }
 
 function Header({ variant }: HeaderProps) {
-  const authenticatedUser = getAuthUserMock();
+  const { currentUser } = useAuth();
 
   return (
     <header className='header'>
@@ -25,16 +25,16 @@ function Header({ variant }: HeaderProps) {
           </>
         }
 
-        {variant === 'user' &&
+        {variant === 'user' && currentUser &&
           <Link className='link' to={ROUTES.profile}>
             <img
               className='avatar'
-              src={authenticatedUser.avatarUrl}
-              alt={`Profile picture of ${authenticatedUser.fullName}`}
+              src={currentUser.avatarUrl}
+              alt={`Profile picture of ${currentUser.fullName}`}
               width={24}
               height={24}
             />
-            {authenticatedUser.fullName}
+            {currentUser.fullName}
           </Link>
         }
       </nav>
