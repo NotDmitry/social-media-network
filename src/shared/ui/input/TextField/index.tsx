@@ -1,6 +1,6 @@
 import { useId } from 'react';
 import type { ComponentProps, ReactNode } from 'react';
-import { EnvelopeIcon, CheckIcon, CrossIcon, InfoIcon, InfoTooltipIcon } from '@shared/icons';
+import { CheckIcon, CrossIcon, InfoIcon, InfoTooltipIcon, PencilIcon } from '@shared/icons';
 
 type TextFieldStatus = 'default' | 'valid' | 'invalid';
 
@@ -14,16 +14,16 @@ interface TextFieldProps extends Omit<ComponentProps<'input'>, 'type'> {
 }
 
 function TextField({
-  label = 'Email',
-  labelIcon = <EnvelopeIcon />,
+  label = 'Text',
+  labelIcon = <PencilIcon />,
   status = 'default',
   errorMessage,
-  type = 'email',
+  type = 'text',
   tooltipMessage,
   className = '',
   disabled,
   id,
-  placeholder = 'Enter email',
+  placeholder = 'Enter some text...',
   ...restProps
 }: TextFieldProps) {
   const privateId = useId();
