@@ -18,6 +18,7 @@ interface PasswordFieldProps extends Omit<ComponentProps<'input'>, 'type'> {
   label?: string;
   labelIcon?: ReactNode;
   status?: PasswordFieldStatus;
+  showVisibilityToggle?: boolean;
   errorMessage?: string;
   tooltipMessage?: string;
   infoMessage?: string;
@@ -26,6 +27,7 @@ interface PasswordFieldProps extends Omit<ComponentProps<'input'>, 'type'> {
 function PasswordField({
   label = 'Password',
   labelIcon = <KeyboardIcon />,
+  showVisibilityToggle = true,
   status = 'default',
   errorMessage,
   tooltipMessage,
@@ -89,7 +91,7 @@ function PasswordField({
           id={passwordInputId}
           placeholder={placeholder}
         />
-        {status !== 'default' &&
+        {showVisibilityToggle &&
           <button className='toggle-password-button' type='button' onClick={togglePasswordVisibility}>
             {isPasswordVisible ? (
               <EyeCrossedIcon aria-label='Hide password' />
