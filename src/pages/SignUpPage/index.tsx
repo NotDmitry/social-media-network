@@ -36,7 +36,7 @@ function SignUpPage() {
       <p className='auth-page-text'>
         Already have an account? <Link className='auth-page-link' to={ROUTES.signIn}>Sign in</Link>
       </p>
-    </div >
+    </div>
   );
 }
 

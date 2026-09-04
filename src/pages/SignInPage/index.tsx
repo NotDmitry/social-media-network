@@ -16,7 +16,7 @@ function SignInPage() {
       <p className='auth-page-text'>
         Forgot to create an account? <Link className='auth-page-link' to={ROUTES.signUp}>Sign up</Link>
       </p>
-    </div >
+    </div>
   );
 }
 
