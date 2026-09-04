@@ -90,7 +90,7 @@ function PasswordField({
           placeholder={placeholder}
         />
         {status !== 'default' &&
-          <button className='toggle-password-button' onClick={togglePasswordVisibility}>
+          <button className='toggle-password-button' type='button' onClick={togglePasswordVisibility}>
             {isPasswordVisible ? (
               <EyeCrossedIcon aria-label='Hide password' />
             ) : (
