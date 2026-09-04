@@ -8,6 +8,7 @@
   --color-brand-primary-50: #f2edff;
   --color-brand-primary-500: #7a44ff;
   --color-brand-primary-600: #6236cc;
+  --color-brand-primary-800: #301c66;
   --color-neutral-white: #fff;
   --color-neutral-gray-soft-25: #fafafa;
   --color-neutral-gray-soft-50: #f0f1f3;
@@ -15,13 +16,21 @@
   --color-neutral-gray-soft-500: #667085;
   --color-neutral-gray-strong-25: #bcc3e3;
   --color-neutral-gray-strong-50: #9da6cb;
+  --color-neutral-gray-strong-100: #8791B7;
+  --color-neutral-gray-strong-200: #6A749C;
+  --color-neutral-gray-strong-300: #475175;
+  --color-neutral-gray-strong-400: #384162;
+  --color-neutral-gray-strong-500: #2F3757;
+  --color-neutral-gray-strong-600: #242A46;
   --color-neutral-gray-strong-700: #1b2037;
   --color-neutral-gray-strong-800: #151a2d;
+  --color-neutral-gray-strong-900: #0E1223;
   --color-feedback-negative-600: #ea483d;
   --color-feedback-positive-500: #f81;
   --color-feedback-positive-600: #08b94e;
 
   /* Colors by place */
+  --background-fill-middle: var(--color-neutral-white);
   --background-fill-surface: var(--color-neutral-gray-soft-25);
   --component-fill-dark-soft: var(--color-neutral-gray-soft-50);
   --component-fill-disabled: var(--color-neutral-gray-strong-25);
@@ -40,5 +49,28 @@
   --component-text-gray: var(--color-neutral-gray-soft-500);
   --component-text-positive: var(--color-feedback-positive-500);
   --icon-dark: var(--color-neutral-gray-strong-800);
+  --typography-body-light: var(--color-neutral-white);
+}
+
+:root[data-theme='dark'] {
+  --background-fill-middle: var(--color-neutral-gray-strong-700);
+  --background-fill-surface: var(--color-neutral-gray-strong-900);
+  --component-fill-dark-soft: var(--color-neutral-gray-strong-900);
+  --component-fill-disabled: var(--color-neutral-gray-strong-700);
+  --component-fill-light: var(--color-neutral-gray-strong-800);
+  --component-fill-positive: var(--color-feedback-positive-500);
+  --component-fill-primary-soft: var(--color-brand-primary-25);
+  --component-fill-reversed: var(--color-neutral-white);
+  --component-hover-positive: var(--color-feedback-positive-600);
+  --component-hover-primary: var(--color-brand-primary-600);
+  --component-hover-primary-soft: var(--color-brand-primary-800);
+  --component-stroke-dark-soft: var(--color-neutral-gray-strong-400);
+  --component-stroke-disabled: var(--color-neutral-gray-strong-600);
+  --component-stroke-primary: var(--color-brand-primary-500);
+  --component-text-dark: var(--color-neutral-white);
+  --component-text-disabled: var(--color-neutral-gray-strong-400);
+  --component-text-gray: var(--color-neutral-gray-strong-100);
+  --component-text-positive: var(--color-feedback-positive-500);
+  --icon-dark: var(--color-neutral-white);
   --typography-body-light: var(--color-neutral-white);
 }

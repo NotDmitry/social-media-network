@@ -1,6 +1,11 @@
 @import './modern-normalize.css';
 @import './variables.css';
 
+body {
+  background-color: var(--background-fill-middle);
+  transition: background-color 0.2s ease;
+}
+
 /* Navigation links */
 .link {
   display: flex;
