@@ -50,6 +50,7 @@ function SignInForm() {
           placeholder='Enter password'
           status='default'
           value={formFields.password}
+          showVisibilityToggle={formFields.password.length > 0}
         />
       </fieldset>
       <Button type='submit'>Sign In</Button>

@@ -62,6 +62,7 @@ function SignUpForm() {
           placeholder='Enter password'
           status='default'
           value={formFields.password}
+          showVisibilityToggle={formFields.password.length > 0}
         />
         <PasswordField
           label='Repeat password'
@@ -71,6 +72,7 @@ function SignUpForm() {
           placeholder='Enter password again'
           status='default'
           value={formFields.repeatPassword}
+          showVisibilityToggle={formFields.repeatPassword.length > 0}
         />
       </fieldset>
       <Button type='submit'>Sign Up</Button>
