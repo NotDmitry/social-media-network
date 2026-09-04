@@ -24,6 +24,7 @@ function getCurrentUserFromStorage(): UserModel | null {
     return currentUser;
   } catch (error) {
     console.error(error);
+    
     return null;
   }
 }
