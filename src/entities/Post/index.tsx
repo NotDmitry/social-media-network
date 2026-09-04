@@ -6,19 +6,19 @@ import type { PostModel } from './types';
 import type { CommentModel } from '@entities/Comment/types';
 import type { UserModel } from '@entities/User/types';
 import { getRelativeTimePresentationString } from '@shared/utilities/time';
+import { useAuth } from '@/entities/auth/useAuth';
 
 interface PostProps {
   post: PostModel;
   comments: CommentModel[];
   author: UserModel;
-  authenticatedUserId: string;
 }
 
-function Post({ post, comments, author, authenticatedUserId }: PostProps) {
+function Post({ post, comments, author }: PostProps) {
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
-  const isAuthenticated = authenticatedUserId.length > 0;
+  const { currentUser, isUserAuthenticated } = useAuth();
 
   const commentsButtonLabel = `${String(comments.length)} ${comments.length === 1 ? 'comment' : 'comments'}`;
 
@@ -74,7 +74,7 @@ function Post({ post, comments, author, authenticatedUserId }: PostProps) {
         <li>
           <button
             className='post-menu-button'
-            disabled={!isAuthenticated}
+            disabled={!isUserAuthenticated}
             aria-label='Open / close comments section'
             onClick={toggleCommentsSection}
           >
@@ -82,9 +82,9 @@ function Post({ post, comments, author, authenticatedUserId }: PostProps) {
               <path d='M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z' strokeWidth='2' strokeLinecap='round' strokeLinejoin='round' />
             </svg>
             <span className='post-menu-label'>
-              {isAuthenticated ? commentsButtonLabel : 'You have to login to see the comments'}
+              {isUserAuthenticated ? commentsButtonLabel : 'You have to login to see the comments'}
             </span>
-            {isAuthenticated &&
+            {isUserAuthenticated &&
               <svg className={`chevron-icon ${isCommentsOpen ? 'chevron-icon_open' : ''}`} width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                 <path d='M19.0611 7.85374C18.9218 7.71435 18.7564 7.60378 18.5744 7.52834C18.3923 7.45289 18.1972 7.41406 18.0001 7.41406C17.8031 7.41406 17.6079 7.45289 17.4259 7.52834C17.2438 7.60378 17.0784 7.71435 16.9391 7.85374L12.3531 12.4387C12.2594 12.5325 12.1322 12.5851 11.9996 12.5851C11.867 12.5851 11.7399 12.5325 11.6461 12.4387L7.06113 7.85374C6.77986 7.57235 6.39834 7.41421 6.00048 7.41411C5.60262 7.41402 5.22102 7.57198 4.93963 7.85324C4.65823 8.1345 4.50009 8.51603 4.5 8.91389C4.49991 9.31175 4.65786 9.69335 4.93913 9.97474L9.52513 14.5607C9.85014 14.8858 10.236 15.1436 10.6607 15.3195C11.0853 15.4955 11.5405 15.586 12.0001 15.586C12.4598 15.586 12.9149 15.4955 13.3396 15.3195C13.7643 15.1436 14.1501 14.8858 14.4751 14.5607L19.0611 9.97474C19.3423 9.69345 19.5003 9.31199 19.5003 8.91424C19.5003 8.5165 19.3423 8.13503 19.0611 7.85374Z' stroke='none' />
               </svg>
@@ -99,14 +99,14 @@ function Post({ post, comments, author, authenticatedUserId }: PostProps) {
             <li key={comment.id}>
               <Comment
                 text={comment.content}
-                canDelete={comment.authorId === authenticatedUserId}
+                canDelete={comment.authorId === currentUser?.id}
               />
             </li>
           ))}
         </ol>
       }
 
-      {isAuthenticated && <CreateCommentForm />}
+      {isUserAuthenticated && <CreateCommentForm />}
     </article>
   );
 }

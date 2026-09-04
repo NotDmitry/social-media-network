@@ -1,8 +1,11 @@
-import AppRouter from "@app/AppRouter";
+import AppRouter from '@app/AppRouter';
+import AuthContextProvider from '@/entities/auth/AuthContextProvider';
 
 function App() {
   return (
-    <AppRouter />
+    <AuthContextProvider>
+      <AppRouter />
+    </AuthContextProvider>
   )
 }
 

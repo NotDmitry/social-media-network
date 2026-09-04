@@ -3,13 +3,11 @@ import Post from '@entities/Post';
 import './style.css';
 import { MOCK_POSTS } from '@entities/Post/mocks';
 import { MOCK_COMMENTS } from '@entities/Comment/mocks';
-import { getAuthUserMock, MOCK_USERS } from '@entities/User/mocks';
+import { MOCK_USERS } from '@entities/User/mocks';
 
 function PostsFeed() {
   const [posts] = useState(MOCK_POSTS);
   const [comments] = useState(MOCK_COMMENTS);
-
-  const authenticatedUser = getAuthUserMock();
 
   return (
     <div className='posts-feed'>
@@ -28,7 +26,6 @@ function PostsFeed() {
             post={post}
             comments={postComments}
             author={author}
-            authenticatedUserId={authenticatedUser.id}
           />
         );
       })}

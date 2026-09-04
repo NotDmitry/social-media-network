@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router';
 import { ROUTES } from '@app/routes';
 import Layout from '@app/Layout';
 import PrivateRoutes from '@app/PrivateRoutes';
-import { useAuthMock } from '@shared/mocks/useAuthMock';
+import { useAuth } from '@/entities/auth/useAuth';
 
 import HomePage from '@pages/HomePage';
 import SignInPage from '@pages/SingInPage';
@@ -12,12 +12,12 @@ import ErrorPage from '@pages/ErrorPage';
 import NotFoundPage from '@pages/NotFoundPage';
 
 function AppRouter() {
-  const isAuthenticated = useAuthMock();
+  const { isUserAuthenticated } = useAuth();
 
   return (
     <Routes>
 
-      <Route element={<Layout headerVariant={isAuthenticated ? 'user' : 'guest'} />}>
+      <Route element={<Layout headerVariant={isUserAuthenticated ? 'user' : 'guest'} />}>
         <Route path={ROUTES.home} element={<HomePage />} />
       </Route>
 
