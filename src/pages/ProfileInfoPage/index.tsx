@@ -16,6 +16,7 @@ function ProfileInfoPage() {
 
   return (
     <div className='profile-info-page-container'>
+      <h1 className='visually-hidden'>Profile info page</h1>
       <section className='profile-info-edit-section profile-info-section'>
         <h2 className='profile-info-title'>Edit profile</h2>
         <EditProfileForm user={authenticatedUser} />

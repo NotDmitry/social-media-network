@@ -51,7 +51,7 @@ function EditProfileForm({ user }: EditProfileFormProps) {
           Change profile photo
           <input
             accept='image/*'
-            className='change-avatar-file-input'
+            className='visually-hidden'
             type='file'
             name='avatar'
             onChange={handleAvatarChange}

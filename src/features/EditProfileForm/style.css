@@ -38,7 +38,6 @@
 .change-avatar-label {
   grid-column: 2;
   grid-row: 2;
-  position: relative;
   font-weight: 400;
   color: var(--component-text-gray);
   cursor: pointer;
@@ -53,13 +52,4 @@
 .change-avatar-label:has(:focus-visible) {
   outline: 2px solid var(--component-stroke-primary);
   outline-offset: 2px;
-}
-
-.change-avatar-file-input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
 }
