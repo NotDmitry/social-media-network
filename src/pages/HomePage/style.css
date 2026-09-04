@@ -20,8 +20,9 @@
 
 .create-post-input {
   flex: 1;
-  background: transparent;
+  min-width: 0;
   border: none;
+  background: transparent;
   color: var(--component-text-dark);
   font-family: var(--font-family);
   font-size: 0.875rem;
@@ -35,5 +36,61 @@
 
   &::placeholder {
     color: var(--component-text-dark);
+  }
+}
+
+.home-page-container {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(min-content, 700px) minmax(min-content, 1fr);
+  align-items: start;
+  gap: clamp(50px, 5.5vw, 85px);
+  padding: 24px;
+}
+
+.home-page-content {
+  grid-column: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.home-page-suggested {
+  grid-column: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+@media screen and (width < 900px) {
+  .home-page-container {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .home-page-content,
+  .home-page-suggested {
+    grid-column: 1;
+    width: min(100%, 700px);
+  }
+}
+
+@media screen and (width < 480px) {
+  .home-page-container {
+    padding: 0;
+  }
+
+  .home-page-content {
+    gap: 0;
+  }
+
+  .create-post-container {
+    border-bottom: none;
+  }
+}
+
+@media screen and (width < 375px) {
+  .create-post-input-section {
+    flex-direction: column;
+    gap: 8px;
   }
 }
