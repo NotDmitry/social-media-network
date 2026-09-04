@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useTheme } from '@features/theme/useTheme';
+import type { ThemeVariant } from '@features/theme/types';
 import { getAuthUserMock } from '@entities/User/mocks';
 import EditProfileForm from '@features/EditProfileForm';
 import ToggleSwitch from '@shared/ui/ToggleSwitch';
@@ -6,12 +7,13 @@ import Button from '@shared/ui/Button';
 import './style.css';
 
 function ProfileInfoPage() {
-  const [isDarkThemeEnabled, setIsDarkThemeEnabled] = useState<boolean>(false);
+  const { theme, setTheme } = useTheme();
 
   const authenticatedUser = getAuthUserMock();
 
-  function toggleDarkTheme(isToggled: boolean) {
-    setIsDarkThemeEnabled(isToggled);
+  function toggleDarkTheme(isDarkThemeSelected: boolean) {
+    const newTheme: ThemeVariant = isDarkThemeSelected ? 'dark' : 'light';
+    setTheme(newTheme);
   }
 
   return (
@@ -28,7 +30,7 @@ function ProfileInfoPage() {
           <div className='dark-theme-switch-container'>
             <ToggleSwitch
               ariaLabel='Switch dark mode theme'
-              isToggled={isDarkThemeEnabled}
+              isToggled={theme === 'dark'}
               onToggle={toggleDarkTheme}
             />
             <span className='dark-theme-switch-label'>Dark theme</span>
