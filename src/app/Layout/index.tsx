@@ -11,7 +11,7 @@ interface LayoutProps {
 function Layout({ headerVariant }: LayoutProps) {
   return (
     <div className='layout-wrapper'>
-      <Header variant={headerVariant}></Header>
+      <Header variant={headerVariant} />
       <main className='layout-main'>
         <Outlet />
       </main>
