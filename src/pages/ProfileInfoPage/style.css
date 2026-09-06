@@ -18,6 +18,11 @@
   gap: clamp(12px, 3vw, 32px);
 }
 
+.profile-info-edit-section {
+  width: 100%;
+  min-width: 0;
+}
+
 .profile-info-title {
   margin: 0;
   color: var(--component-text-dark);
@@ -27,7 +32,7 @@
   line-height: 150%;
 }
 
-@media screen and (width <=480px) {
+@media screen and (width <= 480px) {
   .profile-info-page-container {
     grid-template-columns: 1fr;
     gap: 36px;

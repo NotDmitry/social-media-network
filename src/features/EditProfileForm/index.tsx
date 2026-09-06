@@ -46,17 +46,19 @@ function EditProfileForm({ user }: EditProfileFormProps) {
           width={64}
           height={64}
         />
-        <p className='change-avatar-user'>{user.fullName}</p>
-        <label className='change-avatar-label'>
-          Change profile photo
-          <input
-            accept='image/*'
-            className='visually-hidden'
-            type='file'
-            name='avatar'
-            onChange={handleAvatarChange}
-          />
-        </label>
+        <div className='change-avatar-text-wrapper'>
+          <p className='change-avatar-user'>{user.fullName}</p>
+          <label className='change-avatar-label'>
+            <input
+              accept='image/*'
+              className='visually-hidden'
+              type='file'
+              name='avatar'
+              onChange={handleAvatarChange}
+            />
+            Change profile photo
+          </label>
+        </div>
       </div>
 
       <p>Username input placeholder</p>

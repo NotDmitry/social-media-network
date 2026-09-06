@@ -7,14 +7,19 @@
 }
 
 .change-avatar-container {
-  display: grid;
-  grid-template-columns: auto 1fr;
+  display: flex;
+  width: 100%;
   align-items: center;
-  column-gap: 24px;
+  gap: 24px;
+}
+
+.change-avatar-text-wrapper {
+  flex: 1;
+  min-width: 0;
 }
 
 .change-avatar-photo {
-  grid-row: 1 / 3;
+  flex-shrink: 0;
 }
 
 .change-avatar-user,
@@ -28,16 +33,14 @@
 }
 
 .change-avatar-user {
-  grid-column: 2;
-  grid-row: 1;
   margin: 0;
   font-weight: 500;
   color: var(--component-text-dark);
 }
 
 .change-avatar-label {
-  grid-column: 2;
-  grid-row: 2;
+  position: relative;
+  display: block;
   font-weight: 400;
   color: var(--component-text-gray);
   cursor: pointer;
