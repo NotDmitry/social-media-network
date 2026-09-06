@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-function ProfileStatisticsPage() {
-  return <div>Profile Statistics Page</div>;
-=======
 import { useState } from 'react';
 import ToggleSwitch from '@shared/ui/ToggleSwitch';
 import StatsCard from './StatsCard';
@@ -66,7 +62,6 @@ function ProfileStatisticsPage() {
       </div>
     </div>
   );
->>>>>>> 6965cad (feat: add basic ProfileStatisticsPage layout and styles)
 }
 
 export default ProfileStatisticsPage;
