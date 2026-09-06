@@ -9,19 +9,31 @@ interface EditProfileFormProps {
 
 function EditProfileForm({ user }: EditProfileFormProps) {
   const [selectedAvatarUrl, setSelectedAvatarUrl] = useState<string | null>(null);
+  const [selectedAvatarErrorMessage, setSelectedAvatarErrorMessage] = useState<string | null>(null);
 
   function submitForm(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
   }
 
   function handleAvatarChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
+    const fileInput = event.currentTarget;
+    const file = fileInput.files?.[0];
 
-    if (!file?.type.startsWith('image')) {
+    if (!file) {
+      setSelectedAvatarUrl(null);
+      setSelectedAvatarErrorMessage(null);
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      fileInput.value = '';
+      setSelectedAvatarUrl(null);
+      setSelectedAvatarErrorMessage('Non-image file detected');
       return;
     }
 
     const newAvatarUrl = URL.createObjectURL(file);
+    setSelectedAvatarErrorMessage(null);
     setSelectedAvatarUrl(newAvatarUrl);
   }
 
@@ -58,6 +70,11 @@ function EditProfileForm({ user }: EditProfileFormProps) {
             />
             Change profile photo
           </label>
+          {selectedAvatarErrorMessage &&
+            <p className='change-avatar-error'>
+              {selectedAvatarErrorMessage}
+            </p>
+          }
         </div>
       </div>
 
