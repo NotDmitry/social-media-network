@@ -4,6 +4,7 @@ import { ROUTES } from '@app/routes';
 import { Link } from 'react-router';
 import Logo from '@shared/ui/Logo';
 import BurgerIcon from '@shared/ui/BurgerIcon';
+import DrawerNavigation from './DrawerNavigation';
 import './style.css';
 import { getAuthUserMock } from '@entities/User/mocks';
 
@@ -15,6 +16,14 @@ function Header({ variant }: HeaderProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const authenticatedUser = getAuthUserMock();
+
+  function onDrawerOpen() {
+    setIsDrawerOpen(true);
+  }
+
+  function onDrawerClose() {
+    setIsDrawerOpen(false);
+  }
 
   return (
     <header className='header'>
@@ -48,10 +57,15 @@ function Header({ variant }: HeaderProps) {
             className='header-menu-button'
             type='button'
             aria-label='Open mobile navigation'
-            onClick={() => { setIsDrawerOpen((isOpen) => !isOpen) }}
+            onClick={() => { onDrawerOpen() }}
           >
             <BurgerIcon isOpen={isDrawerOpen} />
           </button>
+          <DrawerNavigation
+            isOpen={isDrawerOpen}
+            variant={variant}
+            onClose={() => { onDrawerClose() }}
+          />
         </>
       }
     </header>

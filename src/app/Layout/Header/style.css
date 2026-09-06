@@ -31,7 +31,7 @@
   }
 }
 
-@media (width < 480px) {
+@media screen and (width < 480px) {
   .header-menu-button {
     display: flex;
   }
