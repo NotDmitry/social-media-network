@@ -18,7 +18,7 @@ function ProfileStatisticsPage() {
       <div className='profile-statistics-cards-wrapper'>
         {CARDS_DATA.map((cardData) => (
           <StatsCard
-            key={cardData.title}
+            key={cardData.id}
             title={cardData.title}
             data={cardData.data}
             trendText={cardData.trendText}
