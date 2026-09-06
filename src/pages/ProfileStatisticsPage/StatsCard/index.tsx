@@ -7,15 +7,17 @@ export interface StatsCardProps {
 }
 
 function StatsCard({
-  title = 'title',
-  data = '99,999.90',
-  trendText = '+99% month over month'
+  title = 'Card title',
+  data = 'unspecified data',
+  trendText,
 }: StatsCardProps) {
   return (
     <article className='stats-card-container'>
       <h3 className='stats-card-title'>{title}</h3>
       <p className='stats-card-data'>{data}</p>
-      <p className='stats-card-trend'>{trendText}</p>
+      {trendText &&
+        <p className='stats-card-trend'>{trendText}</p>
+      }
     </article>
   );
 }
