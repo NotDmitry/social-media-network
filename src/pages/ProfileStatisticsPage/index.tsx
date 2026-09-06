@@ -15,7 +15,9 @@ function ProfileStatisticsPage() {
 
   return (
     <div className='profile-statistics-page-container'>
-      <div className='profile-statistics-cards-wrapper'>
+      <h1 className='visually-hidden'>Profile statistics page</h1>
+      <section className='profile-statistics-cards-wrapper'>
+        <h2 className='visually-hidden'>Statistics cards view</h2>
         {CARDS_DATA.map((cardData) => (
           <StatsCard
             key={cardData.id}
@@ -24,7 +26,7 @@ function ProfileStatisticsPage() {
             trendText={cardData.trendText}
           />
         ))}
-      </div>
+      </section>
       {/* TODO: Switch label */}
       <div className='chart-view-switch-container'>
         <ToggleSwitch
