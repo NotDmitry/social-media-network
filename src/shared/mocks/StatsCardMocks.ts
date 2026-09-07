@@ -1,4 +1,4 @@
-import type { StatsCardProps } from './index';
+import type { StatsCardProps } from '@pages/ProfileStatisticsPage/StatsCard';
 
 interface CardsData extends StatsCardProps {
   id: string;

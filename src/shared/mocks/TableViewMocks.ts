@@ -1,4 +1,4 @@
-import type { TableViewProps } from "./index";
+import type { TableViewProps } from "@pages/ProfileStatisticsPage/TableView";
 
 export const TABLE_DATA: TableViewProps = {
   caption: 'Title',
