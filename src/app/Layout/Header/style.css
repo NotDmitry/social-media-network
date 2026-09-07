@@ -13,3 +13,30 @@
   align-items: center;
   gap: 24px;
 }
+
+.header-menu-button {
+  display: none;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--icon-dark);
+  cursor: pointer;
+  transition: all 0.25s ease-in-out;
+
+  &:hover {
+    background-color: var(--component-fill-primary-soft);
+  }
+}
+
+@media screen and (width < 480px) {
+  .header-menu-button {
+    display: flex;
+  }
+
+  .nav-panel {
+    display: none;
+  }
+}

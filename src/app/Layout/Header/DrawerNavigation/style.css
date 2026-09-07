@@ -1,0 +1,87 @@
+html:has(.drawer-navigation-dialog[open]),
+body:has(.drawer-navigation-dialog[open]) {
+  overflow: hidden;
+}
+
+.drawer-navigation-dialog {
+  position: fixed;
+  inset: 0 0 0 auto;
+  max-width: none;
+  max-height: none;
+  width: 75vw;
+  height: 100dvh;
+  padding: 0;
+  border: none;
+  border-left: 2px solid var(--component-stroke-dark-soft);
+  background-color: var(--background-fill-middle);
+  color: var(--component-text-dark);
+  transition: all 0.25s ease-in-out;
+
+  &::backdrop {
+    backdrop-filter: blur(20px);
+    background: rgba(27, 32, 55, 0.5);
+    transition: all 0.25s ease-in-out;
+  }
+}
+
+.drawer-navigation-dialog[open] {
+  transform: translateX(0);
+
+  &::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    transform: translateX(100%);
+
+    &::backdrop {
+      opacity: 0;
+    }
+  }
+}
+
+.drawer-navigation-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 100%;
+}
+
+.drawer-navigation-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 12px;
+  background-color: var(--background-fill-surface);
+}
+
+.drawer-navigation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-inline: 12px;
+}
+
+.drawer-navigation-link {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background-color: var(--background-fill-surface);
+  color: var(--component-text-gray);
+  font-family: var(--font-family);
+  font-size: clamp(1rem, 5vw, 1.125rem);
+  font-weight: 400;
+  line-height: 156%;
+  text-decoration: none;
+  transition: color 0.25s ease-in-out, background-color 0.25s ease-in-out;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:hover,
+  &.active {
+    background-color: var(--component-fill-primary-soft);
+    color: var(--component-text-dark)
+  }
+}

@@ -1,0 +1,35 @@
+.profile-layout-wrapper {
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(12px, 3vw, 24px);
+}
+
+.profile-layout-navigation {
+  display: flex;
+  height: 40px;
+  padding: 4px;
+  background-color: var(--background-fill-surface);
+}
+
+.profile-layout-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 12px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  font-family: var(--second-family);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 150%;
+  color: var(--component-text-dark);
+  text-decoration: none;
+  transition: all 0.25s ease-in-out;
+
+  &.active {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+    background-color: var(--color-feedback-positive-500);
+    color: var(--color-neutral-white);
+  }
+}

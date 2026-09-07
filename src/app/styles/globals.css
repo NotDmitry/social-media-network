@@ -1,6 +1,22 @@
 @import './modern-normalize.css';
 @import './variables.css';
 
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  border: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+body {
+  background-color: var(--background-fill-middle);
+  transition: background-color 0.2s ease;
+}
+
 /* Navigation links */
 .link {
   display: flex;
