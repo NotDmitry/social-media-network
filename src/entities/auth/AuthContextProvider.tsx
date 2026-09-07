@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { AuthContext } from './context';
-import type { SignInPayload, SignUpPayload } from './types';
+import type { SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
 import { isUserModel, type UserModel } from '@entities/User/types';
 import { getAuthUserMock } from '@entities/User/mocks';
 
@@ -24,7 +24,7 @@ function getCurrentUserFromStorage(): UserModel | null {
     return currentUser;
   } catch (error) {
     console.error(error);
-    
+
     return null;
   }
 }
@@ -65,13 +65,25 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
     updateCurrentUser(null);
   }
 
+  function updateProfile(updatedFields: UpdateProfilePayload) {
+    if (currentUser === null) {
+      return;
+    }
+
+    updateCurrentUser({
+      ...currentUser,
+      ...updatedFields,
+    });
+  }
+
   return (
     <AuthContext value={{
       currentUser,
       isUserAuthenticated: currentUser !== null,
       signIn,
       signUp,
-      signOut
+      signOut,
+      updateProfile,
     }}>
       {children}
     </AuthContext>
