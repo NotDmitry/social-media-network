@@ -1,19 +1,30 @@
+import { useNavigate } from 'react-router';
 import { useTheme } from '@features/theme/useTheme';
+import { useAuth } from '@entities/auth/useAuth';
 import type { ThemeVariant } from '@features/theme/types';
-import { getAuthUserMock } from '@entities/User/mocks';
-import EditProfileForm from '@features/EditProfileForm';
+import UpdateProfileForm from '@/features/UpdateProfileForm';
 import ToggleSwitch from '@shared/ui/ToggleSwitch';
 import Button from '@shared/ui/Button';
+import { ROUTES } from '@app/routes';
 import './style.css';
 
 function ProfileInfoPage() {
+  const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
+  const { currentUser, signOut } = useAuth();
 
-  const authenticatedUser = getAuthUserMock();
+  function logout() {
+    signOut();
+    void navigate(ROUTES.signIn);
+  }
 
   function toggleDarkTheme(isDarkThemeSelected: boolean) {
     const newTheme: ThemeVariant = isDarkThemeSelected ? 'dark' : 'light';
     setTheme(newTheme);
+  }
+
+  if (currentUser === null) {
+    return null;
   }
 
   return (
@@ -21,7 +32,7 @@ function ProfileInfoPage() {
       <h1 className='visually-hidden'>Profile info page</h1>
       <section className='profile-info-edit-section profile-info-section'>
         <h2 className='profile-info-title'>Edit profile</h2>
-        <EditProfileForm user={authenticatedUser} />
+        <UpdateProfileForm user={currentUser} />
       </section>
 
       <div className='profile-info-side-container'>
@@ -39,7 +50,7 @@ function ProfileInfoPage() {
         </section>
         <section className='profile-info-actions-section profile-info-section'>
           <h2 className='profile-info-title'>Actions</h2>
-          <Button type='button'>Logout</Button>
+          <Button type='button' onClick={logout}>Logout</Button>
         </section>
       </div>
     </div>
