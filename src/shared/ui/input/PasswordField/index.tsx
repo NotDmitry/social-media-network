@@ -92,12 +92,13 @@ function PasswordField({
           placeholder={placeholder}
         />
         {showVisibilityToggle &&
-          <button className='toggle-password-button' type='button' onClick={togglePasswordVisibility}>
-            {isPasswordVisible ? (
-              <EyeCrossedIcon aria-label='Hide password' />
-            ) : (
-              <EyeIcon aria-label='Show password' />
-            )}
+          <button
+            className='toggle-password-button'
+            type='button'
+            onClick={togglePasswordVisibility}
+            aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
+          >
+            {isPasswordVisible ? <EyeCrossedIcon /> : <EyeIcon />}
           </button>
         }
       </div>
