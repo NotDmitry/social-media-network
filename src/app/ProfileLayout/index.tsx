@@ -10,7 +10,9 @@ function ProfileLayout() {
         <NavLink className={'profile-layout-link'} to={ROUTES.statistics}>Statistics</NavLink>
       </nav>
 
-      <Outlet />
+      <div className='profile-layout-content'>
+        <Outlet />
+      </div>
     </div>
   );
 }
