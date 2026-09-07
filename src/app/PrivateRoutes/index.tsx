@@ -1,11 +1,11 @@
 import { Navigate, Outlet } from 'react-router';
 import { ROUTES } from '@app/routes';
-import { useAuthMock } from '@shared/mocks/useAuthMock';
+import { useAuth } from '@/entities/auth/useAuth';
 
 function PrivateRoutes() {
-  const isAuthenticated = useAuthMock();
+  const { isUserAuthenticated } = useAuth();
 
-  return isAuthenticated ? <Outlet /> : <Navigate to={ROUTES.signIn} replace />;
+  return isUserAuthenticated ? <Outlet /> : <Navigate to={ROUTES.signIn} replace />;
 }
 
 export default PrivateRoutes;
