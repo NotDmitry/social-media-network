@@ -3,7 +3,6 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 50px;
   justify-items: start;
-  padding: 12px;
 }
 
 .profile-info-side-container {
@@ -21,6 +20,10 @@
 .profile-info-edit-section {
   width: 100%;
   min-width: 0;
+
+  & .input-field-wrapper:has(input) {
+    max-width: 327px;
+  }
 }
 
 .profile-info-title {
@@ -32,7 +35,7 @@
   line-height: 150%;
 }
 
-@media screen and (width <= 480px) {
+@media screen and (width < 480px) {
   .profile-info-page-container {
     grid-template-columns: 1fr;
     gap: 36px;
@@ -43,8 +46,12 @@
     grid-row: 1;
   }
 
-  .profile-info-section {
+  .profile-info-edit-section {
     grid-row: 2;
+
+    & .input-field-wrapper:has(input) {
+      max-width: 100%;
+    }
   }
 }
 

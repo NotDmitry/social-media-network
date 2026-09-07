@@ -130,40 +130,37 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
           }
         </div>
       </div>
-
-      <fieldset className='auth-form-fieldset'>
-        <TextField
-          label='Username'
-          labelIcon={<PersonIcon />}
-          name='username'
-          onChange={(event) => { changeFieldValue('username', event) }}
-          placeholder='@username123'
-          status='default'
-          type='text'
-          value={formFields.username}
-        />
-        <TextField
-          label='Email'
-          labelIcon={<EnvelopeIcon />}
-          name='email'
-          onChange={(event) => { changeFieldValue('email', event) }}
-          placeholder='email@domain.com'
-          status='default'
-          type='email'
-          value={formFields.email}
-        />
-        <TextareaField
-          label='Description'
-          labelIcon={<PencilIcon />}
-          name='description'
-          onChange={(event) => { changeFieldValue('description', event) }}
-          placeholder='Write description here...'
-          status='default'
-          maxLength={200}
-          rows={1}
-          value={formFields.description}
-        />
-      </fieldset>
+      <TextField
+        label='Username'
+        labelIcon={<PersonIcon />}
+        name='username'
+        onChange={(event) => { changeFieldValue('username', event) }}
+        placeholder='@username123'
+        status='default'
+        type='text'
+        value={formFields.username}
+      />
+      <TextField
+        label='Email'
+        labelIcon={<EnvelopeIcon />}
+        name='email'
+        onChange={(event) => { changeFieldValue('email', event) }}
+        placeholder='email@domain.com'
+        status='default'
+        type='email'
+        value={formFields.email}
+      />
+      <TextareaField
+        label='Description'
+        labelIcon={<PencilIcon />}
+        name='description'
+        onChange={(event) => { changeFieldValue('description', event) }}
+        placeholder='Write description here...'
+        status='default'
+        maxLength={200}
+        rows={1}
+        value={formFields.description}
+      />
       <Button type='submit'>Save Profile Changes</Button>
     </form>
   );
