@@ -1,26 +1,33 @@
 import { useState } from 'react';
+import { useAuth } from '@entities/auth/useAuth';
+import type { SignInPayload } from '@entities/auth/types';
 import TextField from '@shared/ui/input/TextField';
 import PasswordField from '@shared/ui/input/PasswordField';
 import Button from '@shared/ui/Button';
 import { EnvelopeIcon, EyeIcon } from '@shared/icons';
 
-const INITIAL_FORM_FIELDS = {
+const INITIAL_FORM_FIELDS: SignInPayload = {
   email: '',
   password: '',
 }
 
-type SignInFormFields = typeof INITIAL_FORM_FIELDS;
+interface SignInFormProps {
+  onSubmit?: () => void;
+}
 
-function SignInForm() {
+function SignInForm({ onSubmit }: SignInFormProps) {
   const [formFields, setFormFields] = useState(INITIAL_FORM_FIELDS);
 
-  function submitForm(event: React.SubmitEvent<HTMLFormElement>) {
+  const { signIn } = useAuth();
+
+  function handleFormSubmission(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    setFormFields(INITIAL_FORM_FIELDS);
+    signIn(formFields);
+    onSubmit?.();
   }
 
-  function changeFieldValue(name: keyof SignInFormFields, event: React.ChangeEvent<HTMLInputElement>) {
+  function changeFieldValue(name: keyof SignInPayload, event: React.ChangeEvent<HTMLInputElement>) {
     const value = event.currentTarget.value;
 
     setFormFields((currentFields) => ({
@@ -30,7 +37,7 @@ function SignInForm() {
   }
 
   return (
-    <form className='auth-form' onSubmit={submitForm}>
+    <form className='auth-form' onSubmit={handleFormSubmission}>
       <fieldset className='auth-form-fieldset'>
         <TextField
           label='Email'

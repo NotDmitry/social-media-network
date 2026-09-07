@@ -1,8 +1,14 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import SignInForm from '@features/SignInForm';
 import { ROUTES } from '@app/routes';
 
 function SignInPage() {
+  const navigate = useNavigate();
+
+  function openPostsFeed() {
+    void navigate(ROUTES.home);
+  }
+
   return (
     <div className='auth-page-container'>
       <div className='auth-page-title-wrapper'>
@@ -12,7 +18,7 @@ function SignInPage() {
           <span>to sign in into this app</span>
         </p>
       </div>
-      <SignInForm />
+      <SignInForm onSubmit={openPostsFeed} />
       <p className='auth-page-text'>
         Forgot to create an account? <Link className='auth-page-link' to={ROUTES.signUp}>Sign up</Link>
       </p>
