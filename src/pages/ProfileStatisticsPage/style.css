@@ -1,0 +1,64 @@
+.profile-statistics-page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1200px;
+  width: 100%;
+  padding: 12px;
+}
+
+.profile-statistics-cards-wrapper {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(12px, 3vw, 32px);
+}
+
+.chart-view-switch-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.chart-view-switch-label {
+  color: var(--component-text-dark);
+  font-family: var(--second-family);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 150%;
+}
+
+.data-views-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 50px;
+  justify-items: start;
+}
+
+.data-view-container {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 3vw, 24px);
+  width: 100%;
+}
+
+.data-view-title {
+  margin: 0;
+  color: var(--component-text-dark);
+  font-family: var(--second-family);
+  font-size: clamp(1.125rem, 4.5vw, 1.75rem);
+  font-weight: 600;
+  line-height: 150%;
+}
+
+@media screen and (width <= 480px) {
+  .profile-statistics-cards-wrapper {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media screen and (width <= 780px) {
+  .data-views-wrapper {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
