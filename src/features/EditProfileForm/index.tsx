@@ -22,6 +22,7 @@ function EditProfileForm({ user }: EditProfileFormProps) {
     if (!file) {
       setSelectedAvatarUrl(null);
       setSelectedAvatarErrorMessage(null);
+
       return;
     }
 
@@ -29,6 +30,7 @@ function EditProfileForm({ user }: EditProfileFormProps) {
       fileInput.value = '';
       setSelectedAvatarUrl(null);
       setSelectedAvatarErrorMessage('Non-image file detected');
+
       return;
     }
 
