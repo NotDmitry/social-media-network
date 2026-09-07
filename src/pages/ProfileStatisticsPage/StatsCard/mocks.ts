@@ -6,19 +6,19 @@ interface CardsData extends StatsCardProps {
 
 export const CARDS_DATA: CardsData[] = [
   {
-    id: crypto.randomUUID(),
+    id: 'card-1',
     title: 'title1',
     data: '45,678.90',
     trendText: '+20% month over month',
   },
   {
-    id: crypto.randomUUID(),
+    id: 'card-2',
     title: 'title2',
     data: '2,405',
     trendText: '+33% month over month',
   },
   {
-    id: crypto.randomUUID(),
+    id: 'card-3',
     title: 'title3',
     data: '10,353',
     trendText: '-8% month over month',
