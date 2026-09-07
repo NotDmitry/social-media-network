@@ -1,8 +1,14 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import SignUpForm from '@features/SignUpForm';
 import { ROUTES } from '@app/routes';
 
 function SignUpPage() {
+  const navigate = useNavigate();
+
+  function openPostsFeed() {
+    void navigate(ROUTES.home);
+  }
+
   return (
     <div className='auth-page-container'>
       <div className='auth-page-title-wrapper'>
@@ -12,7 +18,7 @@ function SignUpPage() {
           <span>to sign up for this app</span>
         </p>
       </div>
-      <SignUpForm />
+      <SignUpForm onSubmit={openPostsFeed} />
       <p className='auth-page-agreement-text'>
         By clicking continue, you agree to our{' '}
         <a
