@@ -11,26 +11,31 @@ import userSkyler from '@/assets/images/test_user_skyler.jpg';
 
 export const SUGGESTED_USERS_CARDS_DATA: CardData[] = [
   {
+    id: 'card-data-u1',
     pictureUrl: userJesse,
     title: 'Jesse Pinkman',
     subtitle: '@cap_cook',
   },
   {
+    id: 'card-data-u2',
     pictureUrl: userGus,
     title: 'Gustavo Fring',
     subtitle: '@chicken_man',
   },
   {
+    id: 'card-data-u3',
     pictureUrl: userHank,
     title: 'Hank Schrader',
     subtitle: '@goodcop',
   },
   {
+    id: 'card-data-u4',
     pictureUrl: userSkyler,
     title: 'Skyler White',
     subtitle: '@wife',
   },
   {
+    id: 'card-data-u5',
     pictureUrl: userJimmy,
     title: 'James McGill',
     subtitle: '@itsallgoodman',
@@ -39,16 +44,19 @@ export const SUGGESTED_USERS_CARDS_DATA: CardData[] = [
 
 export const SUGGESTED_COMMUNITIES_CARDS_DATA: CardData[] = [
   {
+    id: 'card-data-c1',
     pictureUrl: communityPollos,
     title: 'Los Pollos Hermanos',
     subtitle: '13.2k members',
   },
   {
+    id: 'card-data-c2',
     pictureUrl: communityBcs,
     title: 'Better Call Saul',
     subtitle: '2k members',
   },
   {
+    id: 'card-data-c3',
     pictureUrl: communityDea,
     title: 'DEA',
     subtitle: '125 members',

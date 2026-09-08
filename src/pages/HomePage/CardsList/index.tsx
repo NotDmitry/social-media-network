@@ -1,6 +1,7 @@
 import './style.css';
 
 export interface CardData {
+  id: string;
   pictureUrl: string;
   title: string;
   subtitle: string;
@@ -16,7 +17,7 @@ function CardsList({ title, cardsData }: CardsListProps) {
     <div className='cards-list-container'>
       <h3 className='cards-list-title'>{title}</h3>
       {cardsData.map((cardData) => (
-        <article className='cards-list-item-container' key={crypto.randomUUID()}>
+        <article className='cards-list-item-container' key={cardData.id}>
           <img
             className='avatar'
             src={cardData.pictureUrl}
