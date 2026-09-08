@@ -12,7 +12,7 @@ import './style.css';
 function ProfileStatisticsPage() {
   const [isChartViewEnabled, setIsChartViewEnabled] = useState(false);
 
-  function toggleChartView(isToggled: boolean) {
+  function handleChartViewToggle(isToggled: boolean) {
     setIsChartViewEnabled(isToggled);
   }
 
@@ -33,7 +33,7 @@ function ProfileStatisticsPage() {
       <ToggleSwitch
         label='Enable Chart view'
         isToggled={isChartViewEnabled}
-        onToggle={toggleChartView}
+        onToggle={handleChartViewToggle}
       />
       <div className='data-views-wrapper'>
         <section className='data-view-container'>

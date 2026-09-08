@@ -9,7 +9,7 @@ import './style.css';
 function CreateCommentForm() {
   const [comment, setComment] = useState('');
 
-  function handleFormSubmission(event: React.SubmitEvent<HTMLFormElement>) {
+  function handleFormSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (comment.trim() === '') {
@@ -21,8 +21,12 @@ function CreateCommentForm() {
     setComment('');
   }
 
+  function handleCommentChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
+    setComment(event.currentTarget.value);
+  }
+
   return (
-    <form className='create-comment-form' onSubmit={handleFormSubmission}>
+    <form className='create-comment-form' onSubmit={handleFormSubmit}>
       <TextareaField
         label='Add a comment'
         labelIcon={<PencilIcon />}
@@ -30,7 +34,7 @@ function CreateCommentForm() {
         maxLength={200}
         rows={1}
         value={comment}
-        onChange={(event) => { setComment(event.target.value); }}
+        onChange={handleCommentChange}
       />
       <Button type='submit'>Add a comment</Button>
     </form>

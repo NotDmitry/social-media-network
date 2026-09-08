@@ -25,7 +25,7 @@ function DrawerNavigation({ variant, isOpen, onClose }: DrawerNavigationProps) {
 
   const { currentUser } = useAuth();
 
-  function handleNavigationClose(event: React.MouseEvent<HTMLDialogElement>) {
+  function handleBackdropClick(event: React.MouseEvent<HTMLDialogElement>) {
     if (event.target === event.currentTarget) {
       onClose();
     }
@@ -47,16 +47,16 @@ function DrawerNavigation({ variant, isOpen, onClose }: DrawerNavigationProps) {
     const windowResizeMediaQuery = window.matchMedia('screen and (width >= 480px)');
     const dialogElement = dialogElementRef.current;
 
-    const handleWindowResize = () => {
+    const handleMobileBreakpointChange = () => {
       if (windowResizeMediaQuery.matches) {
         dialogElement?.close();
       }
     }
 
-    windowResizeMediaQuery.addEventListener('change', handleWindowResize);
+    windowResizeMediaQuery.addEventListener('change', handleMobileBreakpointChange);
 
     return () => {
-      windowResizeMediaQuery.removeEventListener('change', handleWindowResize);
+      windowResizeMediaQuery.removeEventListener('change', handleMobileBreakpointChange);
     };
   }, []);
 
@@ -65,7 +65,7 @@ function DrawerNavigation({ variant, isOpen, onClose }: DrawerNavigationProps) {
       className='drawer-navigation-dialog'
       ref={dialogElementRef}
       onClose={onClose}
-      onClick={handleNavigationClose}
+      onClick={handleBackdropClick}
     >
       <div className='drawer-navigation-wrapper'>
         <header className='drawer-navigation-header'>

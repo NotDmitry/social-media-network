@@ -66,7 +66,7 @@ function PasswordField({
     validationClassName = `${validationClassName} input-field-validation_valid`;
   }
 
-  function togglePasswordVisibility() {
+  function handlePasswordVisibilityClick() {
     setIsPasswordVisible((isVisible) => !isVisible);
   }
 
@@ -97,7 +97,7 @@ function PasswordField({
           <button
             className='toggle-password-button'
             type='button'
-            onClick={togglePasswordVisibility}
+            onClick={handlePasswordVisibilityClick}
             aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
           >
             {isPasswordVisible ? <EyeCrossedIcon /> : <EyeIcon />}

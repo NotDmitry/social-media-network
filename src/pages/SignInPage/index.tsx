@@ -7,7 +7,7 @@ import SignInForm from '@/features/SignInForm';
 function SignInPage() {
   const navigate = useNavigate();
 
-  function openPostsFeed() {
+  function handleSignInSubmit() {
     void navigate(ROUTES.home);
   }
 
@@ -20,7 +20,7 @@ function SignInPage() {
           <span>to sign in into this app</span>
         </p>
       </div>
-      <SignInForm onSubmit={openPostsFeed} />
+      <SignInForm onSubmit={handleSignInSubmit} />
       <p className='auth-page-text'>
         Forgot to create an account? <Link className='auth-page-link' to={ROUTES.signUp}>Sign up</Link>
       </p>

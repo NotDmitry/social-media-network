@@ -7,7 +7,7 @@ import SignUpForm from '@/features/SignUpForm';
 function SignUpPage() {
   const navigate = useNavigate();
 
-  function openPostsFeed() {
+  function handleSignUpSubmit() {
     void navigate(ROUTES.home);
   }
 
@@ -20,7 +20,7 @@ function SignUpPage() {
           <span>to sign up for this app</span>
         </p>
       </div>
-      <SignUpForm onSubmit={openPostsFeed} />
+      <SignUpForm onSubmit={handleSignUpSubmit} />
       <p className='auth-page-agreement-text'>
         By clicking continue, you agree to our{' '}
         <a

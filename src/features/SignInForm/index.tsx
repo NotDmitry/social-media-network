@@ -22,30 +22,36 @@ function SignInForm({ onSubmit }: SignInFormProps) {
 
   const { signIn } = useAuth();
 
-  function handleFormSubmission(event: React.SubmitEvent<HTMLFormElement>) {
+  function handleFormSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     signIn(formFields);
     onSubmit?.();
   }
 
-  function changeFieldValue(name: keyof SignInPayload, event: React.ChangeEvent<HTMLInputElement>) {
-    const value = event.currentTarget.value;
-
+  function setFieldValue(name: keyof SignInPayload, value: string) {
     setFormFields((currentFields) => ({
       ...currentFields,
       [name]: value,
     }));
   }
 
+  function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setFieldValue('email', event.currentTarget.value);
+  }
+
+  function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setFieldValue('password', event.currentTarget.value);
+  }
+
   return (
-    <form className='auth-form' onSubmit={handleFormSubmission}>
+    <form className='auth-form' onSubmit={handleFormSubmit}>
       <fieldset className='auth-form-fieldset'>
         <TextField
           label='Email'
           labelIcon={<EnvelopeIcon />}
           name='email'
-          onChange={(event) => { changeFieldValue('email', event) }}
+          onChange={handleEmailChange}
           placeholder='Enter email'
           status='default'
           type='email'
@@ -55,7 +61,7 @@ function SignInForm({ onSubmit }: SignInFormProps) {
           label='Password'
           labelIcon={<EyeIcon />}
           name='password'
-          onChange={(event) => { changeFieldValue('password', event) }}
+          onChange={handlePasswordChange}
           placeholder='Enter password'
           status='default'
           value={formFields.password}

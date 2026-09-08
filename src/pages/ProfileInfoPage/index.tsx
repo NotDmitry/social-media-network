@@ -18,12 +18,12 @@ function ProfileInfoPage() {
   const { theme, setTheme } = useTheme();
   const { currentUser, signOut } = useAuth();
 
-  function logout() {
+  function handleLogoutClick() {
     signOut();
     void navigate(ROUTES.signIn);
   }
 
-  function toggleDarkTheme(isDarkThemeSelected: boolean) {
+  function handleDarkThemeToggle(isDarkThemeSelected: boolean) {
     const newTheme: ThemeVariant = isDarkThemeSelected ? 'dark' : 'light';
     setTheme(newTheme);
   }
@@ -46,12 +46,12 @@ function ProfileInfoPage() {
           <ToggleSwitch
             label='Dark theme'
             isToggled={theme === 'dark'}
-            onToggle={toggleDarkTheme}
+            onToggle={handleDarkThemeToggle}
           />
         </section>
         <section className='profile-info-section'>
           <h2 className='profile-info-title'>Actions</h2>
-          <Button type='button' onClick={logout}>Logout</Button>
+          <Button type='button' onClick={handleLogoutClick}>Logout</Button>
         </section>
       </div>
     </div>

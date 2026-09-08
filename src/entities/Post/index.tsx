@@ -28,11 +28,11 @@ function Post({ post, comments, author }: PostProps) {
 
   const commentsButtonLabel = `${String(comments.length)} ${comments.length === 1 ? 'comment' : 'comments'}`;
 
-  function handleToggleLike() {
+  function handleLikeClick() {
     setIsLiked((isLiked) => !isLiked);
   }
 
-  function toggleCommentsSection() {
+  function handleCommentsSectionClick() {
     setIsCommentsOpen((isOpen) => !isOpen);
   }
 
@@ -70,7 +70,7 @@ function Post({ post, comments, author }: PostProps) {
             className='post-menu-button'
             disabled={!isUserAuthenticated}
             aria-label='Like the post'
-            onClick={handleToggleLike}
+            onClick={handleLikeClick}
           >
             <HeartIcon className={`post-menu-like-icon ${isLiked ? 'post-menu-like-icon_active' : ''}`} />
             <span className='post-menu-label'>{21 + Number(isLiked)} likes</span>
@@ -81,7 +81,7 @@ function Post({ post, comments, author }: PostProps) {
             className='post-menu-button'
             disabled={!isUserAuthenticated}
             aria-label='Open / close comments section'
-            onClick={toggleCommentsSection}
+            onClick={handleCommentsSectionClick}
           >
             <CommentIcon className='post-menu-comment-icon' />
             <span className='post-menu-label'>
