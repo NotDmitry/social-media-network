@@ -9,7 +9,7 @@ import './style.css';
 function CreateCommentForm() {
   const [comment, setComment] = useState('');
 
-  function handleFormSubmission(event: React.SyntheticEvent) {
+  function handleFormSubmission(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     if (comment.trim() === '') {
