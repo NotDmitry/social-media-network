@@ -36,7 +36,7 @@ function ProfileInfoPage() {
       </section>
 
       <div className='profile-info-side-container'>
-        <section className='profile-info-preferences-section profile-info-section'>
+        <section className='profile-info-section'>
           <h2 className='profile-info-title'>Preferences</h2>
           {/* TODO: add label text directly to ToggleSwitch */}
           <div className='dark-theme-switch-container'>
@@ -48,7 +48,7 @@ function ProfileInfoPage() {
             <span className='dark-theme-switch-label'>Dark theme</span>
           </div>
         </section>
-        <section className='profile-info-actions-section profile-info-section'>
+        <section className='profile-info-section'>
           <h2 className='profile-info-title'>Actions</h2>
           <Button type='button' onClick={logout}>Logout</Button>
         </section>

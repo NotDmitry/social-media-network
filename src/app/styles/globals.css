@@ -27,7 +27,7 @@ input::-ms-clear {
 .link {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
   padding: 8px;
   color: var(--component-text-dark);
   font-family: var(--font-family);
@@ -40,6 +40,12 @@ input::-ms-clear {
   &:hover {
     background-color: var(--component-fill-primary-soft);
     text-decoration: underline;
+  }
+}
+
+@media screen and (width < 480px) {
+  .link {
+    line-height: 143%;
   }
 }
 
@@ -186,12 +192,15 @@ input::-ms-clear {
 
 /* Auth page */
 .auth-page-container {
+  flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  margin-inline: auto;
   gap: 24px;
   max-width: 375px;
   width: 100%;
-  padding: 24px;
+  padding: clamp(18px, 4.5vw, 24px);
 }
 
 .auth-page-title {
