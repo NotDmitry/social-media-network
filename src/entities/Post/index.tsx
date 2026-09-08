@@ -1,14 +1,14 @@
 import { useState } from 'react';
 
-import CreateCommentForm from '@features/CreateCommentForm';
+import CreateCommentForm from '@/features/CreateCommentForm';
 
 import { useAuth } from '@/entities/auth/useAuth';
-import Comment from '@entities/Comment';
-import type { CommentModel } from '@entities/Comment/types';
-import type { UserModel } from '@entities/User/types';
+import Comment from '@/entities/Comment';
+import type { CommentModel } from '@/entities/Comment/types';
+import type { UserModel } from '@/entities/User/types';
 
-import { HeartIcon, CommentIcon, ChevronDownIcon } from '@shared/icons';
-import { getRelativeTimePresentationString } from '@shared/utilities/time';
+import { HeartIcon, CommentIcon, ChevronDownIcon } from '@/shared/icons';
+import { getRelativeTimePresentationString } from '@/shared/utilities/time';
 
 import type { PostModel } from './types';
 

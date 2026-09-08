@@ -1,8 +1,8 @@
-import AppRouter from '@app/AppRouter';
+import AppRouter from '@/app/AppRouter';
 
-import ThemeContextProvider from '@features/theme/ThemeContextProvider';
+import ThemeContextProvider from '@/features/theme/ThemeContextProvider';
 
-import AuthContextProvider from '@entities/auth/AuthContextProvider';
+import AuthContextProvider from '@/entities/auth/AuthContextProvider';
 
 function App() {
   return (

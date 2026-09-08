@@ -1,4 +1,4 @@
-import { NotFoundIcon } from '@shared/icons';
+import { NotFoundIcon } from '@/shared/icons';
 
 import './style.css';
 

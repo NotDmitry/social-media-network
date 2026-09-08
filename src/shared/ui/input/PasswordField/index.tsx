@@ -10,7 +10,7 @@ import {
   InfoTooltipIcon,
   KeyboardIcon,
   ThumbUpIcon,
-} from '@shared/icons';
+} from '@/shared/icons';
 
 import './style.css';
 

@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-import Post from '@entities/Post';
-import { MOCK_COMMENTS } from '@entities/Comment/mocks';
-import { MOCK_POSTS } from '@entities/Post/mocks';
-import { MOCK_USERS } from '@entities/User/mocks';
+import Post from '@/entities/Post';
+import { MOCK_COMMENTS } from '@/entities/Comment/mocks';
+import { MOCK_POSTS } from '@/entities/Post/mocks';
+import { MOCK_USERS } from '@/entities/User/mocks';
 
 import './style.css';
 

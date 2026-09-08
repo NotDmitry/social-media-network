@@ -1,4 +1,4 @@
-import { TrashIcon } from '@shared/icons';
+import { TrashIcon } from '@/shared/icons';
 
 import './style.css';
 

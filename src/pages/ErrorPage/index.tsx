@@ -1,4 +1,4 @@
-import { ErrorIcon } from '@shared/icons';
+import { ErrorIcon } from '@/shared/icons';
 
 import './style.css';
 

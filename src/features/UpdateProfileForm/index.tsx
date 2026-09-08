@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 
-import { useAuth } from '@entities/auth/useAuth';
-import type { UpdateProfilePayload } from '@entities/auth/types';
-import type { UserModel } from '@entities/User/types';
+import { useAuth } from '@/entities/auth/useAuth';
+import type { UpdateProfilePayload } from '@/entities/auth/types';
+import type { UserModel } from '@/entities/User/types';
 
-import Button from '@shared/ui/Button';
-import TextareaField from '@shared/ui/input/TextareaField';
-import TextField from '@shared/ui/input/TextField';
-import { EnvelopeIcon, PencilIcon, PersonIcon } from '@shared/icons';
+import Button from '@/shared/ui/Button';
+import TextareaField from '@/shared/ui/input/TextareaField';
+import TextField from '@/shared/ui/input/TextField';
+import { EnvelopeIcon, PencilIcon, PersonIcon } from '@/shared/icons';
 
 import './style.css';
 

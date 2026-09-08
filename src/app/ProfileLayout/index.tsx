@@ -1,6 +1,6 @@
 import { NavLink, Outlet } from 'react-router';
 
-import { ROUTES } from '@app/routes';
+import { ROUTES } from '@/app/routes';
 
 import './style.css';
 

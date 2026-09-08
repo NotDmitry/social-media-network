@@ -1,8 +1,8 @@
 import { useNavigate, Link } from 'react-router';
 
-import { ROUTES } from '@app/routes';
+import { ROUTES } from '@/app/routes';
 
-import SignInForm from '@features/SignInForm';
+import SignInForm from '@/features/SignInForm';
 
 function SignInPage() {
   const navigate = useNavigate();

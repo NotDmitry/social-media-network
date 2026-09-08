@@ -1,8 +1,8 @@
 import type { UserModel } from './types';
 
-import userGus from '@assets/images/test_user_gus.jpg';
-import userJesse from '@assets/images/test_user_jesse.jpg';
-import userWalter from '@assets/images/test_user_walter.jpg';
+import userGus from '@/assets/images/test_user_gus.jpg';
+import userJesse from '@/assets/images/test_user_jesse.jpg';
+import userWalter from '@/assets/images/test_user_walter.jpg';
 
 export const MOCK_USERS: UserModel[] = [
   {

@@ -1,17 +1,17 @@
 import { Routes, Route } from 'react-router';
 
-import Layout from '@app/Layout';
-import PrivateRoutes from '@app/PrivateRoutes';
-import ProfileLayout from '@app/ProfileLayout';
-import { ROUTES } from '@app/routes';
+import Layout from '@/app/Layout';
+import PrivateRoutes from '@/app/PrivateRoutes';
+import ProfileLayout from '@/app/ProfileLayout';
+import { ROUTES } from '@/app/routes';
 
-import ErrorPage from '@pages/ErrorPage';
-import HomePage from '@pages/HomePage';
-import NotFoundPage from '@pages/NotFoundPage';
-import ProfileInfoPage from '@pages/ProfileInfoPage';
-import ProfileStatisticsPage from '@pages/ProfileStatisticsPage';
-import SignInPage from '@pages/SignInPage';
-import SignUpPage from '@pages/SignUpPage';
+import ErrorPage from '@/pages/ErrorPage';
+import HomePage from '@/pages/HomePage';
+import NotFoundPage from '@/pages/NotFoundPage';
+import ProfileInfoPage from '@/pages/ProfileInfoPage';
+import ProfileStatisticsPage from '@/pages/ProfileStatisticsPage';
+import SignInPage from '@/pages/SignInPage';
+import SignUpPage from '@/pages/SignUpPage';
 
 import { useAuth } from '@/entities/auth/useAuth';
 

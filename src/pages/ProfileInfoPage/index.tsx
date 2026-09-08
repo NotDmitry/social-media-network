@@ -1,15 +1,15 @@
 import { useNavigate } from 'react-router';
 
-import { ROUTES } from '@app/routes';
+import { ROUTES } from '@/app/routes';
 
-import { useTheme } from '@features/theme/useTheme';
+import { useTheme } from '@/features/theme/useTheme';
 import UpdateProfileForm from '@/features/UpdateProfileForm';
-import type { ThemeVariant } from '@features/theme/types';
+import type { ThemeVariant } from '@/features/theme/types';
 
-import { useAuth } from '@entities/auth/useAuth';
+import { useAuth } from '@/entities/auth/useAuth';
 
-import Button from '@shared/ui/Button';
-import ToggleSwitch from '@shared/ui/ToggleSwitch';
+import Button from '@/shared/ui/Button';
+import ToggleSwitch from '@/shared/ui/ToggleSwitch';
 
 import './style.css';
 

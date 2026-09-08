@@ -2,12 +2,12 @@ import { useEffect, useRef } from 'react';
 
 import { useLocation, NavLink } from 'react-router';
 
-import { ROUTES } from '@app/routes';
-import type { HeaderVariant } from '@app/Layout/Header/types';
+import { ROUTES } from '@/app/routes';
+import type { HeaderVariant } from '@/app/Layout/Header/types';
 
-import { useAuth } from '@entities/auth/useAuth';
+import { useAuth } from '@/entities/auth/useAuth';
 
-import Logo from '@shared/ui/Logo';
+import Logo from '@/shared/ui/Logo';
 
 import './style.css';
 
