@@ -1,4 +1,5 @@
 import { ErrorIcon } from '@shared/icons';
+
 import './style.css';
 
 function ErrorPage() {

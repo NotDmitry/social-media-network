@@ -1,8 +1,11 @@
 import { useState } from 'react';
+
+import { getAuthUserMock } from '@entities/User/mocks';
+import { isUserModel } from '@entities/User/types';
+import type { UserModel } from '@entities/User/types';
+
 import { AuthContext } from './context';
 import type { SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
-import { isUserModel, type UserModel } from '@entities/User/types';
-import { getAuthUserMock } from '@entities/User/mocks';
 
 const CURRENT_USER_STORAGE_KEY = 'currentUser';
 

@@ -1,17 +1,19 @@
 import { Routes, Route } from 'react-router';
-import { ROUTES } from '@app/routes';
-import Layout from '@app/Layout';
-import ProfileLayout from '@app/ProfileLayout';
-import PrivateRoutes from '@app/PrivateRoutes';
-import { useAuth } from '@/entities/auth/useAuth';
 
+import Layout from '@app/Layout';
+import PrivateRoutes from '@app/PrivateRoutes';
+import ProfileLayout from '@app/ProfileLayout';
+import { ROUTES } from '@app/routes';
+
+import ErrorPage from '@pages/ErrorPage';
 import HomePage from '@pages/HomePage';
-import SignInPage from '@pages/SignInPage';
-import SignUpPage from '@pages/SignUpPage';
+import NotFoundPage from '@pages/NotFoundPage';
 import ProfileInfoPage from '@pages/ProfileInfoPage';
 import ProfileStatisticsPage from '@pages/ProfileStatisticsPage';
-import ErrorPage from '@pages/ErrorPage';
-import NotFoundPage from '@pages/NotFoundPage';
+import SignInPage from '@pages/SignInPage';
+import SignUpPage from '@pages/SignUpPage';
+
+import { useAuth } from '@/entities/auth/useAuth';
 
 function AppRouter() {
   const { isUserAuthenticated } = useAuth();

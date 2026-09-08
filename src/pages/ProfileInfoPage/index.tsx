@@ -1,11 +1,16 @@
 import { useNavigate } from 'react-router';
-import { useTheme } from '@features/theme/useTheme';
-import { useAuth } from '@entities/auth/useAuth';
-import type { ThemeVariant } from '@features/theme/types';
-import UpdateProfileForm from '@/features/UpdateProfileForm';
-import ToggleSwitch from '@shared/ui/ToggleSwitch';
-import Button from '@shared/ui/Button';
+
 import { ROUTES } from '@app/routes';
+
+import { useTheme } from '@features/theme/useTheme';
+import UpdateProfileForm from '@/features/UpdateProfileForm';
+import type { ThemeVariant } from '@features/theme/types';
+
+import { useAuth } from '@entities/auth/useAuth';
+
+import Button from '@shared/ui/Button';
+import ToggleSwitch from '@shared/ui/ToggleSwitch';
+
 import './style.css';
 
 function ProfileInfoPage() {

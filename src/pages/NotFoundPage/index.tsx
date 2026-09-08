@@ -1,4 +1,5 @@
 import { NotFoundIcon } from '@shared/icons';
+
 import './style.css';
 
 function NotFoundPage() {

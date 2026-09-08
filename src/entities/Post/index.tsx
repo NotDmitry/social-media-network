@@ -1,13 +1,18 @@
-import './style.css';
-import CreateCommentForm from '@features/CreateCommentForm';
-import Comment from '@entities/Comment';
 import { useState } from 'react';
-import type { PostModel } from './types';
+
+import CreateCommentForm from '@features/CreateCommentForm';
+
+import { useAuth } from '@/entities/auth/useAuth';
+import Comment from '@entities/Comment';
 import type { CommentModel } from '@entities/Comment/types';
 import type { UserModel } from '@entities/User/types';
-import { getRelativeTimePresentationString } from '@shared/utilities/time';
-import { useAuth } from '@/entities/auth/useAuth';
+
 import { HeartIcon, CommentIcon, ChevronDownIcon } from '@shared/icons';
+import { getRelativeTimePresentationString } from '@shared/utilities/time';
+
+import type { PostModel } from './types';
+
+import './style.css';
 
 interface PostProps {
   post: PostModel;

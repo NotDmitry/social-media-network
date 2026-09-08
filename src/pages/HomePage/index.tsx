@@ -1,8 +1,12 @@
-import { useAuth } from '@entities/auth/useAuth';
 import PostsFeed from '@widgets/PostsFeed';
-import CardsList from './CardsList';
+
+import { useAuth } from '@entities/auth/useAuth';
+
 import Button from '@shared/ui/Button';
+
+import CardsList from './CardsList';
 import { SUGGESTED_USERS_CARDS_DATA, SUGGESTED_COMMUNITIES_CARDS_DATA } from './CardsList/mocks';
+
 import './style.css';
 
 function HomePage() {

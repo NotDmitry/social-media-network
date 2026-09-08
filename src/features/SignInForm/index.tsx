@@ -1,9 +1,11 @@
 import { useState } from 'react';
+
 import { useAuth } from '@entities/auth/useAuth';
 import type { SignInPayload } from '@entities/auth/types';
-import TextField from '@shared/ui/input/TextField';
-import PasswordField from '@shared/ui/input/PasswordField';
+
 import Button from '@shared/ui/Button';
+import PasswordField from '@shared/ui/input/PasswordField';
+import TextField from '@shared/ui/input/TextField';
 import { EnvelopeIcon, EyeIcon } from '@shared/icons';
 
 const INITIAL_FORM_FIELDS: SignInPayload = {

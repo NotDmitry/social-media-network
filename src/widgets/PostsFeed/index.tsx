@@ -1,9 +1,11 @@
 import { useState } from 'react';
+
 import Post from '@entities/Post';
-import './style.css';
-import { MOCK_POSTS } from '@entities/Post/mocks';
 import { MOCK_COMMENTS } from '@entities/Comment/mocks';
+import { MOCK_POSTS } from '@entities/Post/mocks';
 import { MOCK_USERS } from '@entities/User/mocks';
+
+import './style.css';
 
 function PostsFeed() {
   const [posts] = useState(MOCK_POSTS);

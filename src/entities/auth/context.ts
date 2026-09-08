@@ -1,6 +1,8 @@
 import { createContext } from 'react';
-import type { SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
+
 import type { UserModel } from '@entities/User/types';
+
+import type { SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
 
 interface AuthContextData {
   currentUser: UserModel | null;

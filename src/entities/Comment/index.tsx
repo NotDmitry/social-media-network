@@ -1,4 +1,5 @@
 import { TrashIcon } from '@shared/icons';
+
 import './style.css';
 
 interface CommentProps {

@@ -1,15 +1,17 @@
 import { useId, useState } from 'react';
 import type { ComponentProps, ReactNode } from 'react';
+
 import {
-  KeyboardIcon,
   CheckIcon,
   CrossIcon,
+  EyeCrossedIcon,
+  EyeIcon,
   InfoIcon,
   InfoTooltipIcon,
+  KeyboardIcon,
   ThumbUpIcon,
-  EyeIcon,
-  EyeCrossedIcon,
 } from '@shared/icons';
+
 import './style.css';
 
 type PasswordFieldStatus = 'default' | 'valid' | 'invalid';

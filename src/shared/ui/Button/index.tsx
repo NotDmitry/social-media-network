@@ -1,4 +1,5 @@
 import type { ComponentProps } from 'react';
+
 import './style.css';
 
 type ButtonProps = ComponentProps<'button'>;
