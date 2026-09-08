@@ -3,6 +3,7 @@ export interface UserModel {
   fullName: string;
   username: string;
   email: string;
+  description?: string;
   avatarUrl: string;
   createdAt: string;
 }
@@ -20,6 +21,7 @@ export function isUserModel(value: unknown): value is UserModel {
     typeof user.fullName === 'string' &&
     typeof user.username === 'string' &&
     typeof user.email === 'string' &&
+    (user.description === undefined || typeof user.description === 'string') &&
     typeof user.avatarUrl === 'string' &&
     typeof user.createdAt === 'string'
   );

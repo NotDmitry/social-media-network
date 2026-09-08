@@ -1,35 +1,37 @@
+import { useAuth } from '@entities/auth/useAuth';
 import PostsFeed from '@widgets/PostsFeed';
 import CardsList from './CardsList';
 import Button from '@shared/ui/Button';
-import { getAuthUserMock } from '@entities/User/mocks';
 import { SUGGESTED_USERS_CARDS_DATA, SUGGESTED_COMMUNITIES_CARDS_DATA } from './CardsList/mocks';
 import './style.css';
 
 function HomePage() {
-  const authenticatedUser = getAuthUserMock();
+  const { currentUser } = useAuth();
 
   return (
     <div className='home-page-container'>
       <section className='home-page-content'>
         {/* Create post input */}
-        <div className='create-post-container'>
-          <img
-            className='avatar create-post-avatar'
-            src={authenticatedUser.avatarUrl}
-            alt={`Picture of ${authenticatedUser.fullName}`}
-            width={64}
-            height={64}
-          />
-          <div className='create-post-input-section'>
-            <input
-              className='create-post-input'
-              type="text"
-              name="post"
-              placeholder={'What\'s happening?'}
+        {currentUser &&
+          <div className='create-post-container'>
+            <img
+              className='avatar create-post-avatar'
+              src={currentUser.avatarUrl}
+              alt={`Picture of ${currentUser.fullName}`}
+              width={64}
+              height={64}
             />
-            <Button type='button'>Tell everyone</Button>
+            <div className='create-post-input-section'>
+              <input
+                className='create-post-input'
+                type="text"
+                name="post"
+                placeholder={'What\'s happening?'}
+              />
+              <Button type='button'>Tell everyone</Button>
+            </div>
           </div>
-        </div>
+        }
 
         <PostsFeed />
       </section>

@@ -1,28 +1,35 @@
 import { useState } from 'react';
+import { useAuth } from '@entities/auth/useAuth';
+import type { SignUpPayload } from '@entities/auth/types';
 import TextField from '@shared/ui/input/TextField';
 import PasswordField from '@shared/ui/input/PasswordField';
 import Button from '@shared/ui/Button';
 import { EnvelopeIcon, EyeIcon, InfoIcon } from '@shared/icons';
 
-const INITIAL_FORM_FIELDS = {
+const INITIAL_FORM_FIELDS: SignUpPayload = {
   fullName: '',
   email: '',
   password: '',
   repeatPassword: '',
 }
 
-type SignUpFormFields = typeof INITIAL_FORM_FIELDS;
+interface SignUpFormProps {
+  onSubmit?: () => void;
+}
 
-function SignUpForm() {
+function SignUpForm({ onSubmit }: SignUpFormProps) {
   const [formFields, setFormFields] = useState(INITIAL_FORM_FIELDS);
 
-  function submitForm(event: React.SubmitEvent<HTMLFormElement>) {
+  const { signUp } = useAuth();
+
+  function handleFormSubmission(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    setFormFields(INITIAL_FORM_FIELDS);
+    signUp(formFields);
+    onSubmit?.();
   }
 
-  function changeFieldValue(name: keyof SignUpFormFields, event: React.ChangeEvent<HTMLInputElement>) {
+  function changeFieldValue(name: keyof SignUpPayload, event: React.ChangeEvent<HTMLInputElement>) {
     const value = event.currentTarget.value;
 
     setFormFields((currentFields) => ({
@@ -32,7 +39,7 @@ function SignUpForm() {
   }
 
   return (
-    <form className='auth-form' onSubmit={submitForm}>
+    <form className='auth-form' onSubmit={handleFormSubmission}>
       <fieldset className='auth-form-fieldset'>
         <TextField
           label='Full name'

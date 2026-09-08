@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
+import { useAuth } from '@entities/auth/useAuth';
 import type { HeaderVariant } from '@app/Layout/Header/types';
 import { NavLink, useLocation } from 'react-router';
 import Logo from '@shared/ui/Logo';
-import { getAuthUserMock } from '@entities/User/mocks';
 import { ROUTES } from '@app/routes';
 import './style.css';
 
@@ -18,7 +18,7 @@ function DrawerNavigation({ variant, isOpen, onClose }: DrawerNavigationProps) {
   const dialogElementRef = useRef<HTMLDialogElement | null>(null);
   const currentLocation = useLocation();
 
-  const authenticatedUser = getAuthUserMock();
+  const { currentUser } = useAuth();
 
   function handleNavigationClose(event: React.MouseEvent<HTMLDialogElement>) {
     if (event.target === event.currentTarget) {
@@ -65,11 +65,11 @@ function DrawerNavigation({ variant, isOpen, onClose }: DrawerNavigationProps) {
       <div className='drawer-navigation-wrapper'>
         <header className='drawer-navigation-header'>
           <Logo />
-          {variant === 'user' &&
+          {variant === 'user' && currentUser &&
             <img
               className='avatar'
-              src={authenticatedUser.avatarUrl}
-              alt={`Profile picture of ${authenticatedUser.fullName}`}
+              src={currentUser.avatarUrl}
+              alt={`Profile picture of ${currentUser.fullName}`}
               width={24}
               height={24}
             />
