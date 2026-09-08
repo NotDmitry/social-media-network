@@ -25,7 +25,7 @@ function SignUpPage() {
         By clicking continue, you agree to our{' '}
         <a
           className='auth-page-external-link'
-          href="https://policies.google.com/terms"
+          href='https://policies.google.com/terms'
           target='_blank'
           rel='noreferrer'
         >
@@ -34,7 +34,7 @@ function SignUpPage() {
         {' '}and{' '}
         <a
           className='auth-page-external-link'
-          href="https://policies.google.com/privacy"
+          href='https://policies.google.com/privacy'
           target='_blank'
           rel='noreferrer'
         >

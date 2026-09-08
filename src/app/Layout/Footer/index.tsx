@@ -5,7 +5,7 @@ function Footer() {
 
   return (
     <footer className='footer'>
-      <a className='link link_external' href="https://sidekick-software.com/" target='_blank' rel='noreferrer'>
+      <a className='link link_external' href='https://sidekick-software.com/' target='_blank' rel='noreferrer'>
         © {currentYear} sidekick
       </a>
     </footer>

@@ -28,8 +28,8 @@ function HomePage() {
             <div className='create-post-input-section'>
               <input
                 className='create-post-input'
-                type="text"
-                name="post"
+                type='text'
+                name='post'
                 placeholder={'What\'s happening?'}
               />
               <Button type='button'>Tell everyone</Button>

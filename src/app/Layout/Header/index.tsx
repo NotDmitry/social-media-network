@@ -33,7 +33,7 @@ function Header({ variant }: HeaderProps) {
 
   return (
     <header className='header'>
-      <a className='header-external-link' href="https://sidekick-software.com/" target='_blank' rel='noreferrer'>
+      <a className='header-external-link' href='https://sidekick-software.com/' target='_blank' rel='noreferrer'>
         <Logo />
       </a>
       <nav className='nav-panel'>

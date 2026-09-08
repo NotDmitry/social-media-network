@@ -1,7 +1,7 @@
 :root {
   /* Font family */
-  --font-family: "Poppins", sans-serif;
-  --second-family: "Inter", sans-serif;
+  --font-family: 'Poppins', sans-serif;
+  --second-family: 'Inter', sans-serif;
 
   /* Color Palette */
   --color-brand-primary-25: #f81;
