@@ -1,4 +1,4 @@
-import type { UserModel } from './types';
+import type { UserModel } from '@/entities/User/types';
 
 import userGus from '@/assets/images/test_user_gus.jpg';
 import userJesse from '@/assets/images/test_user_jesse.jpg';

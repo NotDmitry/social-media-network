@@ -1,4 +1,4 @@
-import type { PostModel } from './types';
+import type { PostModel } from '@/entities/Post/types';
 
 import postImage1 from '@/assets/images/test_post_1.jpg';
 import postImage2 from '@/assets/images/test_post_2.jpg';

@@ -1,9 +1,10 @@
 import { useState } from 'react';
 
 import Post from '@/entities/Post';
-import { MOCK_COMMENTS } from '@/entities/Comment/mocks';
-import { MOCK_POSTS } from '@/entities/Post/mocks';
-import { MOCK_USERS } from '@/entities/User/mocks';
+
+import { MOCK_COMMENTS } from '@/shared/mocks/CommentMocks';
+import { MOCK_POSTS } from '@/shared/mocks/PostMocks';
+import { MOCK_USERS } from '@/shared/mocks/UserMocks';
 
 import './style.css';
 

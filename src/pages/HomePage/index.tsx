@@ -3,9 +3,9 @@ import PostsFeed from '@/widgets/PostsFeed';
 import { useAuth } from '@/entities/auth/useAuth';
 
 import Button from '@/shared/ui/Button';
+import { SUGGESTED_COMMUNITIES_CARDS_DATA, SUGGESTED_USERS_CARDS_DATA } from '@/shared/mocks/CardsListMocks';
 
 import CardsList from './CardsList';
-import { SUGGESTED_USERS_CARDS_DATA, SUGGESTED_COMMUNITIES_CARDS_DATA } from './CardsList/mocks';
 
 import './style.css';
 

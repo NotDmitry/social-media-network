@@ -1,4 +1,4 @@
-import type { CardData } from './index';
+import type { CardData } from '@/pages/HomePage/CardsList';
 
 import communityBcs from '@/assets/images/test_community_bcs.jpg';
 import communityDea from '@/assets/images/test_community_dea.jpg';
