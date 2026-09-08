@@ -91,7 +91,7 @@
     background: var(--component-hover-primary-soft);
   }
 
-  &:hover .post-menu-like-icon {
+  &:hover:not(:disabled) .post-menu-like-icon {
     stroke: var(--color-feedback-negative-600);
   }
 
