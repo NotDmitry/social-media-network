@@ -157,6 +157,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         onChange={(event) => { changeFieldValue('description', event) }}
         placeholder='Write description here...'
         status='default'
+        hintMessage='Max 200 chars'
         maxLength={200}
         rows={1}
         value={formFields.description}
