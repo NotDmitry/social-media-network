@@ -40,7 +40,7 @@
   }
 }
 
-@media screen and (width <=780px) {
+@media screen and (width <= 780px) {
   .data-views-wrapper {
     grid-template-columns: 1fr;
     gap: 24px;
