@@ -64,13 +64,6 @@ input::-ms-clear {
   object-fit: cover;
 }
 
-.icon {
-  flex: 0 0 16px;
-  display: block;
-  width: 16px;
-  height: 16px;
-}
-
 /* Input fields */
 .input-field-wrapper {
   display: flex;

@@ -5,8 +5,7 @@ import type { UpdateProfilePayload } from '@entities/auth/types';
 import Button from '@shared/ui/Button';
 import TextField from '@shared/ui/input/TextField';
 import TextareaField from '@shared/ui/input/TextareaField';
-import { PersonIcon } from '@shared/icons/PersonIcon';
-import { EnvelopeIcon, PencilIcon } from '@shared/icons';
+import { EnvelopeIcon, PencilIcon, PersonIcon } from '@shared/icons';
 import './style.css';
 
 interface UpdateProfileFormProps {
