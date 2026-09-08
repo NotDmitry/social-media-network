@@ -36,6 +36,7 @@
   --component-fill-dark-soft: var(--color-neutral-gray-soft-50);
   --component-fill-disabled: var(--color-neutral-gray-strong-25);
   --component-fill-light: var(--color-neutral-white);
+  --component-fill-light-fixed: var(--color-neutral-white);
   --component-fill-positive: var(--color-feedback-positive-500);
   --component-fill-primary-soft: var(--color-brand-primary-25);
   --component-fill-reversed: var(--color-neutral-gray-strong-800);
@@ -64,6 +65,7 @@
   --component-fill-dark-soft: var(--color-neutral-gray-strong-900);
   --component-fill-disabled: var(--color-neutral-gray-strong-700);
   --component-fill-light: var(--color-neutral-gray-strong-800);
+  --component-fill-light-fixed: var(--color-neutral-white);
   --component-fill-positive: var(--color-feedback-positive-500);
   --component-fill-primary-soft: var(--color-brand-primary-25);
   --component-fill-reversed: var(--color-neutral-white);
@@ -72,11 +74,16 @@
   --component-hover-primary-soft: var(--color-brand-primary-800);
   --component-stroke-dark-soft: var(--color-neutral-gray-strong-400);
   --component-stroke-disabled: var(--color-neutral-gray-strong-600);
+  --component-stroke-negative: var(--color-feedback-negative-500);
   --component-stroke-primary: var(--color-brand-primary-500);
   --component-text-dark: var(--color-neutral-white);
   --component-text-disabled: var(--color-neutral-gray-strong-400);
   --component-text-gray: var(--color-neutral-gray-strong-100);
+  --component-text-negative: var(--color-feedback-negative-500);
   --component-text-positive: var(--color-feedback-positive-500);
   --icon-dark: var(--color-neutral-white);
+  --icon-disabled: var(--color-neutral-gray-strong-400);
+  --icon-negative: var(--color-feedback-negative-500);
+  --icon-positive: var(--color-feedback-positive-500);
   --typography-body-light: var(--color-neutral-white);
 }
