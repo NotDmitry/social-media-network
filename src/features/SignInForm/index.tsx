@@ -51,6 +51,7 @@ function SignInForm({ onSubmit }: SignInFormProps) {
           label='Email'
           labelIcon={<EnvelopeIcon />}
           name='email'
+          autoComplete='email'
           onChange={handleEmailChange}
           placeholder='Enter email'
           status='default'
@@ -61,6 +62,7 @@ function SignInForm({ onSubmit }: SignInFormProps) {
           label='Password'
           labelIcon={<EyeIcon />}
           name='password'
+          autoComplete='current-password'
           onChange={handlePasswordChange}
           placeholder='Enter password'
           status='default'

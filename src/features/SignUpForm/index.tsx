@@ -61,6 +61,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           label='Full name'
           labelIcon={<InfoIcon />}
           name='fullName'
+          autoComplete='name'
           onChange={handleFullNameChange}
           placeholder='Enter your full name'
           status='default'
@@ -71,6 +72,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           label='Email'
           labelIcon={<EnvelopeIcon />}
           name='email'
+          autoComplete='email'
           onChange={handleEmailChange}
           placeholder='Enter email'
           status='default'
@@ -81,6 +83,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           label='Password'
           labelIcon={<EyeIcon />}
           name='password'
+          autoComplete='new-password'
           onChange={handlePasswordChange}
           placeholder='Enter password'
           status='default'
@@ -91,6 +94,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           label='Repeat password'
           labelIcon={<EyeIcon />}
           name='repeatPassword'
+          autoComplete='new-password'
           onChange={handleRepeatPasswordChange}
           placeholder='Enter password again'
           status='default'

@@ -136,6 +136,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         label='Username'
         labelIcon={<PersonIcon />}
         name='username'
+        autoComplete='username'
         onChange={(event) => { changeFieldValue('username', event) }}
         placeholder='@username123'
         status='default'
@@ -146,6 +147,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         label='Email'
         labelIcon={<EnvelopeIcon />}
         name='email'
+        autoComplete='email'
         onChange={(event) => { changeFieldValue('email', event) }}
         placeholder='email@domain.com'
         status='default'
