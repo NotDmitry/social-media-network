@@ -43,15 +43,11 @@ function ProfileInfoPage() {
       <div className='profile-info-side-container'>
         <section className='profile-info-section'>
           <h2 className='profile-info-title'>Preferences</h2>
-          {/* TODO: add label text directly to ToggleSwitch */}
-          <div className='dark-theme-switch-container'>
-            <ToggleSwitch
-              ariaLabel='Switch dark mode theme'
-              isToggled={theme === 'dark'}
-              onToggle={toggleDarkTheme}
-            />
-            <span className='dark-theme-switch-label'>Dark theme</span>
-          </div>
+          <ToggleSwitch
+            label='Dark theme'
+            isToggled={theme === 'dark'}
+            onToggle={toggleDarkTheme}
+          />
         </section>
         <section className='profile-info-section'>
           <h2 className='profile-info-title'>Actions</h2>

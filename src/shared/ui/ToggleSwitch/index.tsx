@@ -1,21 +1,23 @@
 import './style.css';
 
 interface ToggleSwitchProps {
-  ariaLabel?: string;
+  label: string;
   isToggled: boolean;
   onToggle: (isToggled: boolean) => void;
 }
 
-function ToggleSwitch({ isToggled, onToggle, ariaLabel = 'Switch button state' }: ToggleSwitchProps) {
+function ToggleSwitch({ label, isToggled, onToggle }: ToggleSwitchProps) {
   return (
-    <label className={`toggle-switch ${isToggled ? 'toggle-switch_toggled' : ''}`}>
-      <input
-        aria-label={ariaLabel}
-        checked={isToggled}
-        className='toggle-switch-input'
-        onChange={(event) => { onToggle(event.target.checked) }}
-        type='checkbox'
-      />
+    <label className='toggle-switch-label'>
+      <span className={`toggle-switch ${isToggled ? 'toggle-switch_toggled' : ''}`}>
+        <input
+          checked={isToggled}
+          className='visually-hidden'
+          onChange={(event) => { onToggle(event.target.checked) }}
+          type='checkbox'
+        />
+      </span>
+      <span className='toggle-switch-text'>{label}</span>
     </label>
   );
 }
