@@ -28,6 +28,7 @@ input::-ms-clear {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   padding: 8px;
   color: var(--component-text-dark);
   font-family: var(--font-family);
