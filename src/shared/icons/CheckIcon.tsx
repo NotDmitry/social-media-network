@@ -1,8 +1,9 @@
+import Icon from './Icon';
 import type { IconProps } from './types';
 
-function CheckIcon({ className = '', ...props }: IconProps) {
+function CheckIcon(props: IconProps) {
   return (
-    <svg className={`icon ${className}`} {...props} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <Icon {...props}>
       <path
         d="M0.205671 9.96052L3.25834 13.0132C4.11676 13.8713 5.50826 13.8713 6.36669 13.0132L15.7943
         3.58555C16.0755 3.29446 16.0674 2.83059 15.7763 2.54945C15.4923 2.27518 15.0421 2.27518 14.7582
@@ -10,7 +11,7 @@ function CheckIcon({ className = '', ...props }: IconProps) {
         8.64328 0.486843 8.65135 0.205705 8.94245C-0.0685627 9.2264 -0.0685627 9.67657 0.205671 9.96052Z"
         fill="currentColor"
       />
-    </svg>
+    </Icon>
   );
 }
 

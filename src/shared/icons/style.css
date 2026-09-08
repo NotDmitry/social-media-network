@@ -1,6 +1,6 @@
-.icon {
-  flex: 0 0 16px;
-  display: block;
-  width: 16px;
-  height: 16px;
+@layer icons {
+  .icon {
+    flex: none;
+    display: block;
+  }
 }

@@ -1,8 +1,9 @@
+import Icon from './Icon';
 import type { IconProps } from './types';
 
-function EyeCrossedIcon({ className = '', ...props }: IconProps) {
+function EyeCrossedIcon(props: IconProps) {
   return (
-    <svg className={`icon ${className}`} {...props} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <Icon {...props}>
       <path
         d="M15.5137 6.27948C14.9118 5.29396 14.1527 4.41365 13.2663 3.67348L15.133 1.80681C15.2544 1.68108 15.3216
         1.51267 15.3201 1.33788C15.3186 1.16308 15.2485 0.99587 15.1249 0.872264C15.0013 0.748659 14.8341 0.678546
@@ -28,9 +29,8 @@ function EyeCrossedIcon({ className = '', ...props }: IconProps) {
         9.81557 11.2401 9.1011 11.3166 8.33665C11.393 7.57221 11.2026 6.80485 10.7777 6.16481L12.3177 4.62481C13.1343
         5.285 13.8311 6.08084 14.3777 6.97748C14.5676 7.28478 14.6682 7.63889 14.6682 8.00014C14.6682 8.36139 14.5676
         8.71551 14.3777 9.02281Z"
-        fill="currentColor"
       />
-    </svg>
+    </Icon>
   );
 }
 

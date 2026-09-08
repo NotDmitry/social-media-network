@@ -1,8 +1,9 @@
+import Icon from './Icon';
 import type { IconProps } from './types';
 
-function EnvelopeIcon({ className = '', ...props }: IconProps) {
+function EnvelopeIcon(props: IconProps) {
   return (
-    <svg className={`icon ${className}`} {...props} viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <Icon {...props}>
       <path
         d='M12.6667 0.666748H3.33333C2.4496 0.667807 1.60237 1.01934 0.97748 1.64423C0.352588 2.26912
         0.00105857 3.11635 0 4.00008L0 12.0001C0.00105857 12.8838 0.352588 13.731 0.97748 14.3559C1.60237
@@ -16,9 +17,8 @@ function EnvelopeIcon({ className = '', ...props }: IconProps) {
         9.93092 7.11617 10.2814 8 10.2814C8.88383 10.2814 9.73158 9.93092 10.3573 9.30675L14.6667
         5.00008V12.0001C14.6667 12.5305 14.456 13.0392 14.0809 13.4143C13.7058 13.7894 13.1971 14.0001
         12.6667 14.0001Z'
-        fill='currentColor'
       />
-    </svg>
+    </Icon>
   );
 }
 

@@ -1,8 +1,9 @@
+import Icon from './Icon';
 import type { IconProps } from './types';
 
-function PencilIcon({ className = '', ...props }: IconProps) {
+function PencilIcon(props: IconProps) {
   return (
-    <svg className={`icon ${className}`} {...props} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <Icon {...props}>
       <path
         d="M15.2353 0.765302C14.7821 0.312767 14.1678 0.0585938 13.5273 0.0585938C12.8869 0.0585938 12.2726
         0.312767 11.8193 0.765302L0.976677 11.608C0.666178 11.9167 0.419985 12.284 0.252342 12.6885C0.0846994 13.093
@@ -16,9 +17,8 @@ function PencilIcon({ className = '', ...props }: IconProps) {
         1.39174 13.8086 1.41991 13.9399 1.47448C14.0712 1.52905 14.1905 1.60896 14.291 1.70964C14.3915 1.81032 14.4711
         1.9298 14.5254 2.06126C14.5797 2.19272 14.6076 2.33359 14.6074 2.47581C14.6072 2.61804 14.5791 2.75885 14.5245
         2.89019C14.4699 3.02153 14.39 3.14084 14.2893 3.2413L14.292 3.23797Z"
-        fill="currentColor"
       />
-    </svg>
+    </Icon>
   );
 }
 

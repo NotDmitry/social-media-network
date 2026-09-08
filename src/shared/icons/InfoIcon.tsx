@@ -1,8 +1,9 @@
+import Icon from './Icon';
 import type { IconProps } from './types';
 
-function InfoIcon({ className = '', ...props }: IconProps) {
+function InfoIcon(props: IconProps) {
   return (
-    <svg className={`icon ${className}`} {...props} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <Icon {...props}>
       <path
         d="M8 16C9.58225 16 11.129 15.5308 12.4446 14.6518C13.7602 13.7727 14.7855 12.5233 15.391
         11.0615C15.9965 9.59966 16.155 7.99113 15.8463 6.43928C15.5376 4.88743 14.7757 3.46197 13.6569 2.34315C12.538
@@ -18,9 +19,8 @@ function InfoIcon({ className = '', ...props }: IconProps) {
         12.4714C8.07024 12.3464 8 12.1768 8 12V8H7.33333C7.15652 8 6.98695 7.92977 6.86193 7.80474C6.73691 7.67972
         6.66667 7.51015 6.66667 7.33334C6.66667 7.15653 6.73691 6.98696 6.86193 6.86193C6.98695 6.73691 7.15652 6.66667
         7.33333 6.66667Z"
-        fill="currentColor"
       />
-    </svg>
+    </Icon>
   );
 }
 

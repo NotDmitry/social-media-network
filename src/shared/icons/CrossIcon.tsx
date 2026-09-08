@@ -1,8 +1,9 @@
+import Icon from './Icon';
 import type { IconProps } from './types';
 
-function CrossIcon({ className = '', ...props }: IconProps) {
+function CrossIcon(props: IconProps) {
   return (
-    <svg className={`icon ${className}`} {...props} viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <Icon {...props}>
       <path
         d="M12 3.99988C11.875 3.8749 11.7054 3.80469 11.5287 3.80469C11.3519 3.80469 11.1824 3.8749 11.0573
         3.99988L8 7.05721L4.94267 3.99988C4.81765 3.8749 4.64811 3.80469 4.47133 3.80469C4.29456 3.80469 4.12502
@@ -13,9 +14,8 @@ function CrossIcon({ className = '', ...props }: IconProps) {
         12.1249 12 11.9999C12.125 11.8749 12.1952 11.7053 12.1952 11.5285C12.1952 11.3518 12.125 11.1822 12
         11.0572L8.94267 7.99988L12 4.94255C12.125 4.81753 12.1952 4.64799 12.1952 4.47121C12.1952 4.29444 12.125
         4.1249 12 3.99988Z"
-        fill="currentColor"
       />
-    </svg>
+    </Icon>
   );
 }
 
