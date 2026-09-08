@@ -14,7 +14,9 @@ function HomePage() {
 
   return (
     <div className='home-page-container'>
+      <h1 className='visually-hidden'>Home page</h1>
       <section className='home-page-content'>
+        <h2 className='visually-hidden'>Posts feed</h2>
         {/* Create post input */}
         {currentUser &&
           <div className='create-post-container'>
@@ -41,6 +43,7 @@ function HomePage() {
       </section>
 
       <aside className='home-page-suggested'>
+        <h2 className='visually-hidden'>Suggestions</h2>
         <CardsList
           title='Suggested people'
           cardsData={SUGGESTED_USERS_CARDS_DATA}

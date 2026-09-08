@@ -14,7 +14,7 @@ interface CardsListProps {
 function CardsList({ title, cardsData }: CardsListProps) {
   return (
     <div className='cards-list-container'>
-      <p className='cards-list-title'>{title}</p>
+      <h3 className='cards-list-title'>{title}</h3>
       {cardsData.map((cardData) => (
         <article className='cards-list-item-container' key={crypto.randomUUID()}>
           <img
