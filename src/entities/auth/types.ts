@@ -1,16 +1,6 @@
-export interface SignInPayload {
-  email: string,
-  password: string;
-}
+import { z } from 'zod';
+import { signInSchema, signUpSchema, updateProfileSchema } from './schema';
 
-export interface SignUpPayload extends SignInPayload {
-  fullName: string;
-  repeatPassword: string;
-}
-
-export interface UpdateProfilePayload {
-  avatarUrl?: string,
-  username?: string,
-  email?: string,
-  description?: string,
-}
+export type SignInPayload = z.output<typeof signInSchema>;
+export type SignUpPayload = z.output<typeof signUpSchema>;
+export type UpdateProfilePayload = z.output<typeof updateProfileSchema>;
