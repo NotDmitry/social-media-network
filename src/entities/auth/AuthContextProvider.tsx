@@ -58,8 +58,8 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
     updateCurrentUser({
       ...getAuthUserMock(),
       email,
-      firstName: firstName ?? null,
-      secondName: secondName ?? null,
+      firstName,
+      secondName,
     });
   }
 
