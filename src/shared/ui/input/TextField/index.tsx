@@ -1,6 +1,5 @@
 import { useId } from 'react';
 import type { ComponentProps, ReactNode } from 'react';
-
 import { CheckIcon, CrossIcon, InfoIcon, InfoTooltipIcon, PencilIcon } from '@/shared/icons';
 
 type TextFieldStatus = 'default' | 'valid' | 'invalid';

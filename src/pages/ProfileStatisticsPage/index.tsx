@@ -1,12 +1,9 @@
 import { useState } from 'react';
-
 import ToggleSwitch from '@/shared/ui/ToggleSwitch';
 import { CARDS_DATA } from '@/shared/mocks/StatsCardMocks';
 import { TABLE_DATA } from '@/shared/mocks/TableViewMocks';
-
 import StatsCard from './StatsCard';
 import TableView from './TableView';
-
 import './style.css';
 
 function ProfileStatisticsPage() {

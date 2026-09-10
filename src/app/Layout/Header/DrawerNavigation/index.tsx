@@ -1,14 +1,9 @@
 import { useEffect, useRef } from 'react';
-
 import { useLocation, NavLink } from 'react-router';
-
 import { ROUTES } from '@/app/routes';
 import type { HeaderVariant } from '@/app/Layout/Header/types';
-
 import { useAuth } from '@/entities/auth/useAuth';
-
 import Logo from '@/shared/ui/Logo';
-
 import './style.css';
 
 type DrawerVariant = Exclude<HeaderVariant, 'default'>;

@@ -1,7 +1,5 @@
 import { NavLink, Outlet } from 'react-router';
-
 import { ROUTES } from '@/app/routes';
-
 import './style.css';
 
 function ProfileLayout() {

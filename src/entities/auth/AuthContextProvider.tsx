@@ -1,10 +1,7 @@
 import { useState } from 'react';
-
 import { isUserModel } from '@/entities/User/types';
 import type { UserModel } from '@/entities/User/types';
-
 import { getAuthUserMock } from '@/shared/mocks/UserMocks';
-
 import { AuthContext } from './context';
 import type { SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
 

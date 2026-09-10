@@ -1,5 +1,4 @@
 import type { IconProps } from './types';
-
 import './style.css';
 
 function Icon({ className = '', ...props }: IconProps) {

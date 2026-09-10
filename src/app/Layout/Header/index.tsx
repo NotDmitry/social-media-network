@@ -1,17 +1,11 @@
 import { useState } from 'react';
-
 import { Link } from 'react-router';
-
 import { ROUTES } from '@/app/routes';
-
 import { useAuth } from '@/entities/auth/useAuth';
-
 import Logo from '@/shared/ui/Logo';
 import BurgerIcon from '@/shared/ui/BurgerIcon';
-
 import DrawerNavigation from './DrawerNavigation';
 import type { HeaderVariant } from './types';
-
 import './style.css';
 
 interface HeaderProps {

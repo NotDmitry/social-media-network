@@ -1,8 +1,6 @@
 import { useId } from 'react';
 import type { ComponentProps, ReactNode } from 'react';
-
 import { InfoIcon, PencilIcon } from '@/shared/icons';
-
 import './style.css';
 
 type TextareaFieldStatus = 'default' | 'invalid';

@@ -1,7 +1,5 @@
 import { createContext } from 'react';
-
 import type { UserModel } from '@/entities/User/types';
-
 import type { SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
 
 interface AuthContextData {

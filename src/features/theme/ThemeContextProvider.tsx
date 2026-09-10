@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-
 import { ThemeContext } from './context';
 import type { ThemeVariant } from './types';
 

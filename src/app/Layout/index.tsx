@@ -1,9 +1,7 @@
 import { Outlet } from 'react-router';
-
 import Footer from './Footer';
 import Header from './Header';
 import type { HeaderVariant } from './Header/types';
-
 import './style.css';
 
 interface LayoutProps {

@@ -1,9 +1,7 @@
 import { useState } from 'react';
-
 import Button from '@/shared/ui/Button';
 import TextareaField from '@/shared/ui/input/TextareaField';
 import { PencilIcon } from '@/shared/icons';
-
 import './style.css';
 
 function CreateCommentForm() {

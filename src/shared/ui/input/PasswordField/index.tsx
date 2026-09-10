@@ -1,6 +1,5 @@
 import { useId, useState } from 'react';
 import type { ComponentProps, ReactNode } from 'react';
-
 import {
   CheckIcon,
   CrossIcon,
@@ -11,7 +10,6 @@ import {
   KeyboardIcon,
   ThumbUpIcon,
 } from '@/shared/icons';
-
 import './style.css';
 
 type PasswordFieldStatus = 'default' | 'valid' | 'invalid';

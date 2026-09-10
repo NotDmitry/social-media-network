@@ -1,5 +1,4 @@
 import { createContext } from 'react';
-
 import type { ThemeVariant } from './types';
 
 interface ThemeContextData {
