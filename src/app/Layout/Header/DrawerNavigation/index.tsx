@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react';
-import { useAuth } from '@entities/auth/useAuth';
-import type { HeaderVariant } from '@app/Layout/Header/types';
-import { NavLink, useLocation } from 'react-router';
-import Logo from '@shared/ui/Logo';
-import { ROUTES } from '@app/routes';
+import { useLocation, NavLink } from 'react-router';
+import { ROUTES } from '@/app/routes';
+import type { HeaderVariant } from '@/app/Layout/Header/types';
+import { useAuth } from '@/entities/auth/useAuth';
+import Logo from '@/shared/ui/Logo';
 import './style.css';
 
 type DrawerVariant = Exclude<HeaderVariant, 'default'>;
@@ -20,7 +20,7 @@ function DrawerNavigation({ variant, isOpen, onClose }: DrawerNavigationProps) {
 
   const { currentUser } = useAuth();
 
-  function handleNavigationClose(event: React.MouseEvent<HTMLDialogElement>) {
+  function handleBackdropClick(event: React.MouseEvent<HTMLDialogElement>) {
     if (event.target === event.currentTarget) {
       onClose();
     }
@@ -42,16 +42,16 @@ function DrawerNavigation({ variant, isOpen, onClose }: DrawerNavigationProps) {
     const windowResizeMediaQuery = window.matchMedia('screen and (width >= 480px)');
     const dialogElement = dialogElementRef.current;
 
-    const handleWindowResize = () => {
+    const handleMobileBreakpointChange = () => {
       if (windowResizeMediaQuery.matches) {
         dialogElement?.close();
       }
     }
 
-    windowResizeMediaQuery.addEventListener('change', handleWindowResize);
+    windowResizeMediaQuery.addEventListener('change', handleMobileBreakpointChange);
 
     return () => {
-      windowResizeMediaQuery.removeEventListener('change', handleWindowResize);
+      windowResizeMediaQuery.removeEventListener('change', handleMobileBreakpointChange);
     };
   }, []);
 
@@ -60,7 +60,7 @@ function DrawerNavigation({ variant, isOpen, onClose }: DrawerNavigationProps) {
       className='drawer-navigation-dialog'
       ref={dialogElementRef}
       onClose={onClose}
-      onClick={handleNavigationClose}
+      onClick={handleBackdropClick}
     >
       <div className='drawer-navigation-wrapper'>
         <header className='drawer-navigation-header'>

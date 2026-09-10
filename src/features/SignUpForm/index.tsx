@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useAuth } from '@entities/auth/useAuth';
-import type { SignUpPayload } from '@entities/auth/types';
-import TextField from '@shared/ui/input/TextField';
-import PasswordField from '@shared/ui/input/PasswordField';
-import Button from '@shared/ui/Button';
-import { EnvelopeIcon, EyeIcon, InfoIcon } from '@shared/icons';
+import { useAuth } from '@/entities/auth/useAuth';
+import type { SignUpPayload } from '@/entities/auth/types';
+import Button from '@/shared/ui/Button';
+import PasswordField from '@/shared/ui/input/PasswordField';
+import TextField from '@/shared/ui/input/TextField';
+import { EnvelopeIcon, EyeIcon, InfoIcon } from '@/shared/icons';
 
 const INITIAL_FORM_FIELDS: SignUpPayload = {
   fullName: '',
@@ -22,30 +22,45 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
 
   const { signUp } = useAuth();
 
-  function handleFormSubmission(event: React.SubmitEvent<HTMLFormElement>) {
+  function handleFormSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     signUp(formFields);
     onSubmit?.();
   }
 
-  function changeFieldValue(name: keyof SignUpPayload, event: React.ChangeEvent<HTMLInputElement>) {
-    const value = event.currentTarget.value;
-
+  function setFieldValue(name: keyof SignUpPayload, value: string) {
     setFormFields((currentFields) => ({
       ...currentFields,
       [name]: value,
     }));
   }
 
+  function handleFullNameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setFieldValue('fullName', event.currentTarget.value);
+  }
+
+  function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setFieldValue('email', event.currentTarget.value);
+  }
+
+  function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setFieldValue('password', event.currentTarget.value);
+  }
+
+  function handleRepeatPasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setFieldValue('repeatPassword', event.currentTarget.value);
+  }
+
   return (
-    <form className='auth-form' onSubmit={handleFormSubmission}>
+    <form className='auth-form' onSubmit={handleFormSubmit}>
       <fieldset className='auth-form-fieldset'>
         <TextField
           label='Full name'
           labelIcon={<InfoIcon />}
           name='fullName'
-          onChange={(event) => { changeFieldValue('fullName', event) }}
+          autoComplete='name'
+          onChange={handleFullNameChange}
           placeholder='Enter your full name'
           status='default'
           type='text'
@@ -55,7 +70,8 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           label='Email'
           labelIcon={<EnvelopeIcon />}
           name='email'
-          onChange={(event) => { changeFieldValue('email', event) }}
+          autoComplete='email'
+          onChange={handleEmailChange}
           placeholder='Enter email'
           status='default'
           type='email'
@@ -65,7 +81,8 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           label='Password'
           labelIcon={<EyeIcon />}
           name='password'
-          onChange={(event) => { changeFieldValue('password', event) }}
+          autoComplete='new-password'
+          onChange={handlePasswordChange}
           placeholder='Enter password'
           status='default'
           value={formFields.password}
@@ -75,7 +92,8 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           label='Repeat password'
           labelIcon={<EyeIcon />}
           name='repeatPassword'
-          onChange={(event) => { changeFieldValue('repeatPassword', event) }}
+          autoComplete='new-password'
+          onChange={handleRepeatPasswordChange}
           placeholder='Enter password again'
           status='default'
           value={formFields.repeatPassword}

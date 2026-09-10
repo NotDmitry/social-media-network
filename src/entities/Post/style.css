@@ -102,7 +102,8 @@
 
 .post-menu-like-icon,
 .post-menu-comment-icon {
-  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
   stroke: var(--component-text-dark);
   transition: all 0.2s ease-in-out;
 }
@@ -113,7 +114,8 @@
 }
 
 .chevron-icon {
-  flex: 0 0 24px;
+  width: 24px;
+  height: 24px;
   fill: var(--component-text-dark);
   transition: all 0.2s ease-in-out;
 }

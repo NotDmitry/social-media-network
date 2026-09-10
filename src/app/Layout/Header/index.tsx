@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import type { HeaderVariant } from './types';
-import { ROUTES } from '@app/routes';
 import { Link } from 'react-router';
-import Logo from '@shared/ui/Logo';
-import BurgerIcon from '@shared/ui/BurgerIcon';
+import { ROUTES } from '@/app/routes';
+import { useAuth } from '@/entities/auth/useAuth';
+import Logo from '@/shared/ui/Logo';
+import BurgerIcon from '@/shared/ui/BurgerIcon';
 import DrawerNavigation from './DrawerNavigation';
+import type { HeaderVariant } from './types';
 import './style.css';
-import { useAuth } from '@entities/auth/useAuth';
 
 interface HeaderProps {
   variant: HeaderVariant;
@@ -17,19 +17,19 @@ function Header({ variant }: HeaderProps) {
 
   const { currentUser } = useAuth();
 
-  function onDrawerOpen() {
+  function handleMenuClick() {
     setIsDrawerOpen(true);
   }
 
-  function onDrawerClose() {
+  function handleDrawerClose() {
     setIsDrawerOpen(false);
   }
 
   return (
     <header className='header'>
-      <a className='header-external-link' href="https://sidekick-software.com/" target='_blank' rel='noreferrer'>
+      <Link className='header-external-link' to={ROUTES.home}>
         <Logo />
-      </a>
+      </Link>
       <nav className='nav-panel'>
         {variant === 'guest' &&
           <>
@@ -57,14 +57,14 @@ function Header({ variant }: HeaderProps) {
             className='header-menu-button'
             type='button'
             aria-label='Open mobile navigation'
-            onClick={() => { onDrawerOpen() }}
+            onClick={() => { handleMenuClick() }}
           >
             <BurgerIcon isOpen={isDrawerOpen} />
           </button>
           <DrawerNavigation
             isOpen={isDrawerOpen}
             variant={variant}
-            onClose={() => { onDrawerClose() }}
+            onClose={() => { handleDrawerClose() }}
           />
         </>
       }

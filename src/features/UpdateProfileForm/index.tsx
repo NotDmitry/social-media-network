@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '@entities/auth/useAuth';
-import type { UserModel } from '@entities/User/types';
-import type { UpdateProfilePayload } from '@entities/auth/types';
-import Button from '@shared/ui/Button';
-import TextField from '@shared/ui/input/TextField';
-import TextareaField from '@shared/ui/input/TextareaField';
-import { PersonIcon } from '@shared/icons/PersonIcon';
-import { EnvelopeIcon, PencilIcon } from '@shared/icons';
+import { useAuth } from '@/entities/auth/useAuth';
+import type { UpdateProfilePayload } from '@/entities/auth/types';
+import type { UserModel } from '@/entities/User/types';
+import Button from '@/shared/ui/Button';
+import TextareaField from '@/shared/ui/input/TextareaField';
+import TextField from '@/shared/ui/input/TextField';
+import { EnvelopeIcon, PencilIcon, PersonIcon } from '@/shared/icons';
 import './style.css';
 
 interface UpdateProfileFormProps {
@@ -134,6 +133,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         label='Username'
         labelIcon={<PersonIcon />}
         name='username'
+        autoComplete='username'
         onChange={(event) => { changeFieldValue('username', event) }}
         placeholder='@username123'
         status='default'
@@ -144,6 +144,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         label='Email'
         labelIcon={<EnvelopeIcon />}
         name='email'
+        autoComplete='email'
         onChange={(event) => { changeFieldValue('email', event) }}
         placeholder='email@domain.com'
         status='default'

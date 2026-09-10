@@ -54,17 +54,3 @@
     }
   }
 }
-
-.dark-theme-switch-container {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.dark-theme-switch-label {
-  color: var(--component-text-dark);
-  font-family: var(--second-family);
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 150%;
-}

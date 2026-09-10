@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import ToggleSwitch from '@shared/ui/ToggleSwitch';
+import ToggleSwitch from '@/shared/ui/ToggleSwitch';
+import { CARDS_DATA } from '@/shared/mocks/StatsCardMocks';
+import { TABLE_DATA } from '@/shared/mocks/TableViewMocks';
 import StatsCard from './StatsCard';
 import TableView from './TableView';
-import { TABLE_DATA } from '@shared/mocks/TableViewMocks';
-import { CARDS_DATA } from '@shared/mocks/StatsCardMocks';
 import './style.css';
 
 function ProfileStatisticsPage() {
   const [isChartViewEnabled, setIsChartViewEnabled] = useState(false);
 
-  function toggleChartView(isToggled: boolean) {
+  function handleChartViewToggle(isToggled: boolean) {
     setIsChartViewEnabled(isToggled);
   }
 
@@ -27,15 +27,11 @@ function ProfileStatisticsPage() {
           />
         ))}
       </section>
-      {/* TODO: Switch label */}
-      <div className='chart-view-switch-container'>
-        <ToggleSwitch
-          ariaLabel='Toggle chart view'
-          isToggled={isChartViewEnabled}
-          onToggle={toggleChartView}
-        />
-        <span className='chart-view-switch-label'>Enable Chart view</span>
-      </div>
+      <ToggleSwitch
+        label='Enable Chart view'
+        isToggled={isChartViewEnabled}
+        onToggle={handleChartViewToggle}
+      />
       <div className='data-views-wrapper'>
         <section className='data-view-container'>
           <h2 className='data-view-title'>Likes</h2>

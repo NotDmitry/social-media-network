@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router';
-import { useTheme } from '@features/theme/useTheme';
-import { useAuth } from '@entities/auth/useAuth';
-import type { ThemeVariant } from '@features/theme/types';
+import { ROUTES } from '@/app/routes';
+import { useTheme } from '@/features/theme/useTheme';
 import UpdateProfileForm from '@/features/UpdateProfileForm';
-import ToggleSwitch from '@shared/ui/ToggleSwitch';
-import Button from '@shared/ui/Button';
-import { ROUTES } from '@app/routes';
+import type { ThemeVariant } from '@/features/theme/types';
+import { useAuth } from '@/entities/auth/useAuth';
+import Button from '@/shared/ui/Button';
+import ToggleSwitch from '@/shared/ui/ToggleSwitch';
 import './style.css';
 
 function ProfileInfoPage() {
@@ -13,12 +13,12 @@ function ProfileInfoPage() {
   const { theme, setTheme } = useTheme();
   const { currentUser, signOut } = useAuth();
 
-  function logout() {
+  function handleLogoutClick() {
     signOut();
     void navigate(ROUTES.signIn);
   }
 
-  function toggleDarkTheme(isDarkThemeSelected: boolean) {
+  function handleDarkThemeToggle(isDarkThemeSelected: boolean) {
     const newTheme: ThemeVariant = isDarkThemeSelected ? 'dark' : 'light';
     setTheme(newTheme);
   }
@@ -38,19 +38,15 @@ function ProfileInfoPage() {
       <div className='profile-info-side-container'>
         <section className='profile-info-section'>
           <h2 className='profile-info-title'>Preferences</h2>
-          {/* TODO: add label text directly to ToggleSwitch */}
-          <div className='dark-theme-switch-container'>
-            <ToggleSwitch
-              ariaLabel='Switch dark mode theme'
-              isToggled={theme === 'dark'}
-              onToggle={toggleDarkTheme}
-            />
-            <span className='dark-theme-switch-label'>Dark theme</span>
-          </div>
+          <ToggleSwitch
+            label='Dark theme'
+            isToggled={theme === 'dark'}
+            onToggle={handleDarkThemeToggle}
+          />
         </section>
         <section className='profile-info-section'>
           <h2 className='profile-info-title'>Actions</h2>
-          <Button type='button' onClick={logout}>Logout</Button>
+          <Button type='button' onClick={handleLogoutClick}>Logout</Button>
         </section>
       </div>
     </div>

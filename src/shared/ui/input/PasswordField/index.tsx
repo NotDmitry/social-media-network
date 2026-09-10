@@ -1,15 +1,15 @@
 import { useId, useState } from 'react';
 import type { ComponentProps, ReactNode } from 'react';
 import {
-  KeyboardIcon,
   CheckIcon,
   CrossIcon,
+  EyeCrossedIcon,
+  EyeIcon,
   InfoIcon,
   InfoTooltipIcon,
+  KeyboardIcon,
   ThumbUpIcon,
-  EyeIcon,
-  EyeCrossedIcon,
-} from '@shared/icons';
+} from '@/shared/icons';
 import './style.css';
 
 type PasswordFieldStatus = 'default' | 'valid' | 'invalid';
@@ -64,7 +64,7 @@ function PasswordField({
     validationClassName = `${validationClassName} input-field-validation_valid`;
   }
 
-  function togglePasswordVisibility() {
+  function handlePasswordVisibilityClick() {
     setIsPasswordVisible((isVisible) => !isVisible);
   }
 
@@ -95,7 +95,7 @@ function PasswordField({
           <button
             className='toggle-password-button'
             type='button'
-            onClick={togglePasswordVisibility}
+            onClick={handlePasswordVisibilityClick}
             aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
           >
             {isPasswordVisible ? <EyeCrossedIcon /> : <EyeIcon />}

@@ -1,11 +1,11 @@
-import { Link, useNavigate } from 'react-router';
-import SignUpForm from '@features/SignUpForm';
-import { ROUTES } from '@app/routes';
+import { useNavigate, Link } from 'react-router';
+import { ROUTES } from '@/app/routes';
+import SignUpForm from '@/features/SignUpForm';
 
 function SignUpPage() {
   const navigate = useNavigate();
 
-  function openPostsFeed() {
+  function handleSignUpSubmit() {
     void navigate(ROUTES.home);
   }
 
@@ -18,12 +18,12 @@ function SignUpPage() {
           <span>to sign up for this app</span>
         </p>
       </div>
-      <SignUpForm onSubmit={openPostsFeed} />
+      <SignUpForm onSubmit={handleSignUpSubmit} />
       <p className='auth-page-agreement-text'>
         By clicking continue, you agree to our{' '}
         <a
           className='auth-page-external-link'
-          href="https://policies.google.com/terms"
+          href='https://policies.google.com/terms'
           target='_blank'
           rel='noreferrer'
         >
@@ -32,7 +32,7 @@ function SignUpPage() {
         {' '}and{' '}
         <a
           className='auth-page-external-link'
-          href="https://policies.google.com/privacy"
+          href='https://policies.google.com/privacy'
           target='_blank'
           rel='noreferrer'
         >

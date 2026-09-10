@@ -9,6 +9,7 @@
 
 .error-page-icon {
   width: clamp(42px, 10vw, 95px);
+  height: auto;
   fill: var(--icon-dark);
 }
 

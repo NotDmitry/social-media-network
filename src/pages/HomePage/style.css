@@ -94,7 +94,11 @@
   }
 }
 
-@media screen and (width <= 375px) {
+@media screen and (width < 375px) {
+  .create-post-avatar {
+    display: none;
+  }
+
   .create-post-input-section {
     flex-direction: column;
     gap: 8px;

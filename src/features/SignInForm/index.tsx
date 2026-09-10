@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useAuth } from '@entities/auth/useAuth';
-import type { SignInPayload } from '@entities/auth/types';
-import TextField from '@shared/ui/input/TextField';
-import PasswordField from '@shared/ui/input/PasswordField';
-import Button from '@shared/ui/Button';
-import { EnvelopeIcon, EyeIcon } from '@shared/icons';
+import { useAuth } from '@/entities/auth/useAuth';
+import type { SignInPayload } from '@/entities/auth/types';
+import Button from '@/shared/ui/Button';
+import PasswordField from '@/shared/ui/input/PasswordField';
+import TextField from '@/shared/ui/input/TextField';
+import { EnvelopeIcon, EyeIcon } from '@/shared/icons';
 
 const INITIAL_FORM_FIELDS: SignInPayload = {
   email: '',
@@ -20,30 +20,37 @@ function SignInForm({ onSubmit }: SignInFormProps) {
 
   const { signIn } = useAuth();
 
-  function handleFormSubmission(event: React.SubmitEvent<HTMLFormElement>) {
+  function handleFormSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     signIn(formFields);
     onSubmit?.();
   }
 
-  function changeFieldValue(name: keyof SignInPayload, event: React.ChangeEvent<HTMLInputElement>) {
-    const value = event.currentTarget.value;
-
+  function setFieldValue(name: keyof SignInPayload, value: string) {
     setFormFields((currentFields) => ({
       ...currentFields,
       [name]: value,
     }));
   }
 
+  function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setFieldValue('email', event.currentTarget.value);
+  }
+
+  function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setFieldValue('password', event.currentTarget.value);
+  }
+
   return (
-    <form className='auth-form' onSubmit={handleFormSubmission}>
+    <form className='auth-form' onSubmit={handleFormSubmit}>
       <fieldset className='auth-form-fieldset'>
         <TextField
           label='Email'
           labelIcon={<EnvelopeIcon />}
           name='email'
-          onChange={(event) => { changeFieldValue('email', event) }}
+          autoComplete='email'
+          onChange={handleEmailChange}
           placeholder='Enter email'
           status='default'
           type='email'
@@ -53,7 +60,8 @@ function SignInForm({ onSubmit }: SignInFormProps) {
           label='Password'
           labelIcon={<EyeIcon />}
           name='password'
-          onChange={(event) => { changeFieldValue('password', event) }}
+          autoComplete='current-password'
+          onChange={handlePasswordChange}
           placeholder='Enter password'
           status='default'
           value={formFields.password}
