@@ -68,8 +68,8 @@ function DrawerNavigation({ variant, isOpen, onClose }: DrawerNavigationProps) {
           {variant === 'user' && currentUser &&
             <img
               className='avatar'
-              src={currentUser.avatarUrl}
-              alt={`Profile picture of ${currentUser.fullName}`}
+              src={currentUser.profileImage ?? undefined}
+              alt={`Profile picture of ${currentUser.displayName}`}
               width={24}
               height={24}
             />

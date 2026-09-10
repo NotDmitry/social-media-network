@@ -18,8 +18,8 @@ function HomePage() {
           <div className='create-post-container'>
             <img
               className='avatar create-post-avatar'
-              src={currentUser.avatarUrl}
-              alt={`Picture of ${currentUser.fullName}`}
+              src={currentUser.profileImage ?? undefined}
+              alt={`Picture of ${currentUser.displayName}`}
               width={64}
               height={64}
             />

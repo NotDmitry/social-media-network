@@ -5,7 +5,7 @@ export const usernameSchema = z.string().trim().nonempty('The username can\'t be
 
 export const nameSchema = z.string().trim().nonempty('The name can\'t be empty');
 
-export const userDescription = z.string();
+export const userDescriptionSchema = z.string();
 
 export const userModelSchema = z.object({
   id: idSchema,
@@ -13,10 +13,10 @@ export const userModelSchema = z.object({
   email: emailSchema.nullable(),
   firstName: nameSchema.nullable(),
   profileImage: imageUrlSchema.nullable(),
-  description: userDescription.nullable(),
-  bio: userDescription.nullish(),
+  description: userDescriptionSchema.nullable(),
+  bio: userDescriptionSchema.nullable(),
   secondName: nameSchema.nullable(),
   lastLogin: dateTimeSchema.nullable(),
   creationDate: dateTimeSchema.nullable(),
   modifiedDate: dateTimeSchema.nullable(),
-})
+});
