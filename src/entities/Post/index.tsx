@@ -3,7 +3,7 @@ import CreateCommentForm from '@/features/CreateCommentForm';
 import { useAuth } from '@/entities/auth/useAuth';
 import Comment from '@/entities/Comment';
 import type { CommentModel } from '@/entities/Comment/types';
-import type { UserModel } from '@/entities/User/types';
+import type { UserView } from '@/entities/User/types';
 import { HeartIcon, CommentIcon, ChevronDownIcon } from '@/shared/icons';
 import { getRelativeTimePresentationString } from '@/shared/utilities/time';
 import type { PostModel } from './types';
@@ -12,7 +12,7 @@ import './style.css';
 interface PostProps {
   post: PostModel;
   comments: CommentModel[];
-  author: UserModel;
+  author: UserView;
 }
 
 function Post({ post, comments, author }: PostProps) {
@@ -36,12 +36,12 @@ function Post({ post, comments, author }: PostProps) {
       <header className='post-header'>
         <img
           className='avatar post-avatar'
-          src={author.avatarUrl}
-          alt={`Profile picture of ${author.fullName}`}
+          src={author.profileImage ?? undefined}
+          alt={`Profile picture of ${author.displayName}`}
           width={48}
           height={48}
         />
-        <span className='post-author'>{author.fullName}</span>
+        <span className='post-author'>{author.displayName}</span>
         <time
           className='post-time'
           dateTime={post.createdAt}>{getRelativeTimePresentationString(post.createdAt)}
@@ -53,7 +53,7 @@ function Post({ post, comments, author }: PostProps) {
           className='post-image'
           src={post.imageUrl}
           width={500}
-          alt={`Post by ${author.fullName}`}
+          alt={`Post by ${author.displayName}`}
         />
       }
 

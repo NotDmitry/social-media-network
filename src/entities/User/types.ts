@@ -1,28 +1,25 @@
-export interface UserModel {
-  id: string;
-  fullName: string;
-  username: string;
-  email: string;
-  description?: string;
-  avatarUrl: string;
-  createdAt: string;
+import { z } from 'zod';
+import { userModelSchema } from './schema';
+
+export type UserModel = z.output<typeof userModelSchema>;
+
+export interface UserView extends UserModel {
+  displayName: string;
 }
 
-// TODO: replace with ZOD runtime schema validation
 export function isUserModel(value: unknown): value is UserModel {
-  if (typeof value !== 'object' || value === null) {
-    return false;
+  return userModelSchema.validate(value);
+}
+
+export function getUserDisplayName(user: UserModel) {
+  const displayName = `${user.firstName ?? ''} ${user.secondName ?? ''}`.trim();
+
+  return displayName || user.username;
+}
+
+export function toUserView(user: UserModel): UserView {
+  return {
+    ...user,
+    displayName: getUserDisplayName(user),
   }
-
-  const user = value as Record<string, unknown>;
-
-  return (
-    typeof user.id === 'string' &&
-    typeof user.fullName === 'string' &&
-    typeof user.username === 'string' &&
-    typeof user.email === 'string' &&
-    (user.description === undefined || typeof user.description === 'string') &&
-    typeof user.avatarUrl === 'string' &&
-    typeof user.createdAt === 'string'
-  );
 }

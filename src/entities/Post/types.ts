@@ -1,6 +1,6 @@
 export interface PostModel {
   id: string;
-  authorId: string;
+  authorId: number;
   imageUrl?: string;
   description: string;
   createdAt: string;
