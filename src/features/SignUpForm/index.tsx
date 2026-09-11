@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/entities/auth/useAuth';
+import type { SignUpPayload } from '@/entities/auth/types';
 import Button from '@/shared/ui/Button';
 import PasswordField from '@/shared/ui/input/PasswordField';
-import TextField from '@/shared/ui/input/TextField';
-import { EnvelopeIcon, EyeIcon, InfoIcon } from '@/shared/icons';
+import TextField, { type TextFieldStatus } from '@/shared/ui/input/TextField';
+import { EnvelopeIcon, EyeIcon, PersonIcon } from '@/shared/icons';
+import { signUpFormSchema } from './schema';
 import type { SignUpFormFields } from './schema';
 
 const INITIAL_FORM_FIELDS: SignUpFormFields = {
-  firstName: '',
-  secondName: '',
+  fullName: '',
   email: '',
   password: '',
   repeatPassword: '',
@@ -19,101 +21,77 @@ interface SignUpFormProps {
 }
 
 function SignUpForm({ onSubmit }: SignUpFormProps) {
-  const [formFields, setFormFields] = useState(INITIAL_FORM_FIELDS);
-
   const { signUp } = useAuth();
 
-  function handleFormSubmit(event: React.SubmitEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: {
+      errors,
+      isSubmitted,
+    },
+  } = useForm<SignUpFormFields, unknown, SignUpPayload>({
+    resolver: zodResolver(signUpFormSchema),
+    defaultValues: INITIAL_FORM_FIELDS,
+  });
 
-    signUp(formFields);
+  function handleFormSubmit(signUpPayload: SignUpPayload) {
+    signUp(signUpPayload);
     onSubmit?.();
   }
 
-  function setFieldValue(name: keyof SignUpFormFields, value: string) {
-    setFormFields((currentFields) => ({
-      ...currentFields,
-      [name]: value,
-    }));
-  }
+  function getFieldStatus(hasError: boolean): TextFieldStatus {
+    if (!isSubmitted) {
+      return 'default';
+    }
 
-  function handleFirstNameChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setFieldValue('firstName', event.currentTarget.value);
-  }
-
-  function handleSecondNameChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setFieldValue('secondName', event.currentTarget.value);
-  }
-
-  function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setFieldValue('email', event.currentTarget.value);
-  }
-
-  function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setFieldValue('password', event.currentTarget.value);
-  }
-
-  function handleRepeatPasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setFieldValue('repeatPassword', event.currentTarget.value);
+    return hasError ? 'invalid' : 'valid';
   }
 
   return (
-    <form className='auth-form' onSubmit={handleFormSubmit}>
+    <form className='auth-form' onSubmit={(event) => void handleSubmit(handleFormSubmit)(event)}>
       <fieldset className='auth-form-fieldset'>
         <TextField
-          label='First name'
-          labelIcon={<InfoIcon />}
-          name='firstName'
-          autoComplete='given-name'
-          onChange={handleFirstNameChange}
-          placeholder='Enter your first name'
-          status='default'
+          {...register('fullName')}
+          label='Full name'
+          labelIcon={<PersonIcon />}
+          autoComplete='name'
+          placeholder='Enter your full name'
+          status={getFieldStatus(Boolean(errors.fullName))}
+          errorMessage={errors.fullName?.message}
           type='text'
-          value={formFields.firstName}
         />
         <TextField
-          label='Second name'
-          labelIcon={<InfoIcon />}
-          name='secondName'
-          autoComplete='family-name'
-          onChange={handleSecondNameChange}
-          placeholder='Enter your second name'
-          status='default'
-          type='text'
-          value={formFields.secondName}
-        />
-        <TextField
+          {...register('email')}
           label='Email'
           labelIcon={<EnvelopeIcon />}
-          name='email'
           autoComplete='email'
-          onChange={handleEmailChange}
           placeholder='Enter email'
-          status='default'
+          status={getFieldStatus(Boolean(errors.email))}
+          errorMessage={errors.email?.message}
           type='email'
-          value={formFields.email}
         />
         <PasswordField
+          {...register('password', { deps: 'repeatPassword' })}
           label='Password'
           labelIcon={<EyeIcon />}
-          name='password'
           autoComplete='new-password'
-          onChange={handlePasswordChange}
           placeholder='Enter password'
-          status='default'
-          value={formFields.password}
-          showVisibilityToggle={formFields.password.length > 0}
+          status={getFieldStatus(Boolean(errors.password))}
+          errorMessage={errors.password?.message}
+          infoMessage='Your password is correct'
+          showVisibilityToggle={true}
         />
         <PasswordField
+          {...register('repeatPassword')}
           label='Repeat password'
           labelIcon={<EyeIcon />}
-          name='repeatPassword'
           autoComplete='new-password'
-          onChange={handleRepeatPasswordChange}
           placeholder='Enter password again'
-          status='default'
-          value={formFields.repeatPassword}
-          showVisibilityToggle={formFields.repeatPassword.length > 0}
+          status={getFieldStatus(Boolean(errors.repeatPassword))}
+          errorMessage={errors.repeatPassword?.message}
+          infoMessage='Passwords match'
+          showVisibilityToggle={true}
         />
       </fieldset>
       <Button type='submit'>Sign Up</Button>

@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/entities/auth/useAuth';
 import type { SignInPayload } from '@/entities/auth/types';
 import Button from '@/shared/ui/Button';
 import PasswordField from '@/shared/ui/input/PasswordField';
-import TextField from '@/shared/ui/input/TextField';
+import TextField, { type TextFieldStatus } from '@/shared/ui/input/TextField';
 import { EnvelopeIcon, EyeIcon } from '@/shared/icons';
+import { signInFormSchema } from './schema';
 
 const INITIAL_FORM_FIELDS: SignInPayload = {
   email: '',
@@ -16,56 +18,55 @@ interface SignInFormProps {
 }
 
 function SignInForm({ onSubmit }: SignInFormProps) {
-  const [formFields, setFormFields] = useState(INITIAL_FORM_FIELDS);
-
   const { signIn } = useAuth();
 
-  function handleFormSubmit(event: React.SubmitEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: {
+      errors,
+      isSubmitted,
+    },
+  } = useForm<SignInPayload>({
+    resolver: zodResolver(signInFormSchema),
+    defaultValues: INITIAL_FORM_FIELDS,
+  });
 
-    signIn(formFields);
+  function handleFormSubmit(signInPayload: SignInPayload) {
+    signIn(signInPayload);
     onSubmit?.();
   }
 
-  function setFieldValue(name: keyof SignInPayload, value: string) {
-    setFormFields((currentFields) => ({
-      ...currentFields,
-      [name]: value,
-    }));
-  }
+  function getFieldStatus(hasError: boolean): TextFieldStatus {
+    if (!isSubmitted) {
+      return 'default';
+    }
 
-  function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setFieldValue('email', event.currentTarget.value);
-  }
-
-  function handlePasswordChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setFieldValue('password', event.currentTarget.value);
+    return hasError ? 'invalid' : 'valid';
   }
 
   return (
-    <form className='auth-form' onSubmit={handleFormSubmit}>
+    <form className='auth-form' onSubmit={(event) => void handleSubmit(handleFormSubmit)(event)}>
       <fieldset className='auth-form-fieldset'>
         <TextField
+          {...register('email')}
           label='Email'
           labelIcon={<EnvelopeIcon />}
-          name='email'
           autoComplete='email'
-          onChange={handleEmailChange}
           placeholder='Enter email'
-          status='default'
+          status={getFieldStatus(Boolean(errors.email))}
+          errorMessage={errors.email?.message}
           type='email'
-          value={formFields.email}
         />
         <PasswordField
+          {...register('password')}
           label='Password'
           labelIcon={<EyeIcon />}
-          name='password'
           autoComplete='current-password'
-          onChange={handlePasswordChange}
           placeholder='Enter password'
-          status='default'
-          value={formFields.password}
-          showVisibilityToggle={formFields.password.length > 0}
+          status={getFieldStatus(Boolean(errors.password))}
+          errorMessage={errors.password?.message}
+          showVisibilityToggle={true}
         />
       </fieldset>
       <Button type='submit'>Sign In</Button>

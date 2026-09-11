@@ -3,7 +3,7 @@ import type { ComponentProps, ReactNode } from 'react';
 import { InfoIcon, PencilIcon } from '@/shared/icons';
 import './style.css';
 
-type TextareaFieldStatus = 'default' | 'invalid';
+export type TextareaFieldStatus = 'default' | 'invalid';
 
 interface TextareaFieldProps extends ComponentProps<'textarea'> {
   label: string;
