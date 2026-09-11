@@ -1,12 +1,12 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/entities/auth/useAuth';
-import { signInSchema } from '@/entities/auth/schema';
 import type { SignInPayload } from '@/entities/auth/types';
 import Button from '@/shared/ui/Button';
 import PasswordField, { type PasswordFieldStatus } from '@/shared/ui/input/PasswordField';
 import TextField, { type TextFieldStatus } from '@/shared/ui/input/TextField';
 import { EnvelopeIcon, EyeIcon } from '@/shared/icons';
+import { signInFormSchema } from './schema';
 
 const INITIAL_FORM_FIELDS: SignInPayload = {
   email: '',
@@ -28,7 +28,7 @@ function SignInForm({ onSubmit }: SignInFormProps) {
       isSubmitted,
     },
   } = useForm<SignInPayload>({
-    resolver: zodResolver(signInSchema),
+    resolver: zodResolver(signInFormSchema),
     defaultValues: INITIAL_FORM_FIELDS,
   });
 
