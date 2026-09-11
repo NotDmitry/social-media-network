@@ -1,87 +1,72 @@
 import { useState } from 'react';
-import { isUserModel, toUserView } from '@/entities/User/types';
-import type { UserModel } from '@/entities/User/types';
+import { login } from '@/entities/auth/api/login';
+import { toUserView } from '@/entities/User/types';
+import { accessToken } from '@/shared/api/accessToken';
 import { getAuthUserMock } from '@/shared/mocks/UserMocks';
 import { AuthContext } from './context';
-import type { SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
-
-const CURRENT_USER_STORAGE_KEY = 'currentUser';
+import type { AuthState, SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
 
 interface AuthContextProviderProps {
   children: React.ReactNode;
 }
 
-function getCurrentUserFromStorage(): UserModel | null {
-  try {
-    const storedUser = localStorage.getItem(CURRENT_USER_STORAGE_KEY);
-
-    if (storedUser === null) {
-      return null;
-    }
-
-    const parsedUser: unknown = JSON.parse(storedUser);
-    const currentUser = isUserModel(parsedUser) ? parsedUser : null;
-
-    return currentUser;
-  } catch (error) {
-    console.error(error);
-
-    return null;
-  }
-}
-
 function AuthContextProvider({ children }: AuthContextProviderProps) {
-  const [currentUser, setCurrentUser] = useState<UserModel | null>(() => getCurrentUserFromStorage());
+  const [authState, setAuthState] = useState<AuthState>({
+    status: 'guest',
+    currentUser: null,
+  });
 
-  function updateCurrentUser(user: UserModel | null) {
-    try {
-      if (user === null) {
-        localStorage.removeItem(CURRENT_USER_STORAGE_KEY);
-      } else {
-        localStorage.setItem(CURRENT_USER_STORAGE_KEY, JSON.stringify(user));
-      }
+  async function signIn(signInPayload: SignInPayload) {
+    const loginResponsePayload = await login(signInPayload);
 
-      setCurrentUser(user);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  function signIn({ email }: SignInPayload) {
-    updateCurrentUser({
-      ...getAuthUserMock(),
-      email
+    accessToken.set(loginResponsePayload.accessToken);
+    setAuthState({
+      status: 'authenticated',
+      currentUser: loginResponsePayload.user,
     });
   }
 
   function signUp({ email, firstName, secondName }: SignUpPayload) {
-    updateCurrentUser({
-      ...getAuthUserMock(),
-      email,
-      firstName,
-      secondName: secondName ?? null,
+    setAuthState({
+      status: 'authenticated',
+      currentUser: {
+        ...getAuthUserMock(),
+        email,
+        firstName,
+        secondName: secondName ?? null,
+      }
     });
   }
 
   function signOut() {
-    updateCurrentUser(null);
+    accessToken.clear();
+    setAuthState({
+      status: 'guest',
+      currentUser: null,
+    })
   }
 
   function updateProfile(updatedFields: UpdateProfilePayload) {
-    if (currentUser === null) {
-      return;
-    }
+    setAuthState((currentState) => {
+      if (currentState.status !== 'authenticated') {
+        return currentState;
+      }
 
-    updateCurrentUser({
-      ...currentUser,
-      ...updatedFields,
+      return {
+        status: currentState.status,
+        currentUser: {
+          ...currentState.currentUser,
+          ...updatedFields,
+        },
+      };
     });
   }
 
   return (
     <AuthContext value={{
-      currentUser: currentUser ? toUserView(currentUser) : null,
-      isUserAuthenticated: currentUser !== null,
+      authStatus: authState.status,
+      currentUser: authState.status === 'authenticated' ? toUserView(authState.currentUser) : null,
+      isUserAuthenticated: authState.status === 'authenticated',
       signIn,
       signUp,
       signOut,

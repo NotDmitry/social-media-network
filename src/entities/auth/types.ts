@@ -1,3 +1,19 @@
+import type { UserModel } from "@/entities/User/types";
+
+export type AuthState =
+  | {
+    status: 'pending';
+    currentUser: null;
+  }
+  | {
+    status: 'guest';
+    currentUser: null;
+  }
+  | {
+    status: 'authenticated';
+    currentUser: UserModel;
+  }
+
 export interface SignInPayload {
   email: string;
   password: string;

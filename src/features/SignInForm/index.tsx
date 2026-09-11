@@ -11,7 +11,7 @@ import { signInFormSchema } from './schema';
 const INITIAL_FORM_FIELDS: SignInPayload = {
   email: '',
   password: '',
-}
+};
 
 interface SignInFormProps {
   onSubmit?: () => void;
@@ -26,14 +26,21 @@ function SignInForm({ onSubmit }: SignInFormProps) {
     formState: {
       errors,
       isSubmitted,
+      isSubmitting,
     },
   } = useForm<SignInPayload>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: INITIAL_FORM_FIELDS,
   });
 
-  function handleFormSubmit(signInPayload: SignInPayload) {
-    signIn(signInPayload);
+  async function handleFormSubmit(signInPayload: SignInPayload) {
+    try {
+      await signIn(signInPayload);
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+
     onSubmit?.();
   }
 
@@ -57,6 +64,7 @@ function SignInForm({ onSubmit }: SignInFormProps) {
           status={getFieldStatus(Boolean(errors.email))}
           errorMessage={errors.email?.message}
           type='email'
+          disabled={isSubmitting}
         />
         <PasswordField
           {...register('password')}
@@ -67,9 +75,12 @@ function SignInForm({ onSubmit }: SignInFormProps) {
           status={getFieldStatus(Boolean(errors.password))}
           errorMessage={errors.password?.message}
           showVisibilityToggle={true}
+          disabled={isSubmitting}
         />
       </fieldset>
-      <Button type='submit'>Sign In</Button>
+      <Button type='submit' disabled={isSubmitting}>
+        {isSubmitting ? 'In progress...' : 'Sign In'}
+      </Button>
     </form>
   );
 }
