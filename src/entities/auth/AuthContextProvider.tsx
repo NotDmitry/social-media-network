@@ -59,7 +59,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
       ...getAuthUserMock(),
       email,
       firstName,
-      secondName,
+      secondName: secondName ?? null,
     });
   }
 

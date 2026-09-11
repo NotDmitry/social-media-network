@@ -7,7 +7,7 @@ export interface SignUpPayload {
   email: string;
   password: string;
   firstName: string;
-  secondName: string;
+  secondName?: string;
 }
 
 export interface UpdateProfilePayload {

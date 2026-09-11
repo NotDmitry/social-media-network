@@ -10,8 +10,7 @@ import { signUpFormSchema } from './schema';
 import type { SignUpFormFields } from './schema';
 
 const INITIAL_FORM_FIELDS: SignUpFormFields = {
-  firstName: '',
-  secondName: '',
+  fullName: '',
   email: '',
   password: '',
   repeatPassword: '',
@@ -31,19 +30,12 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
       errors,
       isSubmitted,
     },
-  } = useForm<SignUpFormFields>({
+  } = useForm<SignUpFormFields, unknown, SignUpPayload>({
     resolver: zodResolver(signUpFormSchema),
     defaultValues: INITIAL_FORM_FIELDS,
   });
 
-  function handleFormSubmit(signUpFields: SignUpFormFields) {
-    const signUpPayload: SignUpPayload = {
-      email: signUpFields.email,
-      firstName: signUpFields.firstName,
-      secondName: signUpFields.secondName,
-      password: signUpFields.password,
-    }
-
+  function handleFormSubmit(signUpPayload: SignUpPayload) {
     signUp(signUpPayload);
     onSubmit?.();
   }
@@ -60,23 +52,13 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
     <form className='auth-form' onSubmit={(event) => void handleSubmit(handleFormSubmit)(event)}>
       <fieldset className='auth-form-fieldset'>
         <TextField
-          {...register('firstName')}
-          label='First name'
+          {...register('fullName')}
+          label='Full name'
           labelIcon={<PersonIcon />}
-          autoComplete='given-name'
-          placeholder='Enter your first name'
-          status={getFieldStatus(Boolean(errors.firstName))}
-          errorMessage={errors.firstName?.message}
-          type='text'
-        />
-        <TextField
-          {...register('secondName')}
-          label='Second name'
-          labelIcon={<PersonIcon />}
-          autoComplete='family-name'
-          placeholder='Enter your second name'
-          status={getFieldStatus(Boolean(errors.secondName))}
-          errorMessage={errors.secondName?.message}
+          autoComplete='name'
+          placeholder='Enter your full name'
+          status={getFieldStatus(Boolean(errors.fullName))}
+          errorMessage={errors.fullName?.message}
           type='text'
         />
         <TextField
