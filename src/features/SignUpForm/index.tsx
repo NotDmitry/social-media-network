@@ -90,7 +90,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           type='email'
         />
         <PasswordField
-          {...register('password')}
+          {...register('password', { deps: 'repeatPassword' })}
           label='Password'
           labelIcon={<EyeIcon />}
           autoComplete='new-password'
