@@ -18,7 +18,7 @@ export async function getCurrentUser(signal?: AbortSignal): Promise<UserModel> {
     response = await fetch('/api/me', {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${availableAccessToken}`
+        Authorization: `Bearer ${availableAccessToken}`,
       },
       signal,
     });
@@ -27,7 +27,7 @@ export async function getCurrentUser(signal?: AbortSignal): Promise<UserModel> {
       throw error;
     }
 
-    throw new Error(`Cannot connect to the server`, {
+    throw new Error('Cannot connect to the server', {
       cause: error,
     });
   }

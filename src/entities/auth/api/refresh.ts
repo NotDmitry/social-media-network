@@ -4,7 +4,7 @@ import { BackendResponseError } from '@/shared/api/backendResponseError';
 
 const REFRESH_ERROR_MESSAGE = 'Session refresh unavailable';
 
-let activeRefreshSession: Promise<RefreshResponsePayload> | null = null;
+let activeRefreshSessionRequest: Promise<RefreshResponsePayload> | null = null;
 
 async function requestRefresh(): Promise<RefreshResponsePayload> {
   let response: Response;
@@ -15,7 +15,7 @@ async function requestRefresh(): Promise<RefreshResponsePayload> {
       credentials: 'include',
     });
   } catch (error) {
-    throw new Error(`Cannot connect to the server`, {
+    throw new Error('Cannot connect to the server', {
       cause: error,
     });
   }
@@ -42,14 +42,13 @@ async function requestRefresh(): Promise<RefreshResponsePayload> {
 }
 
 export function refresh(): Promise<RefreshResponsePayload> {
-  if (activeRefreshSession !== null) {
-    return activeRefreshSession;
+  if (activeRefreshSessionRequest !== null) {
+    return activeRefreshSessionRequest;
   }
 
-  activeRefreshSession = requestRefresh().finally(() => {
-    activeRefreshSession = null;
-  })
+  activeRefreshSessionRequest = requestRefresh().finally(() => {
+    activeRefreshSessionRequest = null;
+  });
 
-  return activeRefreshSession;
+  return activeRefreshSessionRequest;
 }
-

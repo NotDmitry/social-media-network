@@ -16,7 +16,7 @@ export async function logout(): Promise<LogoutResponsePayload> {
       credentials: 'include',
     });
   } catch (error) {
-    throw new Error(`Cannot connect to the server`, {
+    throw new Error('Cannot connect to the server', {
       cause: error,
     });
   }

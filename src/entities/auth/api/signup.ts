@@ -11,12 +11,12 @@ export async function signup(signUpPayload: SignUpPayload): Promise<SignUpRespon
     response = await fetch('/api/signup', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(signUpPayload),
     });
   } catch (error) {
-    throw new Error(`Cannot connect to the server`, {
+    throw new Error('Cannot connect to the server', {
       cause: error,
     });
   }

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { UserModel } from "@/entities/User/types";
+import type { UserModel } from '@/entities/User/types';
 import { loginResponseSchema, logoutResponseSchema, refreshResponseSchema, signUpResponseSchema } from './schema';
 
 export type AuthState =

@@ -23,7 +23,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
   useEffect(() => {
     const sessionAbortController = new AbortController();
 
-    async function restoreSession(): Promise<void> {
+    async function restoreSession() {
       try {
         const refreshResponsePayload = await refresh();
 
@@ -85,7 +85,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
     await signIn({
       email: signUpPayload.email,
       password: signUpPayload.password,
-    })
+    });
 
     return signUpResponsePayload;
   }

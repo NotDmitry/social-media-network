@@ -6,7 +6,7 @@ import type {
   SignInPayload,
   SignUpPayload,
   SignUpResponsePayload,
-  UpdateProfilePayload
+  UpdateProfilePayload,
 } from './types';
 
 interface AuthContextData {
@@ -16,7 +16,7 @@ interface AuthContextData {
   signIn: (signInPayload: SignInPayload) => Promise<void>;
   signUp: (signUpPayload: SignUpPayload) => Promise<SignUpResponsePayload>;
   signOut: () => Promise<LogoutResponsePayload>;
-  updateProfile: (UpdateProfilePayload: UpdateProfilePayload) => void;
+  updateProfile: (updateProfilePayload: UpdateProfilePayload) => void;
 }
 
 export const AuthContext = createContext<AuthContextData | null>(null);

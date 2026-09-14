@@ -11,13 +11,13 @@ export async function login(signInPayload: SignInPayload): Promise<LoginResponse
     response = await fetch('/api/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       credentials: 'include',
       body: JSON.stringify(signInPayload),
     });
   } catch (error) {
-    throw new Error(`Cannot connect to the server`, {
+    throw new Error('Cannot connect to the server', {
       cause: error,
     });
   }
