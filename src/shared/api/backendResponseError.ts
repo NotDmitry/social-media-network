@@ -29,6 +29,10 @@ export class BackendResponseError extends Error {
     try {
       responseBody = await response.json();
     } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        throw error;
+      }
+
       return new BackendResponseError({
         message: fallbackMessage,
         status: response.status,

@@ -23,6 +23,10 @@ export async function getCurrentUser(signal?: AbortSignal): Promise<UserModel> {
       signal,
     });
   } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      throw error;
+    }
+
     throw new Error(`Cannot connect to the server`, {
       cause: error,
     });
@@ -36,8 +40,14 @@ export async function getCurrentUser(signal?: AbortSignal): Promise<UserModel> {
 
   try {
     responseBody = await response.json();
-  } catch {
-    throw new Error('Unable to parse the response body');
+  } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      throw error;
+    }
+
+    throw new Error('Unable to parse the response body', {
+      cause: error,
+    });
   }
 
   const parsedGetUserResponseBody = userModelSchema.safeParse(responseBody);
