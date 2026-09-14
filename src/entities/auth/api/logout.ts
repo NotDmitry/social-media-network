@@ -29,8 +29,10 @@ export async function logout(): Promise<LogoutResponsePayload> {
 
   try {
     responseBody = await response.json();
-  } catch {
-    throw new Error('Unable to parse the response body');
+  } catch (error) {
+    throw new Error('Unable to parse the response body', {
+      cause: error,
+    });
   }
 
   const parsedLogoutResponseBody = logoutResponseSchema.safeParse(responseBody);

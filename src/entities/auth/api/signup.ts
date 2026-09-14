@@ -29,8 +29,10 @@ export async function signup(signUpPayload: SignUpPayload): Promise<SignUpRespon
 
   try {
     responseBody = await response.json();
-  } catch {
-    throw new Error('Unable to parse the response body');
+  } catch (error) {
+    throw new Error('Unable to parse the response body', {
+      cause: error,
+    });
   }
 
   const parsedSignUpResponseBody = signUpResponseSchema.safeParse(responseBody);

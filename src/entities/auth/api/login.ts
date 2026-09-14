@@ -30,8 +30,10 @@ export async function login(signInPayload: SignInPayload): Promise<LoginResponse
 
   try {
     responseBody = await response.json();
-  } catch {
-    throw new Error('Unable to parse the response body');
+  } catch (error) {
+    throw new Error('Unable to parse the response body', {
+      cause: error,
+    });
   }
 
   const parsedLoginResponseBody = loginResponseSchema.safeParse(responseBody);

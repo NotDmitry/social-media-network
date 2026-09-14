@@ -28,8 +28,10 @@ async function requestRefresh(): Promise<RefreshResponsePayload> {
 
   try {
     responseBody = await response.json();
-  } catch {
-    throw new Error('Unable to parse the response body');
+  } catch (error) {
+    throw new Error('Unable to parse the response body', {
+      cause: error,
+    });
   }
 
   const parsedRefreshResponseBody = refreshResponseSchema.safeParse(responseBody);
