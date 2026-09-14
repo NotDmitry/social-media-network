@@ -1,5 +1,6 @@
 import { signUpResponseSchema } from '@/entities/auth/schema';
 import type { SignUpPayload, SignUpResponsePayload } from '@/entities/auth/types';
+import { BackendResponseError } from '@/shared/api/backendResponseError';
 
 const SIGNUP_ERROR_MESSAGE = 'Sign up unavailable';
 
@@ -20,16 +21,8 @@ export async function signup(signUpPayload: SignUpPayload): Promise<SignUpRespon
     });
   }
 
-  if (response.status === 400) {
-    throw new Error('Invalid input data format');
-  }
-
-  if (response.status === 409) {
-    throw new Error('This email is already taken');
-  }
-
   if (!response.ok) {
-    throw new Error(SIGNUP_ERROR_MESSAGE);
+    throw await BackendResponseError.parse(response, SIGNUP_ERROR_MESSAGE);
   }
 
   let responseBody: unknown;

@@ -1,5 +1,6 @@
 import { loginResponseSchema } from '@/entities/auth/schema';
 import type { LoginResponsePayload, SignInPayload } from '@/entities/auth/types';
+import { BackendResponseError } from '@/shared/api/backendResponseError';
 
 const LOGIN_ERROR_MESSAGE = 'Sign in unavailable';
 
@@ -21,12 +22,8 @@ export async function login(signInPayload: SignInPayload): Promise<LoginResponse
     });
   }
 
-  if (response.status === 401) {
-    throw new Error('Incorrect email or password');
-  }
-
   if (!response.ok) {
-    throw new Error(LOGIN_ERROR_MESSAGE);
+    throw await BackendResponseError.parse(response, LOGIN_ERROR_MESSAGE);
   }
 
   let responseBody: unknown;

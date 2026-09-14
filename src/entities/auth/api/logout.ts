@@ -1,6 +1,7 @@
 import { logoutResponseSchema } from '@/entities/auth/schema';
 import type { LogoutResponsePayload } from '@/entities/auth/types';
 import { accessToken } from '@/shared/api/accessToken';
+import { BackendResponseError } from '@/shared/api/backendResponseError';
 
 const LOGOUT_ERROR_MESSAGE = 'Logout unavailable';
 
@@ -21,7 +22,7 @@ export async function logout(): Promise<LogoutResponsePayload> {
   }
 
   if (!response.ok) {
-    throw new Error(LOGOUT_ERROR_MESSAGE);
+    throw await BackendResponseError.parse(response, LOGOUT_ERROR_MESSAGE);
   }
 
   let responseBody: unknown;

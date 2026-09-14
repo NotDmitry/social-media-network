@@ -1,5 +1,6 @@
 import { refreshResponseSchema } from '@/entities/auth/schema';
 import type { RefreshResponsePayload } from '@/entities/auth/types';
+import { BackendResponseError } from '@/shared/api/backendResponseError';
 
 const REFRESH_ERROR_MESSAGE = 'Session refresh unavailable';
 
@@ -19,12 +20,8 @@ async function requestRefresh(): Promise<RefreshResponsePayload> {
     });
   }
 
-  if (response.status === 401) {
-    throw new Error('Session expired');
-  }
-
   if (!response.ok) {
-    throw new Error(REFRESH_ERROR_MESSAGE);
+    throw await BackendResponseError.parse(response, REFRESH_ERROR_MESSAGE);
   }
 
   let responseBody: unknown;
