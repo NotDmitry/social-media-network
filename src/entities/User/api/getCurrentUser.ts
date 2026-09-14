@@ -5,7 +5,7 @@ import { BackendResponseError } from '@/shared/api/backendResponseError';
 
 const GET_CURRENT_USER_ERROR_MESSAGE = 'Can\'t get current user';
 
-export async function getCurrentUser(): Promise<UserModel> {
+export async function getCurrentUser(signal?: AbortSignal): Promise<UserModel> {
   const availableAccessToken = accessToken.get();
 
   if (availableAccessToken === null) {
@@ -20,6 +20,7 @@ export async function getCurrentUser(): Promise<UserModel> {
       headers: {
         Authorization: `Bearer ${availableAccessToken}`
       },
+      signal,
     });
   } catch (error) {
     throw new Error(`Cannot connect to the server`, {

@@ -15,6 +15,10 @@ export type AuthState =
     status: 'authenticated';
     currentUser: UserModel;
   }
+  | {
+    status: 'unavailable';
+    currentUser: null;
+  }
 
 export interface SignInPayload {
   email: string;

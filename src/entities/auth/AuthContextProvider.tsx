@@ -1,9 +1,12 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { login } from '@/entities/auth/api/login';
 import { logout } from '@/entities/auth/api/logout';
+import { refresh } from '@/entities/auth/api/refresh';
 import { signup } from '@/entities/auth/api/signup';
+import { getCurrentUser } from '@/entities/User/api/getCurrentUser';
 import { toUserView } from '@/entities/User/types';
 import { accessToken } from '@/shared/api/accessToken';
+import { BackendResponseError } from '@/shared/api/backendResponseError';
 import { AuthContext } from './context';
 import type { AuthState, SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
 
@@ -13,9 +16,58 @@ interface AuthContextProviderProps {
 
 function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [authState, setAuthState] = useState<AuthState>({
-    status: 'guest',
+    status: 'pending',
     currentUser: null,
   });
+
+  useEffect(() => {
+    const sessionAbortController = new AbortController();
+
+    async function restoreSession(): Promise<void> {
+      try {
+        const refreshResponsePayload = await refresh();
+
+        if (sessionAbortController.signal.aborted) {
+          return;
+        }
+
+        accessToken.set(refreshResponsePayload.token);
+
+        const currentUser = await getCurrentUser(sessionAbortController.signal);
+
+        setAuthState({
+          status: 'authenticated',
+          currentUser,
+        });
+      } catch (error) {
+        if (sessionAbortController.signal.aborted) {
+          return;
+        }
+
+        if (error instanceof BackendResponseError && (error.status === 400 || error.status === 401)) {
+          accessToken.clear();
+          setAuthState({
+            status: 'guest',
+            currentUser: null,
+          });
+
+          return;
+        }
+
+        console.error(error);
+        setAuthState({
+          status: 'unavailable',
+          currentUser: null,
+        });
+      }
+    }
+
+    void restoreSession();
+
+    return () => {
+      sessionAbortController.abort();
+    };
+  }, []);
 
   async function signIn(signInPayload: SignInPayload) {
     const loginResponsePayload = await login(signInPayload);
