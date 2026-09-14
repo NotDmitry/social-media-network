@@ -14,3 +14,8 @@ export const loginResponseSchema = z.object({
 export const logoutResponseSchema = z.object({
   message: z.string(),
 });
+
+export const signUpResponseSchema = z.object({
+  message: z.string(),
+  user: userModelSchema,
+});

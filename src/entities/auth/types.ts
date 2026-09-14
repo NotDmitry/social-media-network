@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import type { UserModel } from "@/entities/User/types";
-import { loginResponseSchema, logoutResponseSchema } from './schema';
+import { loginResponseSchema, logoutResponseSchema, signUpResponseSchema } from './schema';
 
 export type AuthState =
   | {
@@ -39,3 +39,4 @@ export interface UpdateProfilePayload {
 
 export type LoginResponsePayload = z.output<typeof loginResponseSchema>;
 export type LogoutResponsePayload = z.output<typeof logoutResponseSchema>;
+export type SignUpResponsePayload = z.output<typeof signUpResponseSchema>;

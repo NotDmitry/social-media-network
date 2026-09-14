@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { login } from '@/entities/auth/api/login';
 import { logout } from '@/entities/auth/api/logout';
+import { signup } from '@/entities/auth/api/signup';
 import { toUserView } from '@/entities/User/types';
 import { accessToken } from '@/shared/api/accessToken';
-import { getAuthUserMock } from '@/shared/mocks/UserMocks';
 import { AuthContext } from './context';
 import type { AuthState, SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
 
@@ -27,16 +27,15 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
     });
   }
 
-  function signUp({ email, firstName, secondName }: SignUpPayload) {
-    setAuthState({
-      status: 'authenticated',
-      currentUser: {
-        ...getAuthUserMock(),
-        email,
-        firstName,
-        secondName: secondName ?? null,
-      }
-    });
+  async function signUp(signUpPayload: SignUpPayload) {
+    const signUpResponsePayload = await signup(signUpPayload);
+
+    await signIn({
+      email: signUpPayload.email,
+      password: signUpPayload.password,
+    })
+
+    return signUpResponsePayload;
   }
 
   async function signOut() {
