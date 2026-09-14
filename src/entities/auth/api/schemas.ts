@@ -10,3 +10,7 @@ export const loginResponseSchema = z.object({
   refreshTokenExpiresAt: z.iso.datetime(),
   user: userModelSchema,
 });
+
+export const logoutResponseSchema = z.object({
+  message: z.string(),
+});

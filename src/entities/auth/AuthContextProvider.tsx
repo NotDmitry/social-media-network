@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { login } from '@/entities/auth/api/login';
+import { logout } from '@/entities/auth/api/logout';
 import { toUserView } from '@/entities/User/types';
 import { accessToken } from '@/shared/api/accessToken';
 import { getAuthUserMock } from '@/shared/mocks/UserMocks';
@@ -38,12 +39,18 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
     });
   }
 
-  function signOut() {
-    accessToken.clear();
-    setAuthState({
-      status: 'guest',
-      currentUser: null,
-    })
+  async function signOut() {
+    try {
+      const logoutResponsePayload = await logout();
+
+      return logoutResponsePayload;
+    } finally {
+      accessToken.clear();
+      setAuthState({
+        status: 'guest',
+        currentUser: null,
+      });
+    }
   }
 
   function updateProfile(updatedFields: UpdateProfilePayload) {

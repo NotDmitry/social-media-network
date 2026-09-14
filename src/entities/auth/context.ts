@@ -1,5 +1,6 @@
 import { createContext } from 'react';
 import type { UserView } from '@/entities/User/types';
+import type { LogoutResponsePayload } from '@/entities/auth/api/logout';
 import type { AuthState, SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
 
 interface AuthContextData {
@@ -8,7 +9,7 @@ interface AuthContextData {
   isUserAuthenticated: boolean;
   signIn: (signInPayload: SignInPayload) => Promise<void>;
   signUp: (signUpPayload: SignUpPayload) => void;
-  signOut: () => void;
+  signOut: () => Promise<LogoutResponsePayload>;
   updateProfile: (UpdateProfilePayload: UpdateProfilePayload) => void;
 }
 
