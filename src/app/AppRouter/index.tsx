@@ -13,7 +13,22 @@ import SignUpPage from '@/pages/SignUpPage';
 import { useAuth } from '@/entities/auth/useAuth';
 
 function AppRouter() {
-  const { isUserAuthenticated } = useAuth();
+  const { authStatus, isUserAuthenticated } = useAuth();
+
+  // TODO: show spinner
+  if (authStatus === 'pending') {
+    return null;
+  }
+
+  if (authStatus === 'unavailable') {
+    return (
+      <Routes>
+        <Route element={<Layout headerVariant='default' />}>
+          <Route path='*' element={<ErrorPage />} />
+        </Route>
+      </Routes>
+    );
+  }
 
   return (
     <Routes>
