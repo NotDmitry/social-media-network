@@ -1,11 +1,8 @@
+import { logoutResponseSchema } from '@/entities/auth/schema';
+import type { LogoutResponsePayload } from '@/entities/auth/types';
 import { accessToken } from '@/shared/api/accessToken';
-import { logoutResponseSchema } from './schemas';
 
 const LOGOUT_ERROR_MESSAGE = 'Logout unavailable';
-
-export interface LogoutResponsePayload {
-  message: string;
-}
 
 export async function logout(): Promise<LogoutResponsePayload> {
   const availableAccessToken = accessToken.get();
@@ -41,7 +38,5 @@ export async function logout(): Promise<LogoutResponsePayload> {
     throw new Error('Response body is malformed');
   }
 
-  return {
-    message: parsedLogoutResponseBody.data.message,
-  }
+  return parsedLogoutResponseBody.data;
 }

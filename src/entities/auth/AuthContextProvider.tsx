@@ -20,7 +20,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
   async function signIn(signInPayload: SignInPayload) {
     const loginResponsePayload = await login(signInPayload);
 
-    accessToken.set(loginResponsePayload.accessToken);
+    accessToken.set(loginResponsePayload.token);
     setAuthState({
       status: 'authenticated',
       currentUser: loginResponsePayload.user,

@@ -1,7 +1,6 @@
 import { createContext } from 'react';
 import type { UserView } from '@/entities/User/types';
-import type { LogoutResponsePayload } from '@/entities/auth/api/logout';
-import type { AuthState, SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
+import type { AuthState, LogoutResponsePayload, SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
 
 interface AuthContextData {
   authStatus: AuthState['status'];

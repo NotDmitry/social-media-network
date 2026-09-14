@@ -1,13 +1,7 @@
-import type { UserModel } from '@/entities/User/types';
-import type { SignInPayload } from '@/entities/auth/types';
-import { loginResponseSchema } from './schemas';
+import { loginResponseSchema } from '@/entities/auth/schema';
+import type { LoginResponsePayload, SignInPayload } from '@/entities/auth/types';
 
 const LOGIN_ERROR_MESSAGE = 'Sign in unavailable';
-
-export interface LoginResponsePayload {
-  accessToken: string;
-  user: UserModel;
-}
 
 export async function login(signInPayload: SignInPayload): Promise<LoginResponsePayload> {
   let response: Response;
@@ -49,8 +43,5 @@ export async function login(signInPayload: SignInPayload): Promise<LoginResponse
     throw new Error('Response body is malformed');
   }
 
-  return {
-    accessToken: parsedLoginResponseBody.data.token,
-    user: parsedLoginResponseBody.data.user,
-  }
+  return parsedLoginResponseBody.data;
 }
