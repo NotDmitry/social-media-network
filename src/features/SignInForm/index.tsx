@@ -79,7 +79,7 @@ function SignInForm({ onSubmit }: SignInFormProps) {
         />
       </fieldset>
       <Button type='submit' disabled={isSubmitting}>
-        {isSubmitting ? 'In progress...' : 'Sign In'}
+        {isSubmitting ? 'Signing In...' : 'Sign In'}
       </Button>
     </form>
   );
