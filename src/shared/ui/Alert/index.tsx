@@ -2,11 +2,11 @@ import { createPortal } from 'react-dom';
 import { CrossIcon } from '@/shared/icons';
 import './style.css';
 
-type AlertSeverityLevels = 'success' | 'warning' | 'error';
+export type AlertSeverityLevel = 'success' | 'warning' | 'error';
 
-interface AlertProps {
+export interface AlertProps {
   message: string;
-  severity?: AlertSeverityLevels;
+  severity?: AlertSeverityLevel;
   onClose?: () => void;
 }
 
