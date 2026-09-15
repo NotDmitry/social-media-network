@@ -1,7 +1,9 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AlertContext } from './context';
 import Alert from './index';
 import type { AlertProps, AlertSeverityLevel } from './index';
+
+const ALERT_DURATION_MS = 5000;
 
 interface AlertContextProviderProps {
   children: React.ReactNode;
@@ -24,6 +26,20 @@ function AlertContextProvider({ children }: AlertContextProviderProps) {
       closeAlert,
     }
   }, [showAlert, closeAlert]);
+
+  useEffect(() => {
+    if (activeAlert === null) {
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setActiveAlert((currentAlert) => currentAlert === activeAlert ? null : currentAlert);
+    }, ALERT_DURATION_MS);
+
+    return () => {
+      clearTimeout(timer);
+    }
+  }, [activeAlert])
 
   return (
     <AlertContext value={contextValue}>
