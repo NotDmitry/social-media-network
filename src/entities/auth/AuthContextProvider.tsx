@@ -5,6 +5,7 @@ import { refresh } from '@/entities/auth/api/refresh';
 import { signup } from '@/entities/auth/api/signup';
 import { getCurrentUser } from '@/entities/User/api/getCurrentUser';
 import { toUserView } from '@/entities/User/types';
+import { useAlert } from '@/shared/ui/Alert/useAlert';
 import { accessToken } from '@/shared/api/accessToken';
 import { BackendResponseError } from '@/shared/api/backendResponseError';
 import { AuthContext } from './context';
@@ -19,6 +20,8 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
     status: 'pending',
     currentUser: null,
   });
+
+  const { showAlert } = useAlert();
 
   useEffect(() => {
     const sessionAbortController = new AbortController();
@@ -45,6 +48,10 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
         }
 
         if (error instanceof BackendResponseError && (error.status === 400 || error.status === 401)) {
+          if (error.code !== 'REFRESH_TOKEN_REQUIRED') {
+            showAlert(error.message, 'error');
+          }
+
           accessToken.clear();
           setAuthState({
             status: 'guest',
@@ -54,6 +61,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
           return;
         }
 
+        showAlert(error instanceof Error ? error.message : 'Service unavailable', 'error');
         console.error(error);
         setAuthState({
           status: 'unavailable',
@@ -67,7 +75,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
     return () => {
       sessionAbortController.abort();
     };
-  }, []);
+  }, [showAlert]);
 
   async function signIn(signInPayload: SignInPayload) {
     const loginResponsePayload = await login(signInPayload);
