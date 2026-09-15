@@ -82,8 +82,9 @@
 @media screen and (width < 480px) {
   .alert {
     top: 5dvh;
-    inset-inline: 10px;
+    inset-inline: 3vw;
     bottom: auto;
-    max-width: calc(100vw - 20px);
+    width: auto;
+    max-width: none;
   }
 }
