@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import { login } from '@/entities/auth/api/login';
 import { logout } from '@/entities/auth/api/logout';
 import { refresh } from '@/entities/auth/api/refresh';
@@ -22,6 +22,10 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
   });
 
   const { showAlert } = useAlert();
+
+  const showAlertWithError = useEffectEvent((message: string) => {
+    showAlert(message, 'error');
+  });
 
   useEffect(() => {
     const sessionAbortController = new AbortController();
@@ -49,7 +53,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
 
         if (error instanceof BackendResponseError && (error.status === 400 || error.status === 401)) {
           if (error.code !== 'REFRESH_TOKEN_REQUIRED') {
-            showAlert(error.message, 'error');
+            showAlertWithError(error.message);
           }
 
           accessToken.clear();
@@ -61,7 +65,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
           return;
         }
 
-        showAlert(error instanceof Error ? error.message : 'Service unavailable', 'error');
+        showAlertWithError(error instanceof Error ? error.message : 'Service unavailable');
         console.error(error);
         setAuthState({
           status: 'unavailable',
@@ -75,7 +79,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
     return () => {
       sessionAbortController.abort();
     };
-  }, [showAlert]);
+  }, []);
 
   async function signIn(signInPayload: SignInPayload) {
     const loginResponsePayload = await login(signInPayload);
