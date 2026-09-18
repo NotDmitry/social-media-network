@@ -5,6 +5,7 @@ import { useTheme } from '@/features/theme/useTheme';
 import UpdateProfileForm from '@/features/UpdateProfileForm';
 import type { ThemeVariant } from '@/features/theme/types';
 import { useAuth } from '@/entities/auth/useAuth';
+import { useAlert } from '@/shared/ui/Alert/useAlert';
 import Button from '@/shared/ui/Button';
 import ToggleSwitch from '@/shared/ui/ToggleSwitch';
 import './style.css';
@@ -14,13 +15,16 @@ function ProfileInfoPage() {
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const { currentUser, signOut } = useAuth();
+  const { showAlert } = useAlert();
 
   async function handleLogoutClick() {
     setIsLoggingOut(true);
 
     try {
-      await signOut();
+      const { message } = await signOut();
+      showAlert(message || 'Successfully logged out', 'success');
     } catch (error) {
+      showAlert('Server session error. Logout succeed locally', 'warning');
       console.error(error);
     } finally {
       setIsLoggingOut(false);

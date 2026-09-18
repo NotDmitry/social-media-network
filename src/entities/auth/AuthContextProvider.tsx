@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useEffectEvent, useState } from 'react';
 import { login } from '@/entities/auth/api/login';
 import { logout } from '@/entities/auth/api/logout';
 import { refresh } from '@/entities/auth/api/refresh';
 import { signup } from '@/entities/auth/api/signup';
 import { getCurrentUser } from '@/entities/User/api/getCurrentUser';
 import { toUserView } from '@/entities/User/types';
+import { useAlert } from '@/shared/ui/Alert/useAlert';
 import { accessToken } from '@/shared/api/accessToken';
 import { BackendResponseError } from '@/shared/api/backendResponseError';
 import { AuthContext } from './context';
@@ -18,6 +19,12 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
   const [authState, setAuthState] = useState<AuthState>({
     status: 'pending',
     currentUser: null,
+  });
+
+  const { showAlert } = useAlert();
+
+  const showAlertWithError = useEffectEvent((message: string) => {
+    showAlert(message, 'error');
   });
 
   useEffect(() => {
@@ -45,6 +52,10 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
         }
 
         if (error instanceof BackendResponseError && (error.status === 400 || error.status === 401)) {
+          if (error.code !== 'REFRESH_TOKEN_REQUIRED') {
+            showAlertWithError(error.message);
+          }
+
           accessToken.clear();
           setAuthState({
             status: 'guest',
@@ -54,6 +65,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
           return;
         }
 
+        showAlertWithError(error instanceof Error ? error.message : 'Service unavailable');
         console.error(error);
         setAuthState({
           status: 'unavailable',
