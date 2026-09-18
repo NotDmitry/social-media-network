@@ -5,6 +5,7 @@ import { useAuth } from '@/entities/auth/useAuth';
 import type { UpdateProfilePayload, UserView } from '@/entities/User/types';
 import { useAlert } from '@/shared/ui/Alert/useAlert';
 import Button from '@/shared/ui/Button';
+import { uploadImage } from '@/shared/api/uploadImage';
 import TextareaField, { type TextareaFieldStatus } from '@/shared/ui/input/TextareaField';
 import TextField, { type TextFieldStatus } from '@/shared/ui/input/TextField';
 import { EnvelopeIcon, PencilIcon, PersonIcon } from '@/shared/icons';
@@ -16,8 +17,13 @@ interface UpdateProfileFormProps {
   onSubmit?: () => void;
 }
 
+interface SelectedAvatar {
+  url: string;
+  file: File;
+}
+
 function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
-  const [selectedAvatarUrl, setSelectedAvatarUrl] = useState<string | null>(null);
+  const [selectedAvatar, setSelectedAvatar] = useState<SelectedAvatar | null>(null);
   const [selectedAvatarErrorMessage, setSelectedAvatarErrorMessage] = useState<string | null>(null);
 
   const { updateProfile } = useAuth();
@@ -56,9 +62,16 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
 
     const updatedFieldsCount = Object.keys(changedFields).length;
 
-    if (updatedFieldsCount > 0) {
+    if (updatedFieldsCount > 0 || selectedAvatar !== null) {
       try {
+        if (selectedAvatar !== null) {
+          const { url: avatarUrl } = await uploadImage(selectedAvatar.file);
+          changedFields.profileImage = avatarUrl;
+        }
+
         await updateProfile(changedFields);
+
+        setSelectedAvatar(null);
         showAlert('Profile update successful', 'success');
       } catch (error) {
         showAlert(error instanceof Error ? error.message : 'Profile update failed', 'error');
@@ -75,7 +88,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
     const file = fileInput.files?.[0];
 
     if (!file) {
-      setSelectedAvatarUrl(null);
+      setSelectedAvatar(null);
       setSelectedAvatarErrorMessage(null);
 
       return;
@@ -83,15 +96,19 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
 
     if (!file.type.startsWith('image/')) {
       fileInput.value = '';
-      setSelectedAvatarUrl(null);
+      setSelectedAvatar(null);
       setSelectedAvatarErrorMessage('Non-image file detected');
 
       return;
     }
 
     const newAvatarUrl = URL.createObjectURL(file);
+    fileInput.value = '';
+    setSelectedAvatar({
+      url: newAvatarUrl,
+      file,
+    });
     setSelectedAvatarErrorMessage(null);
-    setSelectedAvatarUrl(newAvatarUrl);
   }
 
   function getTextFieldStatus(hasError: boolean): TextFieldStatus {
@@ -107,14 +124,14 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
   }
 
   useEffect(() => {
-    if (selectedAvatarUrl === null) {
+    if (selectedAvatar === null) {
       return;
     }
 
     return () => {
-      URL.revokeObjectURL(selectedAvatarUrl);
+      URL.revokeObjectURL(selectedAvatar.url);
     }
-  }, [selectedAvatarUrl]);
+  }, [selectedAvatar]);
 
   return (
     <form className='profile-update-form' onSubmit={(event) => void handleSubmit(handleFormSubmit)(event)}>
@@ -122,7 +139,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
       <div className='change-avatar-container'>
         <img
           className='avatar change-avatar-photo'
-          src={selectedAvatarUrl ?? user.profileImage ?? undefined}
+          src={selectedAvatar?.url ?? user.profileImage ?? undefined}
           alt={`Profile picture of ${user.displayName}`}
           width={64}
           height={64}
@@ -136,6 +153,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
               type='file'
               name='avatar'
               onChange={handleAvatarChange}
+              disabled={isSubmitting}
             />
             Change profile photo
           </label>
