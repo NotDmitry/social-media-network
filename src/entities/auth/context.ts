@@ -15,7 +15,7 @@ interface AuthContextData {
   signIn: (signInPayload: SignInPayload) => Promise<void>;
   signUp: (signUpPayload: SignUpPayload) => Promise<SignUpResponsePayload>;
   signOut: () => Promise<LogoutResponsePayload>;
-  updateProfile: (updateProfilePayload: UpdateProfilePayload) => void;
+  updateProfile: (updateProfilePayload: UpdateProfilePayload) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextData | null>(null);

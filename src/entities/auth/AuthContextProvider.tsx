@@ -4,6 +4,7 @@ import { logout } from '@/entities/auth/api/logout';
 import { refresh } from '@/entities/auth/api/refresh';
 import { signup } from '@/entities/auth/api/signup';
 import { getCurrentUser } from '@/entities/User/api/getCurrentUser';
+import { updateProfile as requestProfileUpdate } from '@/entities/User/api/updateProfile';
 import { toUserView } from '@/entities/User/utilities';
 import type { UpdateProfilePayload } from '@/entities/User/types';
 import { useAlert } from '@/shared/ui/Alert/useAlert';
@@ -117,20 +118,95 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
     }
   }
 
-  function updateProfile(updatedFields: UpdateProfilePayload) {
+  async function requestProfileUpdateOnce(updatedFields: UpdateProfilePayload) {
+    const updatedUser = await requestProfileUpdate(updatedFields);
+
     setAuthState((currentState) => {
       if (currentState.status !== 'authenticated') {
         return currentState;
       }
 
       return {
-        status: currentState.status,
-        currentUser: {
-          ...currentState.currentUser,
-          ...updatedFields,
-        },
+        status: 'authenticated',
+        currentUser: updatedUser,
       };
     });
+  }
+
+  async function refreshExpiredAccessToken(providedAccessToken: string) {
+    const currentAccessToken = accessToken.get();
+
+    if (currentAccessToken !== providedAccessToken) {
+      return;
+    }
+
+    try {
+      const refreshResponsePayload = await refresh();
+      accessToken.set(refreshResponsePayload.token);
+    } catch (error) {
+      if (
+        error instanceof BackendResponseError
+        && (error.status === 400 || error.status === 401)
+      ) {
+        accessToken.clear();
+        setAuthState({
+          status: 'guest',
+          currentUser: null,
+        });
+      }
+
+      throw error;
+    }
+  }
+
+  async function retryProfileUpdate(updatedFields: UpdateProfilePayload) {
+    try {
+      await requestProfileUpdateOnce(updatedFields);
+    } catch (error) {
+      if (error instanceof BackendResponseError && error.status === 401) {
+        accessToken.clear();
+        setAuthState({
+          status: 'guest',
+          currentUser: null,
+        });
+      }
+
+      throw error;
+    }
+  }
+
+  async function updateProfile(updatedFields: UpdateProfilePayload) {
+    const providedAccessToken = accessToken.get();
+
+    if (providedAccessToken === null) {
+      setAuthState({
+        status: 'guest',
+        currentUser: null,
+      });
+
+      throw new Error('Access token is missing');
+    }
+
+    try {
+      await requestProfileUpdateOnce(updatedFields);
+    } catch (error) {
+      if (!(error instanceof BackendResponseError) || error.status !== 401) {
+        throw error;
+      }
+
+      if (error.code !== 'TOKEN_EXPIRED') {
+        accessToken.clear();
+        setAuthState({
+          status: 'guest',
+          currentUser: null,
+        });
+
+        throw error;
+      }
+
+      await refreshExpiredAccessToken(providedAccessToken);
+      await retryProfileUpdate(updatedFields);
+    }
   }
 
   return (
