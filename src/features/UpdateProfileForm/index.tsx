@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/entities/auth/useAuth';
 import type { UpdateProfilePayload, UserView } from '@/entities/User/types';
+import { useAlert } from '@/shared/ui/Alert/useAlert';
 import Button from '@/shared/ui/Button';
 import TextareaField, { type TextareaFieldStatus } from '@/shared/ui/input/TextareaField';
 import TextField, { type TextFieldStatus } from '@/shared/ui/input/TextField';
@@ -20,6 +21,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
   const [selectedAvatarErrorMessage, setSelectedAvatarErrorMessage] = useState<string | null>(null);
 
   const { updateProfile } = useAuth();
+  const { showAlert } = useAlert();
 
   const {
     register,
@@ -27,6 +29,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
     formState: {
       errors,
       isSubmitted,
+      isSubmitting,
     },
   } = useForm<UpdateProfileFormFields>({
     resolver: zodResolver(updateProfileFormSchema),
@@ -37,7 +40,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
     },
   });
 
-  function handleFormSubmit(updateProfileFields: UpdateProfileFormFields) {
+  async function handleFormSubmit(updateProfileFields: UpdateProfileFormFields) {
     const formFieldsNames = Object.keys(updateProfileFields) as (keyof UpdateProfileFormFields)[];
 
     const changedFields = formFieldsNames.reduce<UpdateProfilePayload>((changes, fieldName) => {
@@ -54,10 +57,17 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
     const updatedFieldsCount = Object.keys(changedFields).length;
 
     if (updatedFieldsCount > 0) {
-      updateProfile(changedFields);
-    }
+      try {
+        await updateProfile(changedFields);
+        showAlert('Profile update successful', 'success');
+      } catch (error) {
+        showAlert(error instanceof Error ? error.message : 'Profile update failed', 'error');
+        console.error(error);
+        return;
+      }
 
-    onSubmit?.();
+      onSubmit?.();
+    }
   }
 
   function handleAvatarChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -145,6 +155,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         status={getTextFieldStatus(Boolean(errors.username))}
         errorMessage={errors.username?.message}
         type='text'
+        disabled={isSubmitting}
       />
       <TextField
         {...register('email')}
@@ -155,6 +166,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         status={getTextFieldStatus(Boolean(errors.email))}
         errorMessage={errors.email?.message}
         type='email'
+        disabled={isSubmitting}
       />
       <TextareaField
         {...register('description')}
@@ -166,8 +178,11 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         hintMessage='Max 200 characters'
         maxLength={201}
         rows={1}
+        disabled={isSubmitting}
       />
-      <Button type='submit'>Save Profile Changes</Button>
+      <Button type='submit' disabled={isSubmitting}>
+        {isSubmitting ? 'Saving...' : 'Save Profile Changes'}
+      </Button>
     </form>
   );
 }
