@@ -32,15 +32,6 @@ export interface SignUpPayload {
   secondName?: string;
 }
 
-export interface UpdateProfilePayload {
-  username?: string;
-  email?: string;
-  firstName?: string;
-  secondName?: string;
-  profileImage?: string;
-  description?: string;
-}
-
 export type LoginResponsePayload = z.output<typeof loginResponseSchema>;
 export type LogoutResponsePayload = z.output<typeof logoutResponseSchema>;
 export type SignUpResponsePayload = z.output<typeof signUpResponseSchema>;

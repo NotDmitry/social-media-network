@@ -4,12 +4,13 @@ import { logout } from '@/entities/auth/api/logout';
 import { refresh } from '@/entities/auth/api/refresh';
 import { signup } from '@/entities/auth/api/signup';
 import { getCurrentUser } from '@/entities/User/api/getCurrentUser';
-import { toUserView } from '@/entities/User/types';
+import { toUserView } from '@/entities/User/utilities';
+import type { UpdateProfilePayload } from '@/entities/User/types';
 import { useAlert } from '@/shared/ui/Alert/useAlert';
 import { accessToken } from '@/shared/api/accessToken';
 import { BackendResponseError } from '@/shared/api/backendResponseError';
 import { AuthContext } from './context';
-import type { AuthState, SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
+import type { AuthState, SignInPayload, SignUpPayload } from './types';
 
 interface AuthContextProviderProps {
   children: React.ReactNode;
