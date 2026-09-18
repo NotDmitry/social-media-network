@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Post from '@/entities/Post';
-import { toUserView } from '@/entities/User/types';
+import { toUserView } from '@/entities/User/utilities';
 import { MOCK_COMMENTS } from '@/shared/mocks/CommentMocks';
 import { MOCK_POSTS } from '@/shared/mocks/PostMocks';
 import { MOCK_USERS } from '@/shared/mocks/UserMocks';

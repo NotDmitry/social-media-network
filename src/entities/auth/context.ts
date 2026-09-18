@@ -1,12 +1,11 @@
 import { createContext } from 'react';
-import type { UserView } from '@/entities/User/types';
+import type { UpdateProfilePayload, UserView } from '@/entities/User/types';
 import type {
   AuthState,
   LogoutResponsePayload,
   SignInPayload,
   SignUpPayload,
   SignUpResponsePayload,
-  UpdateProfilePayload,
 } from './types';
 
 interface AuthContextData {
@@ -16,7 +15,7 @@ interface AuthContextData {
   signIn: (signInPayload: SignInPayload) => Promise<void>;
   signUp: (signUpPayload: SignUpPayload) => Promise<SignUpResponsePayload>;
   signOut: () => Promise<LogoutResponsePayload>;
-  updateProfile: (updateProfilePayload: UpdateProfilePayload) => void;
+  updateProfile: (updateProfilePayload: UpdateProfilePayload) => Promise<void>;
 }
 
 export const AuthContext = createContext<AuthContextData | null>(null);
