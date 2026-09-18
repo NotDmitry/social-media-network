@@ -41,7 +41,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
   async function handleFormSubmit(signUpPayload: SignUpPayload) {
     try {
       const { message } = await signUp(signUpPayload);
-      showAlert( message || 'Account successfully created', 'success');
+      showAlert(message || 'Account successfully created', 'success');
     } catch (error) {
       showAlert(error instanceof Error ? error.message : 'Sign up failed', 'error');
       console.error(error);
