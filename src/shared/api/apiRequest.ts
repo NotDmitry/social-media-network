@@ -6,11 +6,17 @@ interface ApiRequestOptions<ResponseSchema extends z.ZodType> {
   fallbackErrorMessage: string;
 }
 
-export async function apiRequest<ResponseSchema extends z.ZodType>(
+export type ApiRequestParameters<ResponseSchema extends z.ZodType> = [
   fetchInput: RequestInfo | URL,
   fetchInitOptions: RequestInit,
   apiRequestOptions: ApiRequestOptions<ResponseSchema>
-): Promise<z.output<ResponseSchema>> {
+];
+
+export type ApiRequestFunction = <ResponseSchema extends z.ZodType>(
+  ...apiRequestParameters: ApiRequestParameters<ResponseSchema>
+) => Promise<z.output<ResponseSchema>>;
+
+export const apiRequest: ApiRequestFunction = async (fetchInput, fetchInitOptions, apiRequestOptions) => {
   let response: Response;
 
   try {
@@ -52,4 +58,4 @@ export async function apiRequest<ResponseSchema extends z.ZodType>(
   }
 
   return parsedResponseBody.data;
-}
+};
