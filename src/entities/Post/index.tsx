@@ -21,7 +21,7 @@ function Post({ post, comments, author }: PostProps) {
 
   const { currentUser, isUserAuthenticated } = useAuth();
 
-  const commentsButtonLabel = `${String(comments.length)} ${comments.length === 1 ? 'comment' : 'comments'}`;
+  const commentsButtonLabel = `${String(post.commentsCount)} ${post.commentsCount === 1 ? 'comment' : 'comments'}`;
 
   function handleLikeClick() {
     setIsLiked((isLiked) => !isLiked);
@@ -44,20 +44,20 @@ function Post({ post, comments, author }: PostProps) {
         <span className='post-author'>{author.displayName}</span>
         <time
           className='post-time'
-          dateTime={post.createdAt}>{getRelativeTimePresentationString(post.createdAt)}
+          dateTime={post.creationDate}>{getRelativeTimePresentationString(post.creationDate)}
         </time>
       </header>
 
-      {post.imageUrl &&
+      {post.image &&
         <img
           className='post-image'
-          src={post.imageUrl}
+          src={post.image}
           width={500}
           alt={`Post by ${author.displayName}`}
         />
       }
 
-      <p className='post-description'>{post.description}</p>
+      <p className='post-description'>{post.content}</p>
 
       <menu className='post-menu'>
         <li>
@@ -68,7 +68,7 @@ function Post({ post, comments, author }: PostProps) {
             onClick={handleLikeClick}
           >
             <HeartIcon className={`post-menu-like-icon ${isLiked ? 'post-menu-like-icon_active' : ''}`} />
-            <span className='post-menu-label'>{21 + Number(isLiked)} likes</span>
+            <span className='post-menu-label'>{post.likesCount + Number(isLiked)} likes</span>
           </button>
         </li>
         <li>
@@ -89,7 +89,7 @@ function Post({ post, comments, author }: PostProps) {
         </li>
       </menu>
 
-      {isCommentsOpen && comments.length > 0 &&
+      {isCommentsOpen && post.commentsCount > 0 &&
         <ol className='post-comments-list'>
           {comments.map((comment) => (
             <li key={comment.id}>
