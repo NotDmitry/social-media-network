@@ -1,16 +1,15 @@
+import AppInitializer from '@/app/AppInitializer';
 import AppRouter from '@/app/AppRouter';
 import ThemeContextProvider from '@/features/theme/ThemeContextProvider';
-import AuthContextProvider from '@/entities/auth/AuthContextProvider';
 import AlertContextProvider from '@/shared/ui/Alert/AlertContextProvider';
 
 function App() {
   return (
     <AlertContextProvider>
-      <AuthContextProvider>
-        <ThemeContextProvider>
-          <AppRouter />
-        </ThemeContextProvider>
-      </AuthContextProvider>
+      <AppInitializer />
+      <ThemeContextProvider>
+        <AppRouter />
+      </ThemeContextProvider>
     </AlertContextProvider>
   );
 }
