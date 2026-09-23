@@ -94,7 +94,7 @@ function Post({ post, comments, author }: PostProps) {
           {comments.map((comment) => (
             <li key={comment.id}>
               <Comment
-                text={comment.content}
+                text={comment.text}
                 canDelete={comment.authorId === currentUser?.id}
               />
             </li>

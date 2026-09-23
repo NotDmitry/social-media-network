@@ -1,7 +1,4 @@
-export interface CommentModel {
-  id: string;
-  postId: number;
-  authorId: number;
-  content: string;
-  createdAt: string;
-}
+import { z } from 'zod';
+import { commentModelSchema } from './schema';
+
+export type CommentModel = z.output<typeof commentModelSchema>;
