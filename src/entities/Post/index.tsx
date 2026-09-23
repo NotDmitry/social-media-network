@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import CreateCommentForm from '@/features/CreateCommentForm';
 import { useAuth } from '@/entities/auth/useAuth';
 import Comment from '@/entities/Comment';
 import { getPostComments } from '@/entities/Comment/api/getPostComments';
+import { getUserById } from '@/entities/User/api/getUserById';
+import { toUserView } from '@/entities/User/utilities';
 import type { UserView } from '@/entities/User/types';
 import { HeartIcon, CommentIcon, ChevronDownIcon } from '@/shared/icons';
 import { getRelativeTimePresentationString } from '@/shared/utilities/time';
@@ -31,9 +33,38 @@ function Post({ post, author }: PostProps) {
     enabled: isUserAuthenticated && isCommentsOpen,
   });
 
+  const uniqueCommentAuthorIds = [...new Set((comments ?? []).map((comment) => comment.authorId))];
+  const {
+    data: commentAuthorsMap,
+    isPending: isCommentAuthorsQueryPending,
+  } = useQueries({
+    queries: uniqueCommentAuthorIds.map((authorId) => {
+      return {
+        queryKey: ['author', authorId],
+        queryFn: ({ signal }) => getUserById(authorId, signal),
+        enabled: isUserAuthenticated && isCommentsOpen,
+      };
+    }),
+    combine: (authorsQueries) => {
+      const authors = new Map<number, UserView>();
+
+      authorsQueries.forEach((authorQuery) => {
+        if (authorQuery.data) {
+          authors.set(authorQuery.data.id, toUserView(authorQuery.data));
+        }
+      });
+
+      return {
+        data: authors,
+        isPending: authorsQueries.some((authorQuery) => authorQuery.isPending),
+      };
+    },
+  });
+
   const displayedCommentsCount = comments?.length ?? post.commentsCount;
   const commentsButtonLabel =
     `${String(displayedCommentsCount)} ${post.commentsCount === 1 ? 'comment' : 'comments'}`;
+  const isCommentsSectionPending = isCommentsQueryPending || isCommentAuthorsQueryPending;
 
   function handleLikeClick() {
     setIsLiked((isLiked) => !isLiked);
@@ -60,7 +91,9 @@ function Post({ post, author }: PostProps) {
         <span className='post-author'>{author.displayName}</span>
         <time
           className='post-time'
-          dateTime={post.creationDate}>{getRelativeTimePresentationString(post.creationDate)}
+          dateTime={post.creationDate}
+        >
+          {getRelativeTimePresentationString(post.creationDate)}
         </time>
       </header>
 
@@ -107,28 +140,37 @@ function Post({ post, author }: PostProps) {
 
       {isCommentsOpen && isUserAuthenticated &&
         <>
-          {isCommentsQueryPending &&
+          {isCommentsSectionPending &&
             <p className='post-comments-message'>Loading comments...</p>
           }
 
-          {isCommentsQueryError && comments === undefined &&
+          {!isCommentsSectionPending && isCommentsQueryError && comments === undefined &&
             <p className='post-comments-message'>Unable to load comments</p>
           }
 
-          {comments?.length === 0 &&
+          {!isCommentsSectionPending && comments?.length === 0 &&
             <p className='post-comments-message'>No comments yet</p>
           }
 
-          {comments !== undefined && comments.length > 0 &&
+          {!isCommentsSectionPending && comments !== undefined && comments.length > 0 &&
             <ol className='post-comments-list'>
-              {comments.map((comment) => (
-                <li key={comment.id}>
-                  <Comment
-                    comment={comment}
-                    canDelete={comment.authorId === currentUser?.id}
-                  />
-                </li>
-              ))}
+              {comments.map((comment) => {
+                const commentAuthor = commentAuthorsMap.get(comment.authorId);
+
+                if (!commentAuthor) {
+                  return null;
+                }
+
+                return (
+                  <li key={comment.id}>
+                    <Comment
+                      author={commentAuthor}
+                      comment={comment}
+                      canDelete={comment.authorId === currentUser?.id}
+                    />
+                  </li>
+                );
+              })}
             </ol>
           }
         </>

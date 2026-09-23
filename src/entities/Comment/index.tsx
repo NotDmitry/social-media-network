@@ -1,16 +1,19 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteComment } from '@/entities/Comment/api/deleteComment';
+import type { UserView } from '@/entities/User/types';
 import type { CommentModel } from '@/entities/Comment/types';
 import { TrashIcon } from '@/shared/icons';
 import { useAlert } from '@/shared/ui/Alert/useAlert';
+import { getRelativeTimePresentationString } from '@/shared/utilities/time';
 import './style.css';
 
 interface CommentProps {
+  author: UserView
   comment: CommentModel;
   canDelete: boolean;
 }
 
-function Comment({ comment, canDelete }: CommentProps) {
+function Comment({ author, comment, canDelete }: CommentProps) {
   const queryClient = useQueryClient();
   const { showAlert } = useAlert();
 
@@ -37,18 +40,34 @@ function Comment({ comment, canDelete }: CommentProps) {
 
   return (
     <article className='comment'>
-      <p className='comment-text'>{comment.text}</p>
-      {canDelete &&
-        <button
-          className='comment-delete-button'
-          type='button'
-          aria-label='Delete comment'
-          onClick={handleDeleteClick}
-          disabled={isCommentDeletionPending}
+      <header className='comment-header'>
+        <img
+          className='avatar comment-avatar'
+          src={author.profileImage ?? undefined}
+          alt={`Profile picture of ${author.displayName}`}
+          width={32}
+          height={32}
+        />
+        <span className='comment-author'>{author.displayName}</span>
+        <time
+          className='comment-time'
+          dateTime={comment.creationDate}
         >
-          <TrashIcon className='comment-delete-icon' />
-        </button>
-      }
+          {getRelativeTimePresentationString(comment.creationDate)}
+        </time>
+        {canDelete &&
+          <button
+            className='comment-delete-button'
+            type='button'
+            aria-label='Delete comment'
+            onClick={handleDeleteClick}
+            disabled={isCommentDeletionPending}
+          >
+            <TrashIcon className='comment-delete-icon' />
+          </button>
+        }
+      </header>
+      <p className='comment-text'>{comment.text}</p>
     </article>
   );
 }

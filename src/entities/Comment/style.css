@@ -1,20 +1,64 @@
 .comment {
   display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 12px;
+  border: 1px solid var(--component-stroke-dark-soft);
+  background-color: var(--component-fill-light);
+}
+
+.comment-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) 24px;
+  column-gap: 12px;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+}
+
+.comment-avatar {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
+.comment-author,
+.comment-time,
+.comment-text {
+  font-family: var(--second-family);
+  line-height: 150%;
+}
+
+.comment-author,
+.comment-time {
+  grid-column: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.comment-author {
+  grid-row: 1;
+  color: var(--component-text-dark);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.comment-time {
+  grid-row: 2;
+  color: var(--component-text-gray);
+  font-size: 0.875rem;
+  font-weight: 400;
 }
 
 .comment-text {
   margin: 0;
   color: var(--component-text-dark);
-  font-family: var(--second-family);
   font-size: clamp(0.875rem, 3vw, 1rem);
-  font-weight: 500;
-  line-height: 150%;
+  font-weight: 400;
+  overflow-wrap: anywhere;
 }
 
 .comment-delete-button {
+  grid-column: 3;
+  grid-row: 1 / 3;
   flex-shrink: 0;
   display: flex;
   align-items: center;
