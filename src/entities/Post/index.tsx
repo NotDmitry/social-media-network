@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import CreateCommentForm from '@/features/CreateCommentForm';
 import { useAuth } from '@/entities/auth/useAuth';
 import Comment from '@/entities/Comment';
-import type { CommentModel } from '@/entities/Comment/types';
+import { getPostComments } from '@/entities/Comment/api/getPostComments';
 import type { UserView } from '@/entities/User/types';
 import { HeartIcon, CommentIcon, ChevronDownIcon } from '@/shared/icons';
 import { getRelativeTimePresentationString } from '@/shared/utilities/time';
@@ -11,15 +12,24 @@ import './style.css';
 
 interface PostProps {
   post: PostModel;
-  comments: CommentModel[];
   author: UserView;
 }
 
-function Post({ post, comments, author }: PostProps) {
+function Post({ post, author }: PostProps) {
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
 
   const { currentUser, isUserAuthenticated } = useAuth();
+
+  const {
+    data: comments,
+    isError: isCommentsQueryError,
+    isPending: isCommentsQueryPending,
+  } = useQuery({
+    queryKey: ['comments', post.id],
+    queryFn: ({ signal }) => getPostComments(post.id, signal),
+    enabled: isUserAuthenticated && isCommentsOpen,
+  });
 
   const commentsButtonLabel = `${String(post.commentsCount)} ${post.commentsCount === 1 ? 'comment' : 'comments'}`;
 
@@ -89,17 +99,33 @@ function Post({ post, comments, author }: PostProps) {
         </li>
       </menu>
 
-      {isCommentsOpen && post.commentsCount > 0 &&
-        <ol className='post-comments-list'>
-          {comments.map((comment) => (
-            <li key={comment.id}>
-              <Comment
-                text={comment.text}
-                canDelete={comment.authorId === currentUser?.id}
-              />
-            </li>
-          ))}
-        </ol>
+      {isCommentsOpen && isUserAuthenticated &&
+        <>
+          {isCommentsQueryPending &&
+            <p className='post-comments-message'>Loading comments...</p>
+          }
+
+          {isCommentsQueryError && comments === undefined &&
+            <p className='post-comments-message'>Unable to load comments</p>
+          }
+
+          {comments?.length === 0 &&
+            <p className='post-comments-message'>No comments yet</p>
+          }
+
+          {comments !== undefined && comments.length > 0 &&
+            <ol className='post-comments-list'>
+              {comments.map((comment) => (
+                <li key={comment.id}>
+                  <Comment
+                    text={comment.text}
+                    canDelete={comment.authorId === currentUser?.id}
+                  />
+                </li>
+              ))}
+            </ol>
+          }
+        </>
       }
 
       {isUserAuthenticated && <CreateCommentForm />}
