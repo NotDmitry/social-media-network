@@ -37,16 +37,20 @@ export const apiRequest: ApiRequestFunction = async (fetchInput, fetchInitOption
 
   let responseBody: unknown;
 
-  try {
-    responseBody = await response.json();
-  } catch (error) {
-    if (error instanceof DOMException && error.name === 'AbortError') {
-      throw error;
-    }
+  if (response.status === 204) {
+    responseBody = undefined;
+  } else {
+    try {
+      responseBody = await response.json();
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        throw error;
+      }
 
-    throw new Error('Unable to parse the response body', {
-      cause: error,
-    });
+      throw new Error('Unable to parse the response body', {
+        cause: error,
+      });
+    }
   }
 
   const parsedResponseBody = apiRequestOptions.responseValidationSchema.safeParse(responseBody);

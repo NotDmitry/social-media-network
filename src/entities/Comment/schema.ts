@@ -9,3 +9,5 @@ export const commentModelSchema = z.object({
   creationDate: dateTimeSchema,
   modifiedDate: dateTimeSchema,
 });
+
+export const commentsSchema = z.array(commentModelSchema);
