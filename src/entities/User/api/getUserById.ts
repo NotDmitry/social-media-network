@@ -4,11 +4,12 @@ import { apiRequest } from '@/shared/api/apiRequest';
 
 const GET_USER_BY_ID_ERROR_MESSAGE = 'Can\'t get the specified user';
 
-export async function getUserById(userId: number): Promise<UserModel> {
+export async function getUserById(userId: number, signal?: AbortSignal): Promise<UserModel> {
   return apiRequest(
     `/api/users/${String(userId)}`,
     {
       method: 'GET',
+      signal,
     },
     {
       responseValidationSchema: userModelSchema,
