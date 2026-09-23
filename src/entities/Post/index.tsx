@@ -31,7 +31,9 @@ function Post({ post, author }: PostProps) {
     enabled: isUserAuthenticated && isCommentsOpen,
   });
 
-  const commentsButtonLabel = `${String(post.commentsCount)} ${post.commentsCount === 1 ? 'comment' : 'comments'}`;
+  const displayedCommentsCount = comments?.length ?? post.commentsCount;
+  const commentsButtonLabel =
+    `${String(displayedCommentsCount)} ${post.commentsCount === 1 ? 'comment' : 'comments'}`;
 
   function handleLikeClick() {
     setIsLiked((isLiked) => !isLiked);
@@ -118,7 +120,7 @@ function Post({ post, author }: PostProps) {
               {comments.map((comment) => (
                 <li key={comment.id}>
                   <Comment
-                    text={comment.text}
+                    comment={comment}
                     canDelete={comment.authorId === currentUser?.id}
                   />
                 </li>

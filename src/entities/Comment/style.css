@@ -29,8 +29,13 @@
 
   color: var(--icon-dark);
 
-  &:hover {
+  &:hover:not(:disabled) {
     color: var(--color-feedback-negative-600);
+  }
+
+  &:disabled {
+    color: var(--icon-disabled);
+    cursor: not-allowed;
   }
 }
 
