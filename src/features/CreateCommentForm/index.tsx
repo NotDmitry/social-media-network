@@ -1,22 +1,49 @@
 import { useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createComment } from '@/entities/Comment/api/createComment';
+import { useAlert } from '@/shared/ui/Alert/useAlert';
 import Button from '@/shared/ui/Button';
 import TextareaField from '@/shared/ui/input/TextareaField';
 import { PencilIcon } from '@/shared/icons';
 import './style.css';
 
-function CreateCommentForm() {
+interface CreateCommentFormProps {
+  postId: number;
+  onCommentCreated?: () => void;
+}
+
+function CreateCommentForm({ postId, onCommentCreated }: CreateCommentFormProps) {
   const [comment, setComment] = useState('');
+  const { showAlert } = useAlert();
+  const queryClient = useQueryClient();
+
+  const {
+    mutate: addComment,
+    isPending: isCommentCreationPending,
+  } = useMutation({
+    mutationFn: (text: string) => createComment({ postId, text }),
+    onSuccess: async () => {
+      onCommentCreated?.();
+      setComment('');
+      await queryClient.invalidateQueries({ queryKey: ['comments', postId] });
+      showAlert('Comment successfully created', 'success');
+    },
+    onError: (error) => {
+      showAlert('Comment creation failed', 'error');
+      console.error(error);
+    }
+  });
 
   function handleFormSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (comment.trim() === '') {
+    const trimmedComment = comment.trim();
+
+    if (trimmedComment === '') {
       return;
     }
 
-    // TODO: add API logic
-    console.log('Comment added: ', comment);
-    setComment('');
+    addComment(comment);
   }
 
   function handleCommentChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
@@ -32,9 +59,12 @@ function CreateCommentForm() {
         maxLength={200}
         rows={1}
         value={comment}
+        disabled={isCommentCreationPending}
         onChange={handleCommentChange}
       />
-      <Button type='submit'>Add a comment</Button>
+      <Button type='submit' disabled={isCommentCreationPending}>
+        {isCommentCreationPending ? 'Adding a comment...' : 'Add a comment'}
+      </Button>
     </form>
   );
 }

@@ -43,6 +43,10 @@ function Post({ post, author }: PostProps) {
     setIsCommentsOpen((isOpen) => !isOpen);
   }
 
+  function handleCommentCreated() {
+    setIsCommentsOpen(true);
+  }
+
   return (
     <article className='post-card'>
       <header className='post-header'>
@@ -130,7 +134,9 @@ function Post({ post, author }: PostProps) {
         </>
       }
 
-      {isUserAuthenticated && <CreateCommentForm />}
+      {isUserAuthenticated &&
+        <CreateCommentForm postId={post.id} onCommentCreated={handleCommentCreated} />
+      }
     </article>
   );
 }
