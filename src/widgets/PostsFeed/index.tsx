@@ -15,6 +15,7 @@ function PostsFeed() {
     data,
     fetchNextPage,
     hasNextPage,
+    isError: isPostsQueryError,
     isFetchNextPageError,
     isFetching: isPostsQueryFetching,
     isFetchingNextPage,
@@ -39,6 +40,7 @@ function PostsFeed() {
   const uniqueAuthorIds = [...new Set(posts.map((post) => post.authorId))];
   const {
     data: authorsMap,
+    isError: isAuthorsQueryError,
     isPending: isAuthorsQueryPending,
   } = useQueries({
     queries: uniqueAuthorIds.map((authorId) => {
@@ -58,12 +60,16 @@ function PostsFeed() {
 
       return {
         data: authors,
+        isError: authorsQueries.some((authorQuery) => authorQuery.isError),
         isPending: authorsQueries.some((authorQuery) => authorQuery.isPending),
       };
     },
   });
 
   const isInitialPending = isPostsQueryPending || (isAuthorsQueryPending && data?.pages.length === 1);
+  const hasFetchedPostsWithAuthors = posts.some((post) => authorsMap.has(post.authorId));
+  const isGlobalFetchError = (isPostsQueryError && posts.length === 0) ||
+    (isAuthorsQueryError && posts.length > 0 && !hasFetchedPostsWithAuthors);
 
   const sentinelRef = useRef<HTMLParagraphElement>(null);
 
@@ -73,7 +79,8 @@ function PostsFeed() {
     if (
       sentinel === null ||
       !hasNextPage ||
-      isPostsQueryFetching
+      isPostsQueryFetching ||
+      isGlobalFetchError
     ) {
       return;
     }
@@ -89,7 +96,7 @@ function PostsFeed() {
     return () => {
       observer.disconnect();
     };
-  }, [fetchNextPage, hasNextPage, isPostsQueryFetching]);
+  }, [fetchNextPage, hasNextPage, isPostsQueryFetching, isGlobalFetchError]);
 
   return (
     <div className='posts-feed'>
@@ -97,11 +104,15 @@ function PostsFeed() {
         <p className='posts-feed-message'>Loading posts...</p>
       }
 
-      {!isInitialPending && posts.length === 0 &&
+      {!isInitialPending && isGlobalFetchError &&
+        <p className='posts-feed-message'>Unable to fetch posts</p>
+      }
+
+      {!isInitialPending && !isGlobalFetchError && posts.length === 0 &&
         <p className='posts-feed-message'>No posts yet</p>
       }
 
-      {!isInitialPending &&
+      {!isInitialPending && !isGlobalFetchError &&
         posts.map((post) => {
           const author = authorsMap.get(post.authorId);
           const comments = MOCK_COMMENTS.filter((comment) => comment.postId === post.id);
@@ -124,7 +135,7 @@ function PostsFeed() {
       <p
         className='posts-feed-message'
         ref={sentinelRef}
-        hidden={!hasNextPage || isAuthorsQueryPending || isFetchNextPageError}
+        hidden={!hasNextPage || isAuthorsQueryPending || isFetchNextPageError || isGlobalFetchError}
       >
         {isFetchingNextPage && 'Loading more posts...'}
       </p>
