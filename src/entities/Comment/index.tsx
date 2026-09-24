@@ -8,7 +8,7 @@ import { getRelativeTimePresentationString } from '@/shared/utilities/time';
 import './style.css';
 
 interface CommentProps {
-  author: UserView
+  author: UserView | null;
   comment: CommentModel;
   canDelete: boolean;
 }
@@ -43,12 +43,12 @@ function Comment({ author, comment, canDelete }: CommentProps) {
       <header className='comment-header'>
         <img
           className='avatar comment-avatar'
-          src={author.profileImage ?? undefined}
-          alt={`Profile picture of ${author.displayName}`}
+          src={author?.profileImage ?? undefined}
+          alt={`Profile picture of ${author?.displayName ?? 'Unknown user'}`}
           width={32}
           height={32}
         />
-        <span className='comment-author'>{author.displayName}</span>
+        <span className='comment-author'>{author?.displayName ?? 'Unknown user'}</span>
         <time
           className='comment-time'
           dateTime={comment.creationDate}

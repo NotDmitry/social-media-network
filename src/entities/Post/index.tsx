@@ -155,11 +155,7 @@ function Post({ post, author }: PostProps) {
           {!isCommentsSectionPending && comments !== undefined && comments.length > 0 &&
             <ol className='post-comments-list'>
               {comments.map((comment) => {
-                const commentAuthor = commentAuthorsMap.get(comment.authorId);
-
-                if (!commentAuthor) {
-                  return null;
-                }
+                const commentAuthor = commentAuthorsMap.get(comment.authorId) ?? null;
 
                 return (
                   <li key={comment.id}>
