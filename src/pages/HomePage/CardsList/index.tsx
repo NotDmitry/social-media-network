@@ -1,8 +1,8 @@
 import './style.css';
 
 export interface CardData {
-  id: string;
-  pictureUrl: string;
+  id: number;
+  pictureUrl: string | null;
   title: string;
   subtitle: string;
 }
@@ -20,7 +20,7 @@ function CardsList({ title, cardsData }: CardsListProps) {
         <article className='cards-list-item-container' key={cardData.id}>
           <img
             className='avatar'
-            src={cardData.pictureUrl}
+            src={cardData.pictureUrl ?? undefined}
             alt={`Profile picture of ${cardData.title}`}
             width={48}
             height={48}
