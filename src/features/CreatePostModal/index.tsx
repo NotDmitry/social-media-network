@@ -1,8 +1,11 @@
 import { useEffect, useId, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Button from '@/shared/ui/Button';
 import { CloseIcon, FileUploadIcon, PencilIcon } from '@/shared/icons';
-import TextField from '@/shared/ui/input/TextField';
-import TextAreaField from '@/shared/ui/input/TextareaField';
+import TextField, { type TextFieldStatus } from '@/shared/ui/input/TextField';
+import TextAreaField, { type TextareaFieldStatus } from '@/shared/ui/input/TextareaField';
+import { createPostFormSchema, type CreatePostFormFields } from './schema';
 import './style.css';
 
 interface CreatePostModalProps {
@@ -13,19 +16,43 @@ interface CreatePostModalProps {
   onClose: () => void;
 }
 
-function CreatePostModal({ isOpen, maxFileSize, acceptedFileTypes, onClose }: CreatePostModalProps) {
+function CreatePostModal({
+  isOpen,
+  initialDescription,
+  maxFileSize,
+  acceptedFileTypes,
+  onClose,
+}: CreatePostModalProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFileErrorMessage, setSelectedFileErrorMessage] = useState<string | null>(null);
   const dialogElementRef = useRef<HTMLDialogElement | null>(null);
   const formId = useId();
 
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: {
+      errors,
+      isSubmitted,
+    },
+  } = useForm<CreatePostFormFields>({
+    resolver: zodResolver(createPostFormSchema),
+    defaultValues: {
+      title: '',
+      description: initialDescription,
+    },
+  });
+
   function handleModalClose() {
+    setSelectedFile(null);
+    setSelectedFileErrorMessage(null);
     onClose();
   }
 
   function handleBackdropClick(event: React.MouseEvent<HTMLDialogElement>) {
     if (event.target === event.currentTarget) {
-      onClose();
+      handleModalClose();
     }
   }
 
@@ -79,18 +106,39 @@ function CreatePostModal({ isOpen, maxFileSize, acceptedFileTypes, onClose }: Cr
     setSelectedFileErrorMessage(null);
   }
 
+  function handleFormSubmit() {
+    return;
+  }
+
+  function getTextFieldStatus(hasError: boolean): TextFieldStatus {
+    if (!isSubmitted) {
+      return 'default';
+    }
+
+    return hasError ? 'invalid' : 'valid';
+  }
+
+  function getTextareaFieldStatus(hasError: boolean): TextareaFieldStatus {
+    return isSubmitted && hasError ? 'invalid' : 'default';
+  }
+
   useEffect(() => {
     if (isOpen) {
+      reset({
+        title: '',
+        description: initialDescription,
+      });
       dialogElementRef.current?.showModal();
     } else {
       dialogElementRef.current?.close();
     }
-  }, [isOpen]);
+  }, [isOpen, initialDescription, reset]);
 
   return (
     <dialog
       className='create-post-modal'
       ref={dialogElementRef}
+      onClose={handleModalClose}
       onClick={handleBackdropClick}
     >
       <div className='create-post-modal-content'>
@@ -104,17 +152,31 @@ function CreatePostModal({ isOpen, maxFileSize, acceptedFileTypes, onClose }: Cr
             <CloseIcon className='create-post-modal-close-icon' />
           </button>
         </header>
-        <form className='create-post-form' id={formId}>
+        <form
+          className='create-post-form'
+          id={formId}
+          onSubmit={(event) => void handleSubmit(handleFormSubmit)(event)}
+        >
           <TextField
+            {...register('title')}
             label='Post Title'
             labelIcon={<PencilIcon />}
             placeholder='Enter post title'
+            status={getTextFieldStatus(Boolean(errors.title))}
+            errorMessage={errors.title?.message}
+            maxLength={81}
             type='text'
           />
           <TextAreaField
+            {...register('description')}
             label='Description'
             labelIcon={<PencilIcon />}
             placeholder='Write description here...'
+            status={getTextareaFieldStatus(Boolean(errors.description))}
+            errorMessage={errors.description?.message}
+            hintMessage='Max 500 characters'
+            maxLength={501}
+            rows={1}
           />
           <label
             className={`create-post-file-dropzone ${selectedFileErrorMessage ?
