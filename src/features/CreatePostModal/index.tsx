@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import Button from '@/shared/ui/Button';
 import { CloseIcon, FileUploadIcon, PencilIcon } from '@/shared/icons';
 import TextField from '@/shared/ui/input/TextField';
@@ -8,10 +8,14 @@ import './style.css';
 interface CreatePostModalProps {
   isOpen: boolean;
   initialDescription: string;
+  maxFileSize: number;
+  acceptedFileTypes: string[];
   onClose: () => void;
 }
 
-function CreatePostModal({ isOpen, onClose }: CreatePostModalProps) {
+function CreatePostModal({ isOpen, maxFileSize, acceptedFileTypes, onClose }: CreatePostModalProps) {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFileErrorMessage, setSelectedFileErrorMessage] = useState<string | null>(null);
   const dialogElementRef = useRef<HTMLDialogElement | null>(null);
   const formId = useId();
 
@@ -23,6 +27,56 @@ function CreatePostModal({ isOpen, onClose }: CreatePostModalProps) {
     if (event.target === event.currentTarget) {
       onClose();
     }
+  }
+
+  function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    handleFileSelect(event.currentTarget.files);
+    event.currentTarget.value = '';
+  }
+
+  function handleFileDrop(event: React.DragEvent<HTMLLabelElement>) {
+    if (event.type !== 'drop') {
+      return;
+    }
+
+    event.preventDefault();
+    handleFileSelect(event.dataTransfer.files);
+  }
+
+  function handleFileDragOver(event: React.DragEvent<HTMLLabelElement>) {
+    if (event.type !== 'dragover') {
+      return;
+    }
+
+    event.preventDefault();
+  }
+
+  function handleFileSelect(files: FileList | null) {
+    const file = files?.[0];
+
+    if (!file) {
+      setSelectedFile(null);
+      setSelectedFileErrorMessage(null);
+
+      return;
+    }
+
+    if (!acceptedFileTypes.includes(file.type)) {
+      setSelectedFile(null);
+      setSelectedFileErrorMessage('Unsupported file format');
+
+      return;
+    }
+
+    if (file.size > maxFileSize) {
+      setSelectedFile(null);
+      setSelectedFileErrorMessage('The file is too large');
+
+      return;
+    }
+
+    setSelectedFile(file);
+    setSelectedFileErrorMessage(null);
   }
 
   useEffect(() => {
@@ -62,17 +116,31 @@ function CreatePostModal({ isOpen, onClose }: CreatePostModalProps) {
             labelIcon={<PencilIcon />}
             placeholder='Write description here...'
           />
-          <div className='create-post-file-dropzone'>
+          <label
+            className={`create-post-file-dropzone ${selectedFileErrorMessage ?
+              'create-post-file-dropzone_invalid' : ''}`}
+            onDragOver={handleFileDragOver}
+            onDrop={handleFileDrop}
+          >
+            <input
+              type='file'
+              className='visually-hidden'
+              accept={acceptedFileTypes.join(',')}
+              onChange={handleFileChange}
+            />
             <FileUploadIcon className='create-post-file-dropzone-icon' />
-            <div className='create-post-file-dropzone-text'>
-              <p className='create-post-file-dropzone-hint'>
-                Select a file or drag and drop here
-              </p>
-              <p className='create-post-file-dropzone-constraint'>
-                JPG or PNG, no more than 10MB
-              </p>
-            </div>
-          </div>
+            <span className='create-post-file-dropzone-text'>
+              <span className='create-post-file-dropzone-hint'>
+                {selectedFile?.name ?? 'Select a file or drag and drop here'}
+              </span>
+              <span
+                className={`create-post-file-dropzone-constraint ${selectedFileErrorMessage ?
+                  'create-post-file-dropzone-constraint_invalid' : ''}`}
+              >
+                {selectedFileErrorMessage ?? 'JPG or PNG, no more than 10MB'}
+              </span>
+            </span>
+          </label>
         </form>
         <div className='create-post-form-actions'>
           <Button type='submit' form={formId}>Create</Button>

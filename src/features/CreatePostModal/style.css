@@ -95,11 +95,21 @@ body:has(.create-post-modal[open]) {
 }
 
 .create-post-file-dropzone {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 24px;
   padding: clamp(8px, 2vw, 16px) clamp(12px, 3vw, 32px);
   border: 2px dashed var(--component-stroke-dark-soft);
+  cursor: pointer;
+
+  &:focus-within {
+    border-color: var(--component-stroke-primary);
+  }
+
+  &.create-post-file-dropzone_invalid {
+    border-color: var(--component-stroke-negative);
+  }
 }
 
 .create-post-file-dropzone-icon {
@@ -128,6 +138,10 @@ body:has(.create-post-modal[open]) {
 
 .create-post-file-dropzone-constraint {
   color: var(--component-text-gray);
+
+  &.create-post-file-dropzone-constraint_invalid {
+    color: var(--component-text-negative);
+  }
 }
 
 .create-post-form-actions {

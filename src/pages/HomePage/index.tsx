@@ -7,6 +7,9 @@ import { SUGGESTED_COMMUNITIES_CARDS_DATA, SUGGESTED_USERS_CARDS_DATA } from '@/
 import CardsList from './CardsList';
 import './style.css';
 
+const MAX_POST_FILE_SIZE  = 10 * 1024 * 1024;
+const ACCEPTED_POST_FILE_TYPES = ['image/png', 'image/jpeg'];
+
 function HomePage() {
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const [quickPostContent, setQuickPostContent] = useState('');
@@ -62,6 +65,8 @@ function HomePage() {
           <CreatePostModal
             isOpen={isCreatePostModalOpen}
             initialDescription={quickPostContent}
+            maxFileSize={MAX_POST_FILE_SIZE}
+            acceptedFileTypes={ACCEPTED_POST_FILE_TYPES}
             onClose={handleCreatePostModalClose}
           />
         }
