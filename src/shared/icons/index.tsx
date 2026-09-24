@@ -15,3 +15,5 @@ export { default as CommentIcon } from './CommentIcon';
 export { default as ChevronDownIcon } from './ChevronDownIcon';
 export { default as NotFoundIcon } from './NotFoundIcon';
 export { default as ErrorIcon } from './ErrorIcon';
+export { default as CloseIcon } from './CloseIcon';
+export { default as FileUploadIcon } from './FileUploadIcon';

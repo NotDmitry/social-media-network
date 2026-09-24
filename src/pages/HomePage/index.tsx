@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import PostsFeed from '@/widgets/PostsFeed';
+import CreatePostModal from '@/features/CreatePostModal';
 import { useAuth } from '@/entities/auth/useAuth';
 import Button from '@/shared/ui/Button';
 import { SUGGESTED_COMMUNITIES_CARDS_DATA, SUGGESTED_USERS_CARDS_DATA } from '@/shared/mocks/CardsListMocks';
@@ -6,7 +8,26 @@ import CardsList from './CardsList';
 import './style.css';
 
 function HomePage() {
+  const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
+  const [quickPostContent, setQuickPostContent] = useState('');
   const { currentUser } = useAuth();
+
+  function handleCreatePostModalOpen() {
+    setIsCreatePostModalOpen(true);
+  }
+
+  function handleCreatePostModalClose() {
+    setIsCreatePostModalOpen(false);
+  }
+
+  function handleQuickPostContentChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setQuickPostContent(event.target.value);
+  }
+
+  function handleQuickPostSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
+    handleCreatePostModalOpen();
+  }
 
   return (
     <div className='home-page-container'>
@@ -23,16 +44,26 @@ function HomePage() {
               width={64}
               height={64}
             />
-            <div className='create-post-input-section'>
+            <form className='create-post-input-section' onSubmit={handleQuickPostSubmit}>
               <input
                 className='create-post-input'
                 type='text'
                 name='post'
-                placeholder={'What\'s happening?'}
+                placeholder="What's happening?"
+                value={quickPostContent}
+                onChange={handleQuickPostContentChange}
               />
-              <Button type='button'>Tell everyone</Button>
-            </div>
+              <Button type='submit'>Tell everyone</Button>
+            </form>
           </div>
+        }
+
+        {currentUser &&
+          <CreatePostModal
+            isOpen={isCreatePostModalOpen}
+            initialDescription={quickPostContent}
+            onClose={handleCreatePostModalClose}
+          />
         }
 
         <PostsFeed />
