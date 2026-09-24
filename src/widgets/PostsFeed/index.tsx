@@ -5,7 +5,6 @@ import { getPosts } from '@/entities/Post/api/getPosts';
 import { getUserById } from '@/entities/User/api/getUserById';
 import { toUserView } from '@/entities/User/utilities';
 import type { UserView } from '@/entities/User/types';
-import { MOCK_COMMENTS } from '@/shared/mocks/CommentMocks';
 import './style.css';
 
 const POSTS_PAGE_SIZE = 10;
@@ -115,7 +114,6 @@ function PostsFeed() {
       {!isInitialPending && !isGlobalFetchError &&
         posts.map((post) => {
           const author = authorsMap.get(post.authorId);
-          const comments = MOCK_COMMENTS.filter((comment) => comment.postId === post.id);
 
           if (!author) {
             return null;
@@ -125,7 +123,6 @@ function PostsFeed() {
             <Post
               key={post.id}
               post={post}
-              comments={comments}
               author={author}
             />
           );
