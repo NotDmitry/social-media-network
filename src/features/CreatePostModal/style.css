@@ -102,6 +102,7 @@ body:has(.create-post-modal[open]) {
   padding: clamp(8px, 2vw, 16px) clamp(12px, 3vw, 32px);
   border: 2px dashed var(--component-stroke-dark-soft);
   cursor: pointer;
+  transition: all 0.25s ease-in-out;
 
   &:focus-within {
     border-color: var(--component-stroke-primary);
@@ -110,11 +111,17 @@ body:has(.create-post-modal[open]) {
   &.create-post-file-dropzone_invalid {
     border-color: var(--component-stroke-negative);
   }
+
+  &.create-post-file-dropzone_dragged-over,
+  &:hover {
+    background-color: var(--component-hover-primary-soft);
+  }
 }
 
 .create-post-file-dropzone-icon {
   width: 36px;
   height: 36px;
+  color: var(--icon-dark);
 }
 
 .create-post-file-dropzone-text {

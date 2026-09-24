@@ -29,6 +29,7 @@ function CreatePostModal({
 }: CreatePostModalProps) {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFileErrorMessage, setSelectedFileErrorMessage] = useState<string | null>(null);
+  const [isFileDraggedOver, setIsFileDraggedOver] = useState(false);
   const dialogElementRef = useRef<HTMLDialogElement | null>(null);
   const formId = useId();
   const queryClient = useQueryClient();
@@ -111,6 +112,7 @@ function CreatePostModal({
     }
 
     event.preventDefault();
+    setIsFileDraggedOver(false);
     handleFileSelect(event.dataTransfer.files);
   }
 
@@ -120,6 +122,18 @@ function CreatePostModal({
     }
 
     event.preventDefault();
+
+    if (!isPostCreationPending) {
+      setIsFileDraggedOver(true);
+    }
+  }
+
+  function handleFileDragLeave(event: React.DragEvent<HTMLLabelElement>) {
+    if (event.type !== 'dragleave') {
+      return;
+    }
+
+    setIsFileDraggedOver(false);
   }
 
   function handleFileSelect(files: FileList | null) {
@@ -233,10 +247,12 @@ function CreatePostModal({
             disabled={isPostCreationPending}
           />
           <label
-            className={`create-post-file-dropzone ${selectedFileErrorMessage ?
-              'create-post-file-dropzone_invalid' : ''}`}
+            className={`create-post-file-dropzone
+              ${selectedFileErrorMessage ? 'create-post-file-dropzone_invalid' : ''}
+              ${isFileDraggedOver ? 'create-post-file-dropzone_dragged-over' : ''}`}
             onDragOver={handleFileDragOver}
             onDrop={handleFileDrop}
+            onDragLeave={handleFileDragLeave}
           >
             <input
               type='file'
