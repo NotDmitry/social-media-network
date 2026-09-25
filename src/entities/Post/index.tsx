@@ -15,11 +15,12 @@ import './style.css';
 interface PostProps {
   post: PostModel;
   author: UserView;
+  isLiked: boolean;
+  isLikeDisabled: boolean;
 }
 
-function Post({ post, author }: PostProps) {
+function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
 
   const { currentUser, isUserAuthenticated } = useAuth();
 
@@ -67,7 +68,7 @@ function Post({ post, author }: PostProps) {
   const isCommentsSectionPending = isCommentsQueryPending || isCommentAuthorsQueryPending;
 
   function handleLikeClick() {
-    setIsLiked((isLiked) => !isLiked);
+    return;
   }
 
   function handleCommentsSectionClick() {
@@ -112,12 +113,12 @@ function Post({ post, author }: PostProps) {
         <li>
           <button
             className='post-menu-button'
-            disabled={!isUserAuthenticated}
+            disabled={!isUserAuthenticated || isLikeDisabled}
             aria-label='Like the post'
             onClick={handleLikeClick}
           >
             <HeartIcon className={`post-menu-like-icon ${isLiked ? 'post-menu-like-icon_active' : ''}`} />
-            <span className='post-menu-label'>{post.likesCount + Number(isLiked)} likes</span>
+            <span className='post-menu-label'>{post.likesCount} likes</span>
           </button>
         </li>
         <li>
