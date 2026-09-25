@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { useAlertStore } from './store';
-import Alert from './index';
+import { useAlertStore } from '@/shared/ui/Alert/model/store';
+import Alert from '@/shared/ui/Alert/AlertComponent';
+import './style.css';
 
 const VISIBLE_ALERTS_DESKTOP_LIMIT = 5;
 const VISIBLE_ALERTS_MOBILE_LIMIT = 3;

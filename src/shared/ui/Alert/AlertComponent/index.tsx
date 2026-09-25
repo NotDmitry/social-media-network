@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react';
 import { CrossIcon } from '@/shared/icons';
-import type { AlertModel } from './types';
+import type { AlertModel } from '@/shared/ui/Alert/model/types';
 import './style.css';
 
 interface AlertProps extends AlertModel {
