@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
-import { useInfiniteQuery, useQueries } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
 import Post from '@/entities/Post';
+import { useAuth } from '@/entities/auth/useAuth';
+import { getCurrentUserLikes } from '@/entities/Like/api/getCurrentUserLikes';
 import { getPosts } from '@/entities/Post/api/getPosts';
 import { getUserById } from '@/entities/User/api/getUserById';
 import { toUserView } from '@/entities/User/utilities';
@@ -10,6 +12,8 @@ import './style.css';
 const POSTS_PAGE_SIZE = 10;
 
 function PostsFeed() {
+  const { currentUser, isUserAuthenticated } = useAuth();
+
   const {
     data,
     fetchNextPage,
@@ -32,6 +36,21 @@ function PostsFeed() {
 
       return nextPageOffset < lastPage.total ? nextPageOffset : undefined;
     },
+  });
+
+  const {
+    data: likedByCurrentUserPostIds,
+    isError: isCurrentUserLikesQueryError,
+    isPending: isCurrentUserLikesQueryPending,
+  } = useQuery({
+    queryKey: ['currentUserLikes', currentUser?.id],
+    queryFn: async ({ signal }) => {
+      const likes = await getCurrentUserLikes(signal);
+
+      return likes.map((like) => like.postId);
+    },
+    select: (likedPostIds) => new Set(likedPostIds),
+    enabled: currentUser !== null,
   });
 
   const posts = (data?.pages ?? []).flatMap((page) => page.items);
@@ -65,10 +84,36 @@ function PostsFeed() {
     },
   });
 
-  const isInitialPending = isPostsQueryPending || (isAuthorsQueryPending && data?.pages.length === 1);
+  const isInitialPending = (
+    isPostsQueryPending ||
+    (isAuthorsQueryPending && data?.pages.length === 1) ||
+    (isUserAuthenticated && isCurrentUserLikesQueryPending)
+  );
+
   const hasFetchedPostsWithAuthors = posts.some((post) => authorsMap.has(post.authorId));
-  const isGlobalFetchError = (isPostsQueryError && posts.length === 0) ||
-    (isAuthorsQueryError && posts.length > 0 && !hasFetchedPostsWithAuthors);
+
+  const isGlobalFetchError = (
+    (isPostsQueryError && posts.length === 0) ||
+    (isAuthorsQueryError && posts.length > 0 && !hasFetchedPostsWithAuthors)
+  );
+
+  const isCurrentUserLikesUnavailable = (
+    isUserAuthenticated &&
+    isCurrentUserLikesQueryError &&
+    likedByCurrentUserPostIds === undefined
+  );
+
+  let postsFeedStatusMessage: string | null = null;
+
+  if (isInitialPending) {
+    postsFeedStatusMessage = 'Loading...';
+  } else if (isGlobalFetchError) {
+    postsFeedStatusMessage = 'Unable to fetch posts';
+  } else if (posts.length === 0) {
+    postsFeedStatusMessage = 'No posts yet';
+  } else if (isCurrentUserLikesUnavailable) {
+    postsFeedStatusMessage = 'Unable to fetch your likes';
+  }
 
   const sentinelRef = useRef<HTMLParagraphElement>(null);
 
@@ -99,16 +144,8 @@ function PostsFeed() {
 
   return (
     <div className='posts-feed'>
-      {isInitialPending &&
-        <p className='posts-feed-message'>Loading posts...</p>
-      }
-
-      {!isInitialPending && isGlobalFetchError &&
-        <p className='posts-feed-message'>Unable to fetch posts</p>
-      }
-
-      {!isInitialPending && !isGlobalFetchError && posts.length === 0 &&
-        <p className='posts-feed-message'>No posts yet</p>
+      {postsFeedStatusMessage &&
+        <p className='posts-feed-message'>{postsFeedStatusMessage}</p>
       }
 
       {!isInitialPending && !isGlobalFetchError &&
@@ -124,6 +161,8 @@ function PostsFeed() {
               key={post.id}
               post={post}
               author={author}
+              isLiked={likedByCurrentUserPostIds?.has(post.id) ?? false}
+              isLikeDisabled={isCurrentUserLikesUnavailable}
             />
           );
         })
