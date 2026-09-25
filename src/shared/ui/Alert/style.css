@@ -1,13 +1,20 @@
-.alert {
+.alert-stack {
   position: fixed;
   z-index: 10;
   bottom: 20px;
   right: 20px;
   display: flex;
+  flex-direction: column-reverse;
+  gap: clamp(8px, 2vw, 12px);
+  max-width: 350px;
+  width: 100%;
+}
+
+.alert {
+  display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 8px;
-  max-width: 350px;
   width: 100%;
   padding: clamp(12px, 3vw, 24px);
   border-radius: 8px;
@@ -80,7 +87,7 @@
 }
 
 @media screen and (width < 480px) {
-  .alert {
+  .alert-stack {
     top: 5dvh;
     inset-inline: 3vw;
     bottom: auto;

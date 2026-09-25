@@ -1,56 +1,45 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { AlertContext } from './context';
-import Alert from './index';
-import type { AlertProps, AlertSeverityLevel } from './index';
+import AlertStack from './AlertStack';
+import type { AlertModel, AlertSeverityLevel } from './types';
 
 const ALERT_DURATION_MS = 5000;
+const VISIBLE_ALERTS_LIMIT = 5;
 
 interface AlertContextProviderProps {
   children: React.ReactNode;
 }
 
 function AlertContextProvider({ children }: AlertContextProviderProps) {
-  const [activeAlert, setActiveAlert] = useState<AlertProps | null>(null);
+  const [alerts, setAlerts] = useState<AlertModel[]>([]);
 
-  const showAlert = useCallback((message: string, severity: AlertSeverityLevel = 'success') => {
-    setActiveAlert({ message, severity });
+  const visibleAlerts = alerts.slice(0, VISIBLE_ALERTS_LIMIT);
+
+  const showAlert = useCallback((message: string, severity: AlertSeverityLevel) => {
+    const id = crypto.randomUUID();
+    const newAlert: AlertModel = { id, message, severity };
+
+    setAlerts((stackedAlerts) => [...stackedAlerts, newAlert]);
   }, []);
 
-  const closeAlert = useCallback(() => {
-    setActiveAlert(null);
+  const closeAlert = useCallback((alertId: string) => {
+    setAlerts((stackedAlerts) => stackedAlerts.filter((alert) => alert.id !== alertId));
   }, []);
 
   const contextValue = useMemo(() => {
     return {
       showAlert,
-      closeAlert,
     }
-  }, [showAlert, closeAlert]);
-
-  useEffect(() => {
-    if (activeAlert === null) {
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setActiveAlert((currentAlert) => currentAlert === activeAlert ? null : currentAlert);
-    }, ALERT_DURATION_MS);
-
-    return () => {
-      clearTimeout(timer);
-    }
-  }, [activeAlert])
+  }, [showAlert]);
 
   return (
     <AlertContext value={contextValue}>
       {children}
-      {activeAlert && (
-        <Alert
-          message={activeAlert.message}
-          severity={activeAlert.severity}
-          onClose={closeAlert}
-        />
-      )}
+      <AlertStack
+        alerts={visibleAlerts}
+        duration={ALERT_DURATION_MS}
+        onClose={closeAlert}
+      />
     </AlertContext>
   );
 }
