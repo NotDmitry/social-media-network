@@ -5,7 +5,7 @@ export function isUserModel(value: unknown): value is UserModel {
   return userModelSchema.validate(value);
 }
 
-export function getUserDisplayName(user: UserModel) {
+export function getUserDisplayName(user: Pick<UserModel, 'firstName' | 'secondName' | 'username'>) {
   const displayName = `${user.firstName ?? ''} ${user.secondName ?? ''}`.trim();
 
   return displayName || user.username;
