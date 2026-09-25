@@ -1,15 +1,18 @@
 import { useState } from 'react';
-import { useQueries, useQuery } from '@tanstack/react-query';
+import { useMutation, useQueries, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import CreateCommentForm from '@/features/CreateCommentForm';
 import { useAuth } from '@/entities/auth/useAuth';
 import Comment from '@/entities/Comment';
 import { getPostComments } from '@/entities/Comment/api/getPostComments';
+import { likePost } from '@/entities/Like/api/likePost';
+import { dislikePost } from '@/entities/Like/api/dislikePost';
 import { getUserById } from '@/entities/User/api/getUserById';
 import { toUserView } from '@/entities/User/utilities';
 import type { UserView } from '@/entities/User/types';
+import { useAlert } from '@/shared/ui/Alert/useAlert';
 import { HeartIcon, CommentIcon, ChevronDownIcon } from '@/shared/icons';
 import { getRelativeTimePresentationString } from '@/shared/utilities/time';
-import type { PostModel } from './types';
+import type { PostModel, PostsPage } from './types';
 import './style.css';
 
 interface PostProps {
@@ -21,8 +24,9 @@ interface PostProps {
 
 function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
-
   const { currentUser, isUserAuthenticated } = useAuth();
+  const queryClient = useQueryClient();
+  const { showAlert } = useAlert();
 
   const {
     data: comments,
@@ -32,6 +36,48 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
     queryKey: ['comments', post.id],
     queryFn: ({ signal }) => getPostComments(post.id, signal),
     enabled: isUserAuthenticated && isCommentsOpen,
+  });
+
+  const {
+    mutate: toggleLike,
+    isPending: isLikeTogglePending,
+    variables: willBeLiked,
+  } = useMutation({
+    mutationFn: (willBeLiked: boolean) => willBeLiked ? likePost(post.id) : dislikePost(post.id),
+    onSuccess: ({ newLikesCount }, willBeLiked) => {
+      // Manual post cache invalidation
+      queryClient.setQueryData<InfiniteData<PostsPage>>(['posts'], (postsQueryCachedData) => {
+        if (postsQueryCachedData === undefined) {
+          return postsQueryCachedData;
+        }
+
+        return {
+          ...postsQueryCachedData,
+          pages: postsQueryCachedData.pages.map((page) => ({
+            ...page,
+            items: page.items.map((cachedPost) => cachedPost.id === post.id ?
+              { ...cachedPost, likesCount: newLikesCount } : cachedPost),
+          })),
+        };
+      });
+
+      // Manual liked posts cache invalidation
+      queryClient.setQueryData<number[]>(['currentUserLikes', currentUser?.id], (cachedLikedPostIds) => {
+        if (cachedLikedPostIds === undefined) {
+          return cachedLikedPostIds;
+        }
+
+        if (willBeLiked) {
+          return [...cachedLikedPostIds, post.id];
+        }
+
+        return cachedLikedPostIds.filter((postId) => postId !== post.id);
+      });
+    },
+    onError: (error) => {
+      showAlert('Unable to update like status', 'error');
+      console.error(error);
+    },
   });
 
   const uniqueCommentAuthorIds = [...new Set((comments ?? []).map((comment) => comment.authorId))];
@@ -67,8 +113,11 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
     `${String(displayedCommentsCount)} ${post.commentsCount === 1 ? 'comment' : 'comments'}`;
   const isCommentsSectionPending = isCommentsQueryPending || isCommentAuthorsQueryPending;
 
+  const isLikedOptimistic = isLikeTogglePending ? willBeLiked : isLiked;
+  const likesCountOptimistic = isLikeTogglePending ? post.likesCount + (isLiked ? -1 : 1) : post.likesCount;
+
   function handleLikeClick() {
-    return;
+    toggleLike(!isLiked);
   }
 
   function handleCommentsSectionClick() {
@@ -113,12 +162,12 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
         <li>
           <button
             className='post-menu-button'
-            disabled={!isUserAuthenticated || isLikeDisabled}
+            disabled={!isUserAuthenticated || isLikeDisabled || isLikeTogglePending}
             aria-label='Like the post'
             onClick={handleLikeClick}
           >
-            <HeartIcon className={`post-menu-like-icon ${isLiked ? 'post-menu-like-icon_active' : ''}`} />
-            <span className='post-menu-label'>{post.likesCount} likes</span>
+            <HeartIcon className={`post-menu-like-icon ${isLikedOptimistic ? 'post-menu-like-icon_active' : ''}`} />
+            <span className='post-menu-label'>{likesCountOptimistic} likes</span>
           </button>
         </li>
         <li>

@@ -44,8 +44,12 @@ function PostsFeed() {
     isPending: isCurrentUserLikesQueryPending,
   } = useQuery({
     queryKey: ['currentUserLikes', currentUser?.id],
-    queryFn: ({ signal }) => getCurrentUserLikes(signal),
-    select: (likes) => new Set(likes.map((like) => like.postId)),
+    queryFn: async ({ signal }) => {
+      const likes = await getCurrentUserLikes(signal);
+
+      return likes.map((like) => like.postId);
+    },
+    select: (likedPostIds) => new Set(likedPostIds),
     enabled: currentUser !== null,
   });
 
