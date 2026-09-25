@@ -1,20 +1,16 @@
 import { useCallback, useEffect } from 'react';
 import { CrossIcon } from '@/shared/icons';
+import type { AlertModel } from './types';
 import './style.css';
 
-export type AlertSeverityLevel = 'success' | 'warning' | 'error';
-
-export interface AlertProps {
-  id: string;
-  message: string;
-  severity?: AlertSeverityLevel;
+interface AlertProps extends AlertModel {
   duration?: number;
-  onClose?: (alertId: string) => void;
+  onClose: (alertId: string) => void;
 }
 
-function Alert({ id, message, severity = 'success', duration, onClose }: AlertProps) {
+function Alert({ id, message, severity, duration, onClose }: AlertProps) {
   const handleAlertClose = useCallback(() => {
-    onClose?.(id);
+    onClose(id);
   }, [id, onClose]);
 
   useEffect(() => {
