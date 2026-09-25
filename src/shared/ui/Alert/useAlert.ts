@@ -1,12 +1,7 @@
-import { useContext } from 'react';
-import { AlertContext } from './context'
+import { useAlertStore } from '@/shared/ui/Alert/model/store';
 
 export function useAlert() {
-  const alertContextData = useContext(AlertContext);
+  const showAlert = useAlertStore((state) => state.showAlert);
 
-  if (!alertContextData) {
-    throw new Error('useAlert hook must be used inside AlertContext provider');
-  }
-
-  return alertContextData;
+  return { showAlert };
 }

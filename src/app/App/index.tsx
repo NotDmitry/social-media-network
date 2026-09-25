@@ -2,19 +2,20 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AppInitializer from '@/app/AppInitializer';
 import AppRouter from '@/app/AppRouter';
 import ThemeContextProvider from '@/features/theme/ThemeContextProvider';
-import AlertContextProvider from '@/shared/ui/Alert/AlertContextProvider';
+import AlertStack from '@/shared/ui/Alert/AlertStack';
+
+const ALERT_DURATION_MS = 5000;
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AlertContextProvider>
-        <AppInitializer />
-        <ThemeContextProvider>
-          <AppRouter />
-        </ThemeContextProvider>
-      </AlertContextProvider>
+      <AppInitializer />
+      <AlertStack duration={ALERT_DURATION_MS} />
+      <ThemeContextProvider>
+        <AppRouter />
+      </ThemeContextProvider>
     </QueryClientProvider>
   );
 }
