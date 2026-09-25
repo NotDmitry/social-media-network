@@ -1,10 +1,12 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { AlertContext } from './context';
 import AlertStack from './AlertStack';
 import type { AlertModel, AlertSeverityLevel } from './types';
 
 const ALERT_DURATION_MS = 5000;
-const VISIBLE_ALERTS_LIMIT = 5;
+const VISIBLE_ALERTS_DESKTOP_LIMIT = 5;
+const VISIBLE_ALERTS_MOBILE_LIMIT = 3;
+const RESIZE_TO_MOBILE_MEDIA_QUERY = 'screen and (width < 480px)';
 
 interface AlertContextProviderProps {
   children: React.ReactNode;
@@ -12,8 +14,12 @@ interface AlertContextProviderProps {
 
 function AlertContextProvider({ children }: AlertContextProviderProps) {
   const [alerts, setAlerts] = useState<AlertModel[]>([]);
+  const [visibleAlertsLimit, setVisibleAlertsLimit] = useState<number>(() => {
+    return window.matchMedia(RESIZE_TO_MOBILE_MEDIA_QUERY).matches ?
+      VISIBLE_ALERTS_MOBILE_LIMIT : VISIBLE_ALERTS_DESKTOP_LIMIT;
+  });
 
-  const visibleAlerts = alerts.slice(0, VISIBLE_ALERTS_LIMIT);
+  const visibleAlerts = alerts.slice(0, visibleAlertsLimit);
 
   const showAlert = useCallback((message: string, severity: AlertSeverityLevel) => {
     const id = crypto.randomUUID();
@@ -31,6 +37,24 @@ function AlertContextProvider({ children }: AlertContextProviderProps) {
       showAlert,
     }
   }, [showAlert]);
+
+  useEffect(() => {
+    const windowResizeMediaQuery = window.matchMedia(RESIZE_TO_MOBILE_MEDIA_QUERY);
+
+    const handleToMobileBreakpointChange = () => {
+      if (windowResizeMediaQuery.matches) {
+        setVisibleAlertsLimit(VISIBLE_ALERTS_MOBILE_LIMIT);
+      } else {
+        setVisibleAlertsLimit(VISIBLE_ALERTS_DESKTOP_LIMIT);
+      }
+    }
+
+    windowResizeMediaQuery.addEventListener('change', handleToMobileBreakpointChange);
+
+    return () => {
+      windowResizeMediaQuery.removeEventListener('change', handleToMobileBreakpointChange);
+    };
+  }, []);
 
   return (
     <AlertContext value={contextValue}>
