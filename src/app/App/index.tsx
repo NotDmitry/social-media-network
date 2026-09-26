@@ -1,4 +1,6 @@
+import { ApolloProvider } from '@apollo/client/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { apolloClient } from '@/app/apolloClient';
 import AppInitializer from '@/app/AppInitializer';
 import AppRouter from '@/app/AppRouter';
 import ThemeContextProvider from '@/features/theme/ThemeContextProvider';
@@ -11,11 +13,13 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AppInitializer />
-      <AlertStack duration={ALERT_DURATION_MS} />
-      <ThemeContextProvider>
-        <AppRouter />
-      </ThemeContextProvider>
+      <ApolloProvider client={apolloClient}>
+        <AppInitializer />
+        <AlertStack duration={ALERT_DURATION_MS} />
+        <ThemeContextProvider>
+          <AppRouter />
+        </ThemeContextProvider>
+      </ApolloProvider>
     </QueryClientProvider>
   );
 }
