@@ -17,15 +17,18 @@
     ]
   },
   "dependencies": {
+    "@apollo/client": "^4.3.1",
     "@hookform/resolvers": "^5.9.1",
     "@reduxjs/toolkit": "^2.12.0",
     "@sidekick-software/internship-backend": "file:local-packages/sidekick-software-internship-backend-0.1.0.tgz",
     "@tanstack/react-query": "^5.103.2",
+    "graphql": "^16.14.2",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-hook-form": "^7.87.0",
     "react-redux": "^9.3.0",
     "react-router": "^8.3.0",
+    "rxjs": "^7.8.2",
     "zod": "^4.6.1",
     "zustand": "^5.0.15"
   },
