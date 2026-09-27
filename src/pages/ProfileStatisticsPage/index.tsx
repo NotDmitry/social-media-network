@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useQuery } from '@apollo/client/react';
 import StatsCard from '@/features/ProfileStatistics/StatsCard';
+import TableView from '@/features/ProfileStatistics/TableView';
 import { GET_PROFILE_STATISTICS } from '@/features/ProfileStatistics/api/getProfileStatistics';
-import { toProfileStatisticsCardsView } from '@/features/ProfileStatistics/utilities';
+import {
+  toProfileStatisticsCardsView,
+  toProfileStatisticsTablesView
+} from '@/features/ProfileStatistics/utilities';
 import ToggleSwitch from '@/shared/ui/ToggleSwitch';
-import { TABLE_DATA } from '@/shared/mocks/TableViewMocks';
-import TableView from './TableView';
 import './style.css';
 
 function ProfileStatisticsPage() {
@@ -17,11 +19,12 @@ function ProfileStatisticsPage() {
     error: statisticsQueryError
   } = useQuery(GET_PROFILE_STATISTICS, { fetchPolicy: 'cache-and-network' });
 
-
   let statsCardsData;
+  let statsTablesData;
 
   if (statistics) {
     statsCardsData = toProfileStatisticsCardsView(statistics);
+    statsTablesData = toProfileStatisticsTablesView(statistics);
   }
 
   let statisticsStatusMessage: string | null = null;
@@ -61,11 +64,7 @@ function ProfileStatisticsPage() {
           {isChartViewEnabled ? (
             <div style={{ width: '200px', height: '200px', backgroundColor: 'yellow' }}>Chart 1</div>
           ) : (
-            <TableView
-              caption={TABLE_DATA.caption}
-              columnHeaders={TABLE_DATA.columnHeaders}
-              data={TABLE_DATA.data}
-            />
+            statsTablesData && <TableView {...statsTablesData.likes} />
           )}
         </section>
         <section className='data-view-container'>
@@ -73,11 +72,7 @@ function ProfileStatisticsPage() {
           {isChartViewEnabled ? (
             <div style={{ width: '200px', height: '200px', backgroundColor: 'yellow' }}>Chart 2</div>
           ) : (
-            <TableView
-              caption={TABLE_DATA.caption}
-              columnHeaders={TABLE_DATA.columnHeaders}
-              data={TABLE_DATA.data}
-            />
+            statsTablesData && <TableView {...statsTablesData.comments} />
           )}
         </section>
       </div>
