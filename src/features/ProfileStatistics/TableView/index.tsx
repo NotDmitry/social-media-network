@@ -2,13 +2,12 @@ import './style.css';
 
 export interface TableRow {
   rowHeading: string;
-  firstDataSlot: string | number;
-  secondDataSlot: string | number;
+  dataSlots: (string | number)[];
 }
 
 export interface TableViewProps {
   caption: string;
-  columnHeaders: [string, string, string];
+  columnHeaders: string[];
   data: TableRow[];
 }
 
@@ -19,9 +18,9 @@ function TableView({ caption, columnHeaders, data }: TableViewProps) {
         <caption>{caption}</caption>
         <thead>
           <tr>
-            <th scope='col'>{columnHeaders[0]}</th>
-            <th scope='col'>{columnHeaders[1]}</th>
-            <th scope='col'>{columnHeaders[2]}</th>
+            {columnHeaders.map((columnHeader) => (
+              <th scope='col' key={columnHeader}>{columnHeader}</th>
+            ))}
           </tr>
         </thead>
 
@@ -29,8 +28,9 @@ function TableView({ caption, columnHeaders, data }: TableViewProps) {
           {data.map((rowData) => (
             <tr key={rowData.rowHeading}>
               <th scope='row'>{rowData.rowHeading}</th>
-              <td>{rowData.firstDataSlot}</td>
-              <td>{rowData.secondDataSlot}</td>
+              {rowData.dataSlots.map((dataSlot, dataSlotIndex) => (
+                <td key={dataSlotIndex}>{dataSlot}</td>
+              ))}
             </tr>
           ))}
         </tbody>
