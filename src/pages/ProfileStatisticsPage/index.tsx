@@ -1,13 +1,36 @@
 import { useState } from 'react';
+import { useQuery } from '@apollo/client/react';
+import StatsCard from '@/features/ProfileStatistics/StatsCard';
+import { GET_PROFILE_STATISTICS } from '@/features/ProfileStatistics/api/getProfileStatistics';
+import { toProfileStatisticsCardsView } from '@/features/ProfileStatistics/utilities';
 import ToggleSwitch from '@/shared/ui/ToggleSwitch';
-import { CARDS_DATA } from '@/shared/mocks/StatsCardMocks';
 import { TABLE_DATA } from '@/shared/mocks/TableViewMocks';
-import StatsCard from './StatsCard';
 import TableView from './TableView';
 import './style.css';
 
 function ProfileStatisticsPage() {
   const [isChartViewEnabled, setIsChartViewEnabled] = useState(false);
+
+  const {
+    data: statistics,
+    loading: isStatisticsQueryPending,
+    error: statisticsQueryError
+  } = useQuery(GET_PROFILE_STATISTICS, { fetchPolicy: 'cache-and-network' });
+
+
+  let statsCardsData;
+
+  if (statistics) {
+    statsCardsData = toProfileStatisticsCardsView(statistics);
+  }
+
+  let statisticsStatusMessage: string | null = null;
+
+  if (isStatisticsQueryPending && statistics === undefined) {
+    statisticsStatusMessage = 'Loading...';
+  } else if (statisticsQueryError && statistics === undefined) {
+    statisticsStatusMessage = 'Unable to load statistics';
+  }
 
   function handleChartViewToggle(isToggled: boolean) {
     setIsChartViewEnabled(isToggled);
@@ -18,13 +41,13 @@ function ProfileStatisticsPage() {
       <h1 className='visually-hidden'>Profile statistics page</h1>
       <section className='profile-statistics-cards-wrapper'>
         <h2 className='visually-hidden'>Statistics cards view</h2>
-        {CARDS_DATA.map((cardData) => (
-          <StatsCard
-            key={cardData.id}
-            title={cardData.title}
-            data={cardData.data}
-            trendText={cardData.trendText}
-          />
+
+        {statisticsStatusMessage &&
+          <p className='stats-card-list-message'>{statisticsStatusMessage}</p>
+        }
+
+        {statsCardsData?.map((cardData) => (
+          <StatsCard key={cardData.title} {...cardData} />
         ))}
       </section>
       <ToggleSwitch

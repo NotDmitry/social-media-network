@@ -34,13 +34,24 @@
   line-height: 150%;
 }
 
+.stats-card-list-message {
+  grid-column: 1 / -1;
+  margin: 8px;
+  color: var(--component-text-dark);
+  font-family: var(--second-family);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 150%;
+  text-align: center;
+}
+
 @media screen and (width < 480px) {
   .profile-statistics-cards-wrapper {
     grid-template-columns: 1fr;
   }
 }
 
-@media screen and (width <= 780px) {
+@media screen and (width <=780px) {
   .data-views-wrapper {
     grid-template-columns: 1fr;
     gap: 24px;
