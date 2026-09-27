@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@apollo/client/react';
+import ChartView from '@/features/ProfileStatistics/ChartView';
 import StatsCard from '@/features/ProfileStatistics/StatsCard';
 import TableView from '@/features/ProfileStatistics/TableView';
 import { GET_PROFILE_STATISTICS } from '@/features/ProfileStatistics/api/getProfileStatistics';
@@ -61,19 +62,34 @@ function ProfileStatisticsPage() {
       <div className='data-views-wrapper'>
         <section className='data-view-container'>
           <h2 className='data-view-title'>Likes</h2>
-          {isChartViewEnabled ? (
-            <div style={{ width: '200px', height: '200px', backgroundColor: 'yellow' }}>Chart 1</div>
-          ) : (
-            statsTablesData && <TableView {...statsTablesData.likes} />
-          )}
+          {statsTablesData &&
+            <div className={`data-view-card ${isChartViewEnabled ? 'data-view-card_chart' : ''}`}>
+              {isChartViewEnabled ? (
+                <ChartView
+                  type='line'
+                  data={statsTablesData.likes.data}
+                  isCompactDateLabels={true}
+                />
+              ) : (
+                <TableView {...statsTablesData.likes} />
+              )}
+            </div>
+          }
         </section>
         <section className='data-view-container'>
           <h2 className='data-view-title'>Comments</h2>
-          {isChartViewEnabled ? (
-            <div style={{ width: '200px', height: '200px', backgroundColor: 'yellow' }}>Chart 2</div>
-          ) : (
-            statsTablesData && <TableView {...statsTablesData.comments} />
-          )}
+          {statsTablesData &&
+            <div className={`data-view-card ${isChartViewEnabled ? 'data-view-card_chart' : ''}`}>
+              {isChartViewEnabled ? (
+                <ChartView
+                  type='bar'
+                  data={statsTablesData.comments.data}
+                />
+              ) : (
+                <TableView {...statsTablesData.comments} />
+              )}
+            </div>
+          }
         </section>
       </div>
     </div>

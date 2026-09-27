@@ -181,10 +181,10 @@ export function toProfileStatisticsTablesView(activityStats: ProfileStatisticsQu
     comments: getActivityTableView(
       activityStats.meComments,
       {
-        caption: 'Comments for the last 10 days',
-        columnHeaders: ['Date', 'Comments'],
-        dataPeriod: 'day',
-        periodsCount: 10,
+        caption: 'Comments for the last year',
+        columnHeaders: ['Month', 'Comments'],
+        dataPeriod: 'month',
+        periodsCount: 12,
       }
     ),
   };
