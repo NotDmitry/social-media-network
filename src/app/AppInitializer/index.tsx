@@ -1,5 +1,6 @@
 import { useEffect, useEffectEvent } from 'react';
 import { useAppDispatch } from '@/app/store/hooks';
+import { useTheme } from '@/features/theme/useTheme';
 import { sessionCleared, sessionEstablished, sessionUnavailable } from '@/entities/auth/model/authSlice';
 import { refresh } from '@/entities/auth/api/refresh';
 import { getCurrentUser } from '@/entities/User/api/getCurrentUser';
@@ -10,10 +11,15 @@ import { BackendResponseError } from '@/shared/api/backendResponseError';
 function AppInitializer() {
   const dispatch = useAppDispatch();
   const { showAlert } = useAlert();
+  const { theme } = useTheme();
 
   const showAlertWithError = useEffectEvent((message: string) => {
     showAlert(message, 'error');
   });
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+  }, [theme])
 
   useEffect(() => {
     const sessionAbortController = new AbortController();

@@ -1,12 +1,8 @@
-import { useContext } from 'react';
-import { ThemeContext } from './context'
+import { useThemeStore } from './model/store';
 
 export function useTheme() {
-  const themeContextData = useContext(ThemeContext);
+  const theme = useThemeStore((state) => state.theme);
+  const setTheme = useThemeStore((state) => state.setTheme);
 
-  if (!themeContextData) {
-    throw new Error('useTheme hook must be used inside ThemeContext provider');
-  }
-
-  return themeContextData;
+  return { theme, setTheme };
 }
