@@ -67,6 +67,7 @@ function SignInForm({ onSubmit }: SignInFormProps) {
           placeholder='Enter email'
           status={getFieldStatus(Boolean(errors.email))}
           errorMessage={errors.email?.message}
+          tooltipMessage='Valid email example: example@gmail.com'
           type='email'
           disabled={isSubmitting}
         />
@@ -78,6 +79,7 @@ function SignInForm({ onSubmit }: SignInFormProps) {
           placeholder='Enter password'
           status={getFieldStatus(Boolean(errors.password))}
           errorMessage={errors.password?.message}
+          tooltipMessage={'Enter your account\'s password'}
           showVisibilityToggle={true}
           disabled={isSubmitting}
         />

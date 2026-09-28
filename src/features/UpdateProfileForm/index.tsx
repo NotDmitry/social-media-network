@@ -172,6 +172,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         placeholder='@username123'
         status={getTextFieldStatus(Boolean(errors.username))}
         errorMessage={errors.username?.message}
+        tooltipMessage='This will be your nickname'
         type='text'
         disabled={isSubmitting}
       />
@@ -183,6 +184,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         placeholder='email@domain.com'
         status={getTextFieldStatus(Boolean(errors.email))}
         errorMessage={errors.email?.message}
+        tooltipMessage='Valid email example: example@gmail.com'
         type='email'
         disabled={isSubmitting}
       />
