@@ -7,7 +7,6 @@
   padding: clamp(12px, 3vw, 24px);
   border-radius: 8px;
   box-shadow: 4px 4px 4px rgba(0, 0, 0, 0.25);
-  animation: alert-appear 0.5s ease-in;
 }
 
 .alert-message {
@@ -60,16 +59,4 @@
 
 .alert_error {
   background-color: var(--color-feedback-negative-500);
-}
-
-@keyframes alert-appear {
-  from {
-    opacity: 0;
-    transform: translateX(500px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
 }

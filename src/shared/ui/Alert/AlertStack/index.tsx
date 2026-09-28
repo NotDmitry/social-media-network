@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { animated, config, useTransition } from '@react-spring/web';
 import { createPortal } from 'react-dom';
 import { useAlertStore } from '@/shared/ui/Alert/model/store';
 import Alert from '@/shared/ui/Alert/AlertComponent';
@@ -22,6 +23,23 @@ function AlertStack({ duration }: AlertStackProps) {
 
   const visibleAlerts = alerts.slice(0, visibleAlertsLimit);
 
+  const transitions = useTransition(visibleAlerts, {
+    from: {
+      opacity: 0,
+      transform: 'translateX(100%)',
+    },
+    enter: {
+      opacity: 1,
+      transform: 'translateX(0%)',
+    },
+    leave: {
+      opacity: 0,
+      transform: 'translateX(-100%)',
+    },
+    config: config.gentle,
+    exitBeforeEnter: true,
+  });
+
   useEffect(() => {
     const windowResizeMediaQuery = window.matchMedia(RESIZE_TO_MOBILE_MEDIA_QUERY);
 
@@ -40,19 +58,16 @@ function AlertStack({ duration }: AlertStackProps) {
     };
   }, []);
 
-  if (visibleAlerts.length === 0) {
-    return null;
-  }
-
   return createPortal(
     <div className='alert-stack'>
-      {visibleAlerts.map((alert) => (
-        <Alert
-          key={alert.id}
-          {...alert}
-          duration={duration}
-          onClose={closeAlert}
-        />
+      {transitions((style, alert) => (
+        <animated.div style={style}>
+          <Alert
+            {...alert}
+            duration={duration}
+            onClose={closeAlert}
+          />
+        </animated.div>
       ))}
     </div>,
     document.body
