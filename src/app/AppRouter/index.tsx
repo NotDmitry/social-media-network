@@ -1,4 +1,5 @@
-import { Routes, Route } from 'react-router';
+import { Outlet, Routes, Route, useLocation } from 'react-router';
+import ErrorBoundary from '@/app/ErrorBoundary';
 import Layout from '@/app/Layout';
 import PrivateRoutes from '@/app/PrivateRoutes';
 import ProfileLayout from '@/app/ProfileLayout';
@@ -14,6 +15,7 @@ import { useAuth } from '@/entities/auth/useAuth';
 
 function AppRouter() {
   const { authStatus, isUserAuthenticated } = useAuth();
+  const location = useLocation();
 
   // TODO: show spinner
   if (authStatus === 'pending') {
@@ -30,29 +32,39 @@ function AppRouter() {
     );
   }
 
+  const retryPath = `${location.pathname}${location.search}`;
+
   return (
     <Routes>
+      <Route element={
+        <ErrorBoundary retryPath={retryPath}>
+          <Outlet />
+        </ErrorBoundary>
+      }>
 
-      <Route element={<Layout headerVariant={isUserAuthenticated ? 'user' : 'guest'} />}>
-        <Route path={ROUTES.home} element={<HomePage />} />
-      </Route>
+        <Route element={<Layout headerVariant={isUserAuthenticated ? 'user' : 'guest'} />}>
+          <Route path={ROUTES.home} element={<HomePage />} />
+        </Route>
 
-      <Route element={<Layout headerVariant='default' />}>
-        <Route path={ROUTES.signIn} element={<SignInPage />} />
-        <Route path={ROUTES.signUp} element={<SignUpPage />} />
-        <Route path={ROUTES.error} element={<ErrorPage />} />
-        <Route path='*' element={<NotFoundPage />} />
-      </Route>
+        <Route element={<Layout headerVariant='default' />}>
+          <Route path={ROUTES.signIn} element={<SignInPage />} />
+          <Route path={ROUTES.signUp} element={<SignUpPage />} />
+          <Route path='*' element={<NotFoundPage />} />
+        </Route>
 
-      <Route element={<PrivateRoutes />}>
-        <Route element={<Layout headerVariant='user' />}>
-          <Route path={ROUTES.profile} element={<ProfileLayout />}>
-            <Route index element={<ProfileInfoPage />} />
-            <Route path={ROUTES.statistics} element={<ProfileStatisticsPage />} />
+        <Route element={<PrivateRoutes />}>
+          <Route element={<Layout headerVariant='user' />}>
+            <Route path={ROUTES.profile} element={<ProfileLayout />}>
+              <Route index element={<ProfileInfoPage />} />
+              <Route path={ROUTES.statistics} element={<ProfileStatisticsPage />} />
+            </Route>
           </Route>
         </Route>
       </Route>
 
+      <Route element={<Layout headerVariant='default' />}>
+        <Route path={ROUTES.error} element={<ErrorPage />} />
+      </Route>
     </Routes>
   );
 }
