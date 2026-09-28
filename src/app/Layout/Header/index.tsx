@@ -20,7 +20,7 @@ function Header({ variant }: HeaderProps) {
 
   const { currentUser } = useAuth();
 
-  function handleMenuClick() {
+  function handleDrawerOpen() {
     setIsDrawerOpen(true);
   }
 
@@ -64,13 +64,14 @@ function Header({ variant }: HeaderProps) {
             className='header-menu-button'
             type='button'
             aria-label='Open mobile navigation'
-            onClick={handleMenuClick}
+            onClick={handleDrawerOpen}
           >
             <BurgerIcon isOpen={isDrawerOpen} />
           </IconButton>
           <DrawerNavigation
             isOpen={isDrawerOpen}
             variant={variant}
+            onOpen={handleDrawerOpen}
             onClose={handleDrawerClose}
           />
         </>

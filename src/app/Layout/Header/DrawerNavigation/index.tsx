@@ -1,5 +1,10 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useEffectEvent } from 'react';
 import { useLocation, NavLink } from 'react-router';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Avatar from '@mui/material/Avatar';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { ROUTES } from '@/app/routes';
 import type { HeaderVariant } from '@/app/Layout/Header/types';
 import { useAuth } from '@/entities/auth/useAuth';
@@ -11,118 +16,115 @@ type DrawerVariant = Exclude<HeaderVariant, 'default'>;
 interface DrawerNavigationProps {
   variant: DrawerVariant,
   isOpen: boolean,
+  onOpen: () => void,
   onClose: () => void;
 }
 
-function DrawerNavigation({ variant, isOpen, onClose }: DrawerNavigationProps) {
-  const dialogElementRef = useRef<HTMLDialogElement | null>(null);
+function DrawerNavigation({ variant, isOpen, onOpen, onClose }: DrawerNavigationProps) {
+  const isMobile = useMediaQuery('screen and (width < 480px)');
   const currentLocation = useLocation();
 
   const { currentUser } = useAuth();
-
-  function handleBackdropClick(event: React.MouseEvent<HTMLDialogElement>) {
-    if (event.target === event.currentTarget) {
-      onClose();
-    }
-  }
+  const closeDrawer = useEffectEvent(onClose);
 
   useEffect(() => {
-    if (isOpen) {
-      dialogElementRef.current?.showModal();
-    } else {
-      dialogElementRef.current?.close();
+    if (!isMobile && isOpen) {
+      closeDrawer();
     }
-  }, [isOpen]);
+  }, [isMobile, isOpen]);
 
   useEffect(() => {
-    dialogElementRef.current?.close();
+    return () => {
+      closeDrawer();
+    }
   }, [currentLocation]);
 
-  useEffect(() => {
-    const windowResizeMediaQuery = window.matchMedia('screen and (width >= 480px)');
-    const dialogElement = dialogElementRef.current;
-
-    const handleMobileBreakpointChange = () => {
-      if (windowResizeMediaQuery.matches) {
-        dialogElement?.close();
-      }
-    }
-
-    windowResizeMediaQuery.addEventListener('change', handleMobileBreakpointChange);
-
-    return () => {
-      windowResizeMediaQuery.removeEventListener('change', handleMobileBreakpointChange);
-    };
-  }, []);
-
   return (
-    <dialog
-      className='drawer-navigation-dialog'
-      ref={dialogElementRef}
+    <SwipeableDrawer
+      anchor='right'
+      className='drawer-navigation'
+      disableSwipeToOpen={true}
+      elevation={0}
+      open={isOpen}
+      onOpen={onOpen}
       onClose={onClose}
-      onClick={handleBackdropClick}
+      slotProps={{
+        backdrop: {
+          className: 'drawer-navigation-backdrop',
+        },
+        paper: {
+          className: 'drawer-navigation-paper',
+        },
+      }}
     >
-      <div className='drawer-navigation-wrapper'>
-        <header className='drawer-navigation-header'>
-          <Logo />
-          {variant === 'user' && currentUser &&
-            <img
-              className='avatar'
-              src={currentUser.profileImage ?? undefined}
-              alt={`Profile picture of ${currentUser.displayName}`}
-              width={24}
-              height={24}
-            />
-          }
-        </header>
-        <nav className='drawer-navigation-list'>
-          {variant === 'guest' &&
-            <>
-              <NavLink
-                className='drawer-navigation-link'
-                to={ROUTES.signUp}
-                onClick={onClose}
-              >
-                Sign up
-              </NavLink>
-              <NavLink
-                className='drawer-navigation-link'
-                to={ROUTES.signIn}
-                onClick={onClose}
-              >
-                Sign in
-              </NavLink>
-            </>
-          }
-          {variant === 'user' &&
-            <>
-              <NavLink
-                className='drawer-navigation-link'
-                to={ROUTES.profile}
-                end
-                onClick={onClose}
-              >
-                Profile info
-              </NavLink>
-              <NavLink
-                className='drawer-navigation-link'
-                to={ROUTES.statistics}
-                onClick={onClose}
-              >
-                Statistics
-              </NavLink>
-            </>
-          }
-          <NavLink
-            className='drawer-navigation-link'
-            to={ROUTES.home}
-            onClick={onClose}
+      <header className='drawer-navigation-header'>
+        <Logo />
+        {variant === 'user' && currentUser &&
+          <Avatar
+            className='drawer-navigation-avatar'
+            src={currentUser.profileImage ?? undefined}
+            alt={`Profile picture of ${currentUser.displayName}`}
           >
-            Home
-          </NavLink>
-        </nav>
-      </div>
-    </dialog>
+            {currentUser.displayName.charAt(0)}
+          </Avatar>
+        }
+      </header>
+      <List
+        className='drawer-navigation-list'
+        component='nav'
+        disablePadding
+      >
+        {variant === 'guest' &&
+          <>
+            <ListItemButton
+              className='drawer-navigation-link'
+              component={NavLink}
+              to={ROUTES.signUp}
+              onClick={onClose}
+            >
+              Sign up
+            </ListItemButton>
+            <ListItemButton
+              className='drawer-navigation-link'
+              component={NavLink}
+              to={ROUTES.signIn}
+              onClick={onClose}
+            >
+              Sign in
+            </ListItemButton>
+          </>
+        }
+        {variant === 'user' &&
+          <>
+            <ListItemButton
+              className='drawer-navigation-link'
+              component={NavLink}
+              to={ROUTES.profile}
+              end
+              onClick={onClose}
+            >
+              Profile info
+            </ListItemButton>
+            <ListItemButton
+              className='drawer-navigation-link'
+              component={NavLink}
+              to={ROUTES.statistics}
+              onClick={onClose}
+            >
+              Statistics
+            </ListItemButton>
+          </>
+        }
+        <ListItemButton
+          className='drawer-navigation-link'
+          component={NavLink}
+          to={ROUTES.home}
+          onClick={onClose}
+        >
+          Home
+        </ListItemButton>
+      </List>
+    </SwipeableDrawer>
   );
 }
 
