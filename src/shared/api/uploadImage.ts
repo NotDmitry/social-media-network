@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { imageUrlSchema } from '@/shared/schemas';
-import { BackendResponseError } from '@/shared/api/backendResponseError';
+import { apiRequest } from '@/shared/api/apiRequest';
 
 const UPLOAD_IMAGE_ERROR_MESSAGE = 'Image upload unavailable';
 
@@ -14,38 +14,15 @@ export async function uploadImage(image: File): Promise<UploadImageResponsePaylo
   const formData = new FormData();
   formData.append('image', image);
 
-  let response: Response;
-
-  try {
-    response = await fetch('/api/upload-image', {
+  return apiRequest(
+    '/api/upload-image',
+    {
       method: 'POST',
       body: formData,
-    });
-  } catch (error) {
-    throw new Error('Cannot connect to the server', {
-      cause: error,
-    });
-  }
-
-  if (!response.ok) {
-    throw await BackendResponseError.parse(response, UPLOAD_IMAGE_ERROR_MESSAGE);
-  }
-
-  let responseBody: unknown;
-
-  try {
-    responseBody = await response.json();
-  } catch (error) {
-    throw new Error('Unable to parse the response body', {
-      cause: error,
-    });
-  }
-
-  const parsedUploadImageResponseBody = uploadImageResponseSchema.safeParse(responseBody);
-
-  if (!parsedUploadImageResponseBody.success) {
-    throw new Error('Response body is malformed');
-  }
-
-  return parsedUploadImageResponseBody.data;
+    },
+    {
+      responseValidationSchema: uploadImageResponseSchema,
+      fallbackErrorMessage: UPLOAD_IMAGE_ERROR_MESSAGE,
+    }
+  );
 }

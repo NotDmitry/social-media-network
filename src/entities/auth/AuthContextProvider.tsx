@@ -1,4 +1,4 @@
-import { useEffect, useEffectEvent, useState } from 'react';
+import { useCallback, useEffect, useEffectEvent, useState } from 'react';
 import { login } from '@/entities/auth/api/login';
 import { logout } from '@/entities/auth/api/logout';
 import { refresh } from '@/entities/auth/api/refresh';
@@ -29,6 +29,14 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
     showAlert(message, 'error');
   });
 
+  const clearSession = useCallback(() => {
+    accessToken.clear();
+    setAuthState({
+      status: 'guest',
+      currentUser: null,
+    });
+  }, []);
+
   useEffect(() => {
     const sessionAbortController = new AbortController();
 
@@ -58,11 +66,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
             showAlertWithError(error.message);
           }
 
-          accessToken.clear();
-          setAuthState({
-            status: 'guest',
-            currentUser: null,
-          });
+          clearSession();
 
           return;
         }
@@ -81,7 +85,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
     return () => {
       sessionAbortController.abort();
     };
-  }, []);
+  }, [clearSession]);
 
   async function signIn(signInPayload: SignInPayload) {
     const loginResponsePayload = await login(signInPayload);
@@ -110,11 +114,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
 
       return logoutResponsePayload;
     } finally {
-      accessToken.clear();
-      setAuthState({
-        status: 'guest',
-        currentUser: null,
-      });
+      clearSession();
     }
   }
 
@@ -148,11 +148,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
         error instanceof BackendResponseError
         && (error.status === 400 || error.status === 401)
       ) {
-        accessToken.clear();
-        setAuthState({
-          status: 'guest',
-          currentUser: null,
-        });
+        clearSession();
       }
 
       throw error;
@@ -164,11 +160,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
       await requestProfileUpdateOnce(updatedFields);
     } catch (error) {
       if (error instanceof BackendResponseError && error.status === 401) {
-        accessToken.clear();
-        setAuthState({
-          status: 'guest',
-          currentUser: null,
-        });
+        clearSession();
       }
 
       throw error;
@@ -179,10 +171,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
     const providedAccessToken = accessToken.get();
 
     if (providedAccessToken === null) {
-      setAuthState({
-        status: 'guest',
-        currentUser: null,
-      });
+      clearSession();
 
       throw new Error('Access token is missing');
     }
@@ -195,11 +184,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
       }
 
       if (error.code !== 'TOKEN_EXPIRED') {
-        accessToken.clear();
-        setAuthState({
-          status: 'guest',
-          currentUser: null,
-        });
+        clearSession();
 
         throw error;
       }
