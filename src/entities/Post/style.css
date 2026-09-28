@@ -149,3 +149,13 @@
   line-height: 143%;
   text-align: center;
 }
+
+.post-comments-section {
+  display: grid;
+  width: 100%;
+}
+
+.post-comments-section-content {
+  min-height: 0;
+  overflow: hidden;
+}

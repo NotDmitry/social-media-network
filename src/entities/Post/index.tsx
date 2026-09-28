@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { animated, easings, useTransition } from '@react-spring/web';
 import { useMutation, useQueries, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import CreateCommentForm from '@/features/CreateCommentForm';
 import { useAuth } from '@/entities/auth/useAuth';
@@ -116,6 +117,26 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
   const isLikedOptimistic = isLikeTogglePending ? willBeLiked : isLiked;
   const likesCountOptimistic = isLikeTogglePending ? post.likesCount + (isLiked ? -1 : 1) : post.likesCount;
 
+  const isCommentsSectionVisible = isCommentsOpen && isUserAuthenticated;
+  const commentsSectionTransition = useTransition(isCommentsSectionVisible, {
+    from: {
+      opacity: 0,
+      gridTemplateRows: '0fr',
+    },
+    enter: {
+      opacity: 1,
+      gridTemplateRows: '1fr',
+    },
+    leave: {
+      opacity: 0,
+      gridTemplateRows: '0fr',
+    },
+    config: {
+      duration: 250,
+      easing: easings.linear,
+    },
+  })
+
   function handleLikeClick() {
     toggleLike(!isLiked);
   }
@@ -188,39 +209,41 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
         </li>
       </menu>
 
-      {isCommentsOpen && isUserAuthenticated &&
-        <>
-          {isCommentsSectionPending &&
-            <p className='post-comments-message'>Loading comments...</p>
-          }
+      {commentsSectionTransition((style, isVisible) => isVisible && (
+        <animated.div className='post-comments-section' style={style}>
+          <div className='post-comments-section-content'>
+            {isCommentsSectionPending &&
+              <p className='post-comments-message'>Loading comments...</p>
+            }
 
-          {!isCommentsSectionPending && isCommentsQueryError && comments === undefined &&
-            <p className='post-comments-message'>Unable to load comments</p>
-          }
+            {!isCommentsSectionPending && isCommentsQueryError && comments === undefined &&
+              <p className='post-comments-message'>Unable to load comments</p>
+            }
 
-          {!isCommentsSectionPending && comments?.length === 0 &&
-            <p className='post-comments-message'>No comments yet</p>
-          }
+            {!isCommentsSectionPending && comments?.length === 0 &&
+              <p className='post-comments-message'>No comments yet</p>
+            }
 
-          {!isCommentsSectionPending && comments !== undefined && comments.length > 0 &&
-            <ol className='post-comments-list'>
-              {comments.map((comment) => {
-                const commentAuthor = commentAuthorsMap.get(comment.authorId) ?? null;
+            {!isCommentsSectionPending && comments !== undefined && comments.length > 0 &&
+              <ol className='post-comments-list'>
+                {comments.map((comment) => {
+                  const commentAuthor = commentAuthorsMap.get(comment.authorId) ?? null;
 
-                return (
-                  <li key={comment.id}>
-                    <Comment
-                      author={commentAuthor}
-                      comment={comment}
-                      canDelete={comment.authorId === currentUser?.id}
-                    />
-                  </li>
-                );
-              })}
-            </ol>
-          }
-        </>
-      }
+                  return (
+                    <li key={comment.id}>
+                      <Comment
+                        author={commentAuthor}
+                        comment={comment}
+                        canDelete={comment.authorId === currentUser?.id}
+                      />
+                    </li>
+                  );
+                })}
+              </ol>
+            }
+          </div>
+        </animated.div>
+      ))}
 
       {isUserAuthenticated &&
         <CreateCommentForm postId={post.id} onCommentCreated={handleCommentCreated} />
