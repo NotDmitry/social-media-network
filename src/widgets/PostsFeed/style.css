@@ -3,3 +3,13 @@
   flex-direction: column;
   background-color: var(--background-fill-surface);
 }
+
+.posts-feed-message {
+  margin: 8px;
+  color: var(--component-text-dark);
+  font-family: var(--font-family);
+  font-size: clamp(0.875rem, 3vw, 1.125rem);
+  font-weight: 500;
+  line-height: 156%;
+  text-align: center;
+}
