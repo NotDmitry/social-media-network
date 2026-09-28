@@ -14,6 +14,22 @@
   text-align: center;
 }
 
+.posts-feed-scroll-button {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+  background-color: var(--component-fill-positive);
+  color: var(--icon-light-fixed);
+
+  &:hover {
+    background-color: var(--component-hover-primary);
+  }
+}
+
+.posts-feed-scroll-icon {
+  transform: rotate(180deg);
+}
+
 @media screen and (width < 480px) {
   .posts-feed {
     background-color: var(--background-fill-middle);

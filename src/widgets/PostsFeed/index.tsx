@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react';
+import Fab from '@mui/material/Fab';
+import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
 import Post from '@/entities/Post';
 import { useAuth } from '@/entities/auth/useAuth';
@@ -7,6 +9,7 @@ import { getPosts } from '@/entities/Post/api/getPosts';
 import { getUserById } from '@/entities/User/api/getUserById';
 import { toUserView } from '@/entities/User/utilities';
 import type { UserView } from '@/entities/User/types';
+import { ChevronDownIcon } from '@/shared/icons';
 import './style.css';
 
 const POSTS_PAGE_SIZE = 10;
@@ -17,6 +20,7 @@ function getLikedPostIdsSet(likedPostIds: number[]) {
 
 function PostsFeed() {
   const { currentUser, isUserAuthenticated } = useAuth();
+  const isPageScrolled = useScrollTrigger({ disableHysteresis: true });
 
   const {
     data,
@@ -120,6 +124,11 @@ function PostsFeed() {
   }
 
   const sentinelRef = useRef<HTMLParagraphElement>(null);
+  const postsFeedRef = useRef<HTMLDivElement>(null);
+
+  function handleScrollToPostsFeedStart() {
+    postsFeedRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -147,7 +156,7 @@ function PostsFeed() {
   }, [fetchNextPage, hasNextPage, isPostsQueryFetching, isGlobalFetchError]);
 
   return (
-    <div className='posts-feed'>
+    <div className='posts-feed' ref={postsFeedRef}>
       {postsFeedStatusMessage &&
         <p className='posts-feed-message'>{postsFeedStatusMessage}</p>
       }
@@ -179,6 +188,17 @@ function PostsFeed() {
       >
         {isFetchingNextPage && 'Loading more posts...'}
       </p>
+
+      {isPageScrolled &&
+        <Fab
+          className='posts-feed-scroll-button'
+          size='small'
+          aria-label={'Return to the Feed\'s start'}
+          onClick={handleScrollToPostsFeedStart}
+        >
+          <ChevronDownIcon className='posts-feed-scroll-icon' />
+        </Fab>
+      }
     </div>
   );
 }
