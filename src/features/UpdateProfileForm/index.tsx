@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/entities/auth/useAuth';
 import type { UpdateProfilePayload } from '@/entities/auth/types';
-import type { UserModel } from '@/entities/User/types';
+import type { UserView } from '@/entities/User/types';
 import Button from '@/shared/ui/Button';
 import TextareaField from '@/shared/ui/input/TextareaField';
 import TextField from '@/shared/ui/input/TextField';
@@ -9,18 +9,22 @@ import { EnvelopeIcon, PencilIcon, PersonIcon } from '@/shared/icons';
 import './style.css';
 
 interface UpdateProfileFormProps {
-  user: UserModel;
+  user: UserView;
   onSubmit?: () => void;
 }
 
-type ProfileFormFields = Required<UpdateProfilePayload>;
-type ProfileTextInputFieldName = Exclude<keyof ProfileFormFields, 'avatarUrl'>;
+interface ProfileFormFields {
+  username: string;
+  email: string;
+  description: string;
+};
+
+type ProfileTextInputFieldName = keyof ProfileFormFields;
 
 function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
   const [formFields, setFormFields] = useState<ProfileFormFields>({
-    avatarUrl: user.avatarUrl,
     username: user.username,
-    email: user.email,
+    email: user.email ?? '',
     description: user.description ?? '',
   });
   const [selectedAvatarUrl, setSelectedAvatarUrl] = useState<string | null>(null);
@@ -105,13 +109,13 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
       <div className='change-avatar-container'>
         <img
           className='avatar change-avatar-photo'
-          src={selectedAvatarUrl ?? user.avatarUrl}
-          alt={`Profile picture of ${user.fullName}`}
+          src={selectedAvatarUrl ?? user.profileImage ?? undefined}
+          alt={`Profile picture of ${user.displayName}`}
           width={64}
           height={64}
         />
         <div className='change-avatar-text-wrapper'>
-          <p className='change-avatar-user'>{user.fullName}</p>
+          <p className='change-avatar-user'>{user.displayName}</p>
           <label className='change-avatar-label'>
             <input
               accept='image/*'

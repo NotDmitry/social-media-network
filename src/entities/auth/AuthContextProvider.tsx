@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { isUserModel } from '@/entities/User/types';
+import { isUserModel, toUserView } from '@/entities/User/types';
 import type { UserModel } from '@/entities/User/types';
 import { getAuthUserMock } from '@/shared/mocks/UserMocks';
 import { AuthContext } from './context';
@@ -54,11 +54,12 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
     });
   }
 
-  function signUp({ email, fullName }: SignUpPayload) {
+  function signUp({ email, firstName, secondName }: SignUpPayload) {
     updateCurrentUser({
       ...getAuthUserMock(),
       email,
-      fullName
+      firstName: firstName ?? null,
+      secondName: secondName ?? null,
     });
   }
 
@@ -79,7 +80,7 @@ function AuthContextProvider({ children }: AuthContextProviderProps) {
 
   return (
     <AuthContext value={{
-      currentUser,
+      currentUser: currentUser ? toUserView(currentUser) : null,
       isUserAuthenticated: currentUser !== null,
       signIn,
       signUp,

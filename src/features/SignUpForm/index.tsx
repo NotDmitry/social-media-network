@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useAuth } from '@/entities/auth/useAuth';
-import type { SignUpPayload } from '@/entities/auth/types';
 import Button from '@/shared/ui/Button';
 import PasswordField from '@/shared/ui/input/PasswordField';
 import TextField from '@/shared/ui/input/TextField';
 import { EnvelopeIcon, EyeIcon, InfoIcon } from '@/shared/icons';
+import type { SignUpFormFields } from './schema';
 
-const INITIAL_FORM_FIELDS: SignUpPayload = {
-  fullName: '',
+const INITIAL_FORM_FIELDS: SignUpFormFields = {
+  firstName: '',
+  secondName: '',
   email: '',
   password: '',
   repeatPassword: '',
@@ -29,15 +30,19 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
     onSubmit?.();
   }
 
-  function setFieldValue(name: keyof SignUpPayload, value: string) {
+  function setFieldValue(name: keyof SignUpFormFields, value: string) {
     setFormFields((currentFields) => ({
       ...currentFields,
       [name]: value,
     }));
   }
 
-  function handleFullNameChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setFieldValue('fullName', event.currentTarget.value);
+  function handleFirstNameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setFieldValue('firstName', event.currentTarget.value);
+  }
+
+  function handleSecondNameChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setFieldValue('secondName', event.currentTarget.value);
   }
 
   function handleEmailChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -56,15 +61,26 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
     <form className='auth-form' onSubmit={handleFormSubmit}>
       <fieldset className='auth-form-fieldset'>
         <TextField
-          label='Full name'
+          label='First name'
           labelIcon={<InfoIcon />}
-          name='fullName'
-          autoComplete='name'
-          onChange={handleFullNameChange}
-          placeholder='Enter your full name'
+          name='firstName'
+          autoComplete='given-name'
+          onChange={handleFirstNameChange}
+          placeholder='Enter your first name'
           status='default'
           type='text'
-          value={formFields.fullName}
+          value={formFields.firstName}
+        />
+        <TextField
+          label='Second name'
+          labelIcon={<InfoIcon />}
+          name='secondName'
+          autoComplete='family-name'
+          onChange={handleSecondNameChange}
+          placeholder='Enter your second name'
+          status='default'
+          type='text'
+          value={formFields.secondName}
         />
         <TextField
           label='Email'

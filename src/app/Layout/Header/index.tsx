@@ -42,12 +42,12 @@ function Header({ variant }: HeaderProps) {
           <Link className='link' to={ROUTES.profile}>
             <img
               className='avatar'
-              src={currentUser.avatarUrl}
-              alt={`Profile picture of ${currentUser.fullName}`}
+              src={currentUser.profileImage ?? undefined}
+              alt={`Profile picture of ${currentUser.displayName}`}
               width={24}
               height={24}
             />
-            {currentUser.fullName}
+            {currentUser.displayName}
           </Link>
         }
       </nav>
