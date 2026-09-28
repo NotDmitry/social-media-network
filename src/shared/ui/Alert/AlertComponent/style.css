@@ -1,13 +1,8 @@
 .alert {
-  position: fixed;
-  z-index: 10;
-  bottom: 20px;
-  right: 20px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 8px;
-  max-width: 350px;
   width: 100%;
   padding: clamp(12px, 3vw, 24px);
   border-radius: 8px;
@@ -76,15 +71,5 @@
   to {
     opacity: 1;
     transform: translateX(0);
-  }
-}
-
-@media screen and (width < 480px) {
-  .alert {
-    top: 5dvh;
-    inset-inline: 3vw;
-    bottom: auto;
-    width: auto;
-    max-width: none;
   }
 }
