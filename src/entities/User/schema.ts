@@ -22,3 +22,14 @@ export const userModelSchema = z.object({
   creationDate: dateTimeSchema.nullable(),
   modifiedDate: dateTimeSchema.nullable(),
 });
+
+export const suggestedUserModelSchema = z.object({
+  id: idSchema,
+  username: usernameSchema,
+  firstName: nameSchema.nullable(),
+  secondName: nameSchema.nullable(),
+  description: descriptionSchema.nullable(),
+  photo: imageUrlSchema.nullable(),
+});
+
+export const suggestedUsersSchema = z.array(suggestedUserModelSchema);
