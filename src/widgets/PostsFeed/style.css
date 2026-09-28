@@ -13,3 +13,9 @@
   line-height: 156%;
   text-align: center;
 }
+
+@media screen and (width < 480px) {
+  .posts-feed {
+    background-color: var(--background-fill-middle);
+  }
+}
