@@ -12,7 +12,7 @@ import {
 } from '@/shared/icons';
 import './style.css';
 
-type PasswordFieldStatus = 'default' | 'valid' | 'invalid';
+export type PasswordFieldStatus = 'default' | 'valid' | 'invalid';
 
 interface PasswordFieldProps extends Omit<ComponentProps<'input'>, 'type'> {
   label?: string;

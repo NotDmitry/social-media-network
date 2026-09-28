@@ -2,7 +2,7 @@ import { useId } from 'react';
 import type { ComponentProps, ReactNode } from 'react';
 import { CheckIcon, CrossIcon, InfoIcon, InfoTooltipIcon, PencilIcon } from '@/shared/icons';
 
-type TextFieldStatus = 'default' | 'valid' | 'invalid';
+export type TextFieldStatus = 'default' | 'valid' | 'invalid';
 
 interface TextFieldProps extends Omit<ComponentProps<'input'>, 'type'> {
   label?: string;

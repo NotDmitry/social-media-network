@@ -1,11 +1,13 @@
 import { z } from 'zod';
-import { dateTimeSchema, emailSchema, idSchema, imageUrlSchema } from '@/shared/schemas';
-
-export const usernameSchema = z.string().trim().nonempty('The username can\'t be empty');
-
-export const nameSchema = z.string().trim().nonempty('The name can\'t be empty');
-
-export const userDescriptionSchema = z.string();
+import {
+  dateTimeSchema,
+  descriptionSchema,
+  emailSchema,
+  idSchema,
+  imageUrlSchema,
+  nameSchema,
+  usernameSchema,
+} from '@/shared/schemas';
 
 export const userModelSchema = z.object({
   id: idSchema,
@@ -13,8 +15,8 @@ export const userModelSchema = z.object({
   email: emailSchema.nullable(),
   firstName: nameSchema.nullable(),
   profileImage: imageUrlSchema.nullable(),
-  description: userDescriptionSchema.nullable(),
-  bio: userDescriptionSchema.nullable(),
+  description: descriptionSchema.nullable(),
+  bio: descriptionSchema.nullable(),
   secondName: nameSchema.nullable(),
   lastLogin: dateTimeSchema.nullable(),
   creationDate: dateTimeSchema.nullable(),

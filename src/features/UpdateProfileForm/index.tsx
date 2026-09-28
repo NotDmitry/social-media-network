@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/entities/auth/useAuth';
 import type { UpdateProfilePayload } from '@/entities/auth/types';
 import type { UserView } from '@/entities/User/types';
 import Button from '@/shared/ui/Button';
-import TextareaField from '@/shared/ui/input/TextareaField';
-import TextField from '@/shared/ui/input/TextField';
+import TextareaField, { type TextareaFieldStatus } from '@/shared/ui/input/TextareaField';
+import TextField, { type TextFieldStatus } from '@/shared/ui/input/TextField';
 import { EnvelopeIcon, PencilIcon, PersonIcon } from '@/shared/icons';
+import { updateProfileFormSchema, type UpdateProfileFormFields } from './schema';
 import './style.css';
 
 interface UpdateProfileFormProps {
@@ -13,33 +16,34 @@ interface UpdateProfileFormProps {
   onSubmit?: () => void;
 }
 
-interface ProfileFormFields {
-  username: string;
-  email: string;
-  description: string;
-};
-
-type ProfileTextInputFieldName = keyof ProfileFormFields;
-
 function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
-  const [formFields, setFormFields] = useState<ProfileFormFields>({
-    username: user.username,
-    email: user.email ?? '',
-    description: user.description ?? '',
-  });
   const [selectedAvatarUrl, setSelectedAvatarUrl] = useState<string | null>(null);
   const [selectedAvatarErrorMessage, setSelectedAvatarErrorMessage] = useState<string | null>(null);
 
   const { updateProfile } = useAuth();
 
-  function handleFormSubmission(event: React.SubmitEvent<HTMLFormElement>) {
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: {
+      errors,
+      isSubmitted,
+    },
+  } = useForm<UpdateProfileFormFields>({
+    resolver: zodResolver(updateProfileFormSchema),
+    defaultValues: {
+      username: user.username,
+      email: user.email ?? '',
+      description: user.description ?? '',
+    },
+  });
 
-    const formFieldsNames = Object.keys(formFields) as (keyof ProfileFormFields)[];
+  function handleFormSubmit(updateProfileFields: UpdateProfileFormFields) {
+    const formFieldsNames = Object.keys(updateProfileFields) as (keyof UpdateProfileFormFields)[];
 
     const changedFields = formFieldsNames.reduce<UpdateProfilePayload>((changes, fieldName) => {
       const savedValue = user[fieldName] ?? '';
-      const currentValue = formFields[fieldName];
+      const currentValue = updateProfileFields[fieldName];
 
       if (currentValue !== savedValue) {
         changes[fieldName] = currentValue;
@@ -55,18 +59,6 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
     }
 
     onSubmit?.();
-  }
-
-  function changeFieldValue(
-    name: ProfileTextInputFieldName,
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
-    const value = event.currentTarget.value;
-
-    setFormFields((currentFields) => ({
-      ...currentFields,
-      [name]: value,
-    }));
   }
 
   function handleAvatarChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -93,6 +85,18 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
     setSelectedAvatarUrl(newAvatarUrl);
   }
 
+  function getTextFieldStatus(hasError: boolean): TextFieldStatus {
+    if (!isSubmitted) {
+      return 'default';
+    }
+
+    return hasError ? 'invalid' : 'valid';
+  }
+
+  function getTextareaFieldStatus(hasError: boolean): TextareaFieldStatus {
+    return isSubmitted && hasError ? 'invalid' : 'default';
+  }
+
   useEffect(() => {
     if (selectedAvatarUrl === null) {
       return;
@@ -104,7 +108,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
   }, [selectedAvatarUrl]);
 
   return (
-    <form className='profile-update-form' onSubmit={handleFormSubmission}>
+    <form className='profile-update-form' onSubmit={(event) => void handleSubmit(handleFormSubmit)(event)}>
       {/* TODO: Replace this and Post's header with UserCard */}
       <div className='change-avatar-container'>
         <img
@@ -134,38 +138,35 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         </div>
       </div>
       <TextField
+        {...register('username')}
         label='Username'
         labelIcon={<PersonIcon />}
-        name='username'
         autoComplete='username'
-        onChange={(event) => { changeFieldValue('username', event) }}
         placeholder='@username123'
-        status='default'
+        status={getTextFieldStatus(Boolean(errors.username))}
+        errorMessage={errors.username?.message}
         type='text'
-        value={formFields.username}
       />
       <TextField
+        {...register('email')}
         label='Email'
         labelIcon={<EnvelopeIcon />}
-        name='email'
         autoComplete='email'
-        onChange={(event) => { changeFieldValue('email', event) }}
         placeholder='email@domain.com'
-        status='default'
+        status={getTextFieldStatus(Boolean(errors.email))}
+        errorMessage={errors.email?.message}
         type='email'
-        value={formFields.email}
       />
       <TextareaField
+        {...register('description')}
         label='Description'
         labelIcon={<PencilIcon />}
-        name='description'
-        onChange={(event) => { changeFieldValue('description', event) }}
         placeholder='Write description here...'
-        status='default'
-        hintMessage='Max 200 chars'
-        maxLength={200}
+        status={getTextareaFieldStatus(Boolean(errors.description))}
+        errorMessage={errors.description?.message}
+        hintMessage='Max 200 characters'
+        maxLength={201}
         rows={1}
-        value={formFields.description}
       />
       <Button type='submit'>Save Profile Changes</Button>
     </form>
