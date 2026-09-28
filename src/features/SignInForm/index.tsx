@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/entities/auth/useAuth';
 import type { SignInPayload } from '@/entities/auth/types';
+import { useAlert } from '@/shared/ui/Alert/useAlert';
 import Button from '@/shared/ui/Button';
 import PasswordField from '@/shared/ui/input/PasswordField';
 import TextField, { type TextFieldStatus } from '@/shared/ui/input/TextField';
@@ -19,6 +20,7 @@ interface SignInFormProps {
 
 function SignInForm({ onSubmit }: SignInFormProps) {
   const { signIn } = useAuth();
+  const { showAlert } = useAlert();
 
   const {
     register,
@@ -36,7 +38,9 @@ function SignInForm({ onSubmit }: SignInFormProps) {
   async function handleFormSubmit(signInPayload: SignInPayload) {
     try {
       await signIn(signInPayload);
+      showAlert('Sign in successful', 'success');
     } catch (error) {
+      showAlert(error instanceof Error ? error.message : 'Sign in failed', 'error');
       console.error(error);
       return;
     }

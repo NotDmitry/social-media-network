@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/entities/auth/useAuth';
 import type { SignUpPayload } from '@/entities/auth/types';
+import { useAlert } from '@/shared/ui/Alert/useAlert';
 import Button from '@/shared/ui/Button';
 import PasswordField from '@/shared/ui/input/PasswordField';
 import TextField, { type TextFieldStatus } from '@/shared/ui/input/TextField';
@@ -22,6 +23,7 @@ interface SignUpFormProps {
 
 function SignUpForm({ onSubmit }: SignUpFormProps) {
   const { signUp } = useAuth();
+  const { showAlert } = useAlert();
 
   const {
     register,
@@ -38,8 +40,10 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
 
   async function handleFormSubmit(signUpPayload: SignUpPayload) {
     try {
-      await signUp(signUpPayload);
+      const { message } = await signUp(signUpPayload);
+      showAlert(message || 'Account successfully created', 'success');
     } catch (error) {
+      showAlert(error instanceof Error ? error.message : 'Sign up failed', 'error');
       console.error(error);
       return;
     }
