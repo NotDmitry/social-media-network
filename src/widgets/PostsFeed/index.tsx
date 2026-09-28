@@ -11,6 +11,10 @@ import './style.css';
 
 const POSTS_PAGE_SIZE = 10;
 
+function getLikedPostIdsSet(likedPostIds: number[]) {
+  return new Set(likedPostIds);
+}
+
 function PostsFeed() {
   const { currentUser, isUserAuthenticated } = useAuth();
 
@@ -49,7 +53,7 @@ function PostsFeed() {
 
       return likes.map((like) => like.postId);
     },
-    select: (likedPostIds) => new Set(likedPostIds),
+    select: getLikedPostIdsSet,
     enabled: currentUser !== null,
   });
 
