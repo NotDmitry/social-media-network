@@ -1,4 +1,4 @@
-import type { TableViewProps } from '@/pages/ProfileStatisticsPage/TableView';
+import type { TableViewProps } from '@/features/ProfileStatistics/TableView';
 
 export const TABLE_DATA: TableViewProps = {
   caption: 'Title',
@@ -6,38 +6,31 @@ export const TABLE_DATA: TableViewProps = {
   data: [
     {
       rowHeading: 'Row 1',
-      firstDataSlot: 123,
-      secondDataSlot: 456,
+      dataSlots: [123, 456],
     },
     {
       rowHeading: 'Row 2',
-      firstDataSlot: 123,
-      secondDataSlot: 456,
+      dataSlots: [123, 456],
     },
     {
       rowHeading: 'Row 3',
-      firstDataSlot: 123,
-      secondDataSlot: 456,
+      dataSlots: [123, 456],
     },
     {
       rowHeading: 'Row 4',
-      firstDataSlot: 123,
-      secondDataSlot: 456,
+      dataSlots: [123, 456],
     },
     {
       rowHeading: 'Row 5',
-      firstDataSlot: 123,
-      secondDataSlot: 456,
+      dataSlots: [123, 456],
     },
     {
       rowHeading: 'Row 6',
-      firstDataSlot: 123,
-      secondDataSlot: 456,
+      dataSlots: [123, 456],
     },
     {
       rowHeading: 'Row 7',
-      firstDataSlot: 123,
-      secondDataSlot: 456,
+      dataSlots: [123, 456],
     },
   ]
 }
