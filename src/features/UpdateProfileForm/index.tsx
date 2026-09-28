@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/entities/auth/useAuth';
-import type { UpdateProfilePayload } from '@/entities/auth/types';
-import type { UserView } from '@/entities/User/types';
+import type { UpdateProfilePayload, UserView } from '@/entities/User/types';
+import { useAlert } from '@/shared/ui/Alert/useAlert';
 import Button from '@/shared/ui/Button';
+import { uploadImage } from '@/shared/api/uploadImage';
 import TextareaField, { type TextareaFieldStatus } from '@/shared/ui/input/TextareaField';
 import TextField, { type TextFieldStatus } from '@/shared/ui/input/TextField';
 import { EnvelopeIcon, PencilIcon, PersonIcon } from '@/shared/icons';
@@ -16,11 +17,17 @@ interface UpdateProfileFormProps {
   onSubmit?: () => void;
 }
 
+interface SelectedAvatar {
+  url: string;
+  file: File;
+}
+
 function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
-  const [selectedAvatarUrl, setSelectedAvatarUrl] = useState<string | null>(null);
+  const [selectedAvatar, setSelectedAvatar] = useState<SelectedAvatar | null>(null);
   const [selectedAvatarErrorMessage, setSelectedAvatarErrorMessage] = useState<string | null>(null);
 
   const { updateProfile } = useAuth();
+  const { showAlert } = useAlert();
 
   const {
     register,
@@ -28,6 +35,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
     formState: {
       errors,
       isSubmitted,
+      isSubmitting,
     },
   } = useForm<UpdateProfileFormFields>({
     resolver: zodResolver(updateProfileFormSchema),
@@ -38,7 +46,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
     },
   });
 
-  function handleFormSubmit(updateProfileFields: UpdateProfileFormFields) {
+  async function handleFormSubmit(updateProfileFields: UpdateProfileFormFields) {
     const formFieldsNames = Object.keys(updateProfileFields) as (keyof UpdateProfileFormFields)[];
 
     const changedFields = formFieldsNames.reduce<UpdateProfilePayload>((changes, fieldName) => {
@@ -54,11 +62,25 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
 
     const updatedFieldsCount = Object.keys(changedFields).length;
 
-    if (updatedFieldsCount > 0) {
-      updateProfile(changedFields);
-    }
+    if (updatedFieldsCount > 0 || selectedAvatar !== null) {
+      try {
+        if (selectedAvatar !== null) {
+          const { url: avatarUrl } = await uploadImage(selectedAvatar.file);
+          changedFields.profileImage = avatarUrl;
+        }
 
-    onSubmit?.();
+        await updateProfile(changedFields);
+
+        setSelectedAvatar(null);
+        showAlert('Profile update successful', 'success');
+      } catch (error) {
+        showAlert(error instanceof Error ? error.message : 'Profile update failed', 'error');
+        console.error(error);
+        return;
+      }
+
+      onSubmit?.();
+    }
   }
 
   function handleAvatarChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -66,7 +88,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
     const file = fileInput.files?.[0];
 
     if (!file) {
-      setSelectedAvatarUrl(null);
+      setSelectedAvatar(null);
       setSelectedAvatarErrorMessage(null);
 
       return;
@@ -74,15 +96,19 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
 
     if (!file.type.startsWith('image/')) {
       fileInput.value = '';
-      setSelectedAvatarUrl(null);
+      setSelectedAvatar(null);
       setSelectedAvatarErrorMessage('Non-image file detected');
 
       return;
     }
 
     const newAvatarUrl = URL.createObjectURL(file);
+    fileInput.value = '';
+    setSelectedAvatar({
+      url: newAvatarUrl,
+      file,
+    });
     setSelectedAvatarErrorMessage(null);
-    setSelectedAvatarUrl(newAvatarUrl);
   }
 
   function getTextFieldStatus(hasError: boolean): TextFieldStatus {
@@ -98,14 +124,14 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
   }
 
   useEffect(() => {
-    if (selectedAvatarUrl === null) {
+    if (selectedAvatar === null) {
       return;
     }
 
     return () => {
-      URL.revokeObjectURL(selectedAvatarUrl);
+      URL.revokeObjectURL(selectedAvatar.url);
     }
-  }, [selectedAvatarUrl]);
+  }, [selectedAvatar]);
 
   return (
     <form className='profile-update-form' onSubmit={(event) => void handleSubmit(handleFormSubmit)(event)}>
@@ -113,7 +139,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
       <div className='change-avatar-container'>
         <img
           className='avatar change-avatar-photo'
-          src={selectedAvatarUrl ?? user.profileImage ?? undefined}
+          src={selectedAvatar?.url ?? user.profileImage ?? undefined}
           alt={`Profile picture of ${user.displayName}`}
           width={64}
           height={64}
@@ -127,6 +153,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
               type='file'
               name='avatar'
               onChange={handleAvatarChange}
+              disabled={isSubmitting}
             />
             Change profile photo
           </label>
@@ -146,6 +173,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         status={getTextFieldStatus(Boolean(errors.username))}
         errorMessage={errors.username?.message}
         type='text'
+        disabled={isSubmitting}
       />
       <TextField
         {...register('email')}
@@ -156,6 +184,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         status={getTextFieldStatus(Boolean(errors.email))}
         errorMessage={errors.email?.message}
         type='email'
+        disabled={isSubmitting}
       />
       <TextareaField
         {...register('description')}
@@ -167,8 +196,11 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         hintMessage='Max 200 characters'
         maxLength={201}
         rows={1}
+        disabled={isSubmitting}
       />
-      <Button type='submit'>Save Profile Changes</Button>
+      <Button type='submit' disabled={isSubmitting}>
+        {isSubmitting ? 'Saving...' : 'Save Profile Changes'}
+      </Button>
     </form>
   );
 }
