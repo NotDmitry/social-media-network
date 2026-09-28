@@ -139,3 +139,13 @@
   margin: 0;
   list-style: none;
 }
+
+.post-comments-message {
+  margin: 8px;
+  color: var(--component-text-dark);
+  font-family: var(--font-family);
+  font-size: clamp(0.875rem, 3vw, 1rem);
+  font-weight: 500;
+  line-height: 143%;
+  text-align: center;
+}

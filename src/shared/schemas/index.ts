@@ -16,3 +16,5 @@ export const usernameSchema = z.string().trim().nonempty('The username can\'t be
 export const nameSchema = z.string().trim().nonempty('The name can\'t be empty');
 
 export const descriptionSchema = z.string();
+
+export const noContentResponseSchema = z.undefined();
