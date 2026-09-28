@@ -9,6 +9,7 @@ import { getPosts } from '@/entities/Post/api/getPosts';
 import { getUserById } from '@/entities/User/api/getUserById';
 import { toUserView } from '@/entities/User/utilities';
 import type { UserView } from '@/entities/User/types';
+import Spinner from '@/shared/ui/Spinner';
 import { ChevronDownIcon } from '@/shared/icons';
 import './style.css';
 
@@ -113,9 +114,7 @@ function PostsFeed() {
 
   let postsFeedStatusMessage: string | null = null;
 
-  if (isInitialPending) {
-    postsFeedStatusMessage = 'Loading...';
-  } else if (isGlobalFetchError) {
+  if (isGlobalFetchError) {
     postsFeedStatusMessage = 'Unable to fetch posts';
   } else if (posts.length === 0) {
     postsFeedStatusMessage = 'No posts yet';
@@ -157,9 +156,11 @@ function PostsFeed() {
 
   return (
     <div className='posts-feed' ref={postsFeedRef}>
-      {postsFeedStatusMessage &&
+      {isInitialPending ? (
+        <Spinner label='Loading posts...' />
+      ) : (postsFeedStatusMessage &&
         <p className='posts-feed-message'>{postsFeedStatusMessage}</p>
-      }
+      )}
 
       {!isInitialPending && !isGlobalFetchError &&
         posts.map((post) => {
@@ -186,7 +187,7 @@ function PostsFeed() {
         ref={sentinelRef}
         hidden={!hasNextPage || isAuthorsQueryPending || isFetchNextPageError || isGlobalFetchError}
       >
-        {isFetchingNextPage && 'Loading more posts...'}
+        {isFetchingNextPage && <Spinner label='Loading more posts...' />}
       </p>
 
       {isPageScrolled &&

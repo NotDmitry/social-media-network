@@ -8,6 +8,7 @@ import {
   toProfileStatisticsCardsView,
   toProfileStatisticsTablesView
 } from '@/features/ProfileStatistics/utilities';
+import Spinner from '@/shared/ui/Spinner';
 import ToggleSwitch from '@/shared/ui/ToggleSwitch';
 import './style.css';
 
@@ -30,9 +31,9 @@ function ProfileStatisticsPage() {
 
   let statisticsStatusMessage: string | null = null;
 
-  if (isStatisticsQueryPending && statistics === undefined) {
-    statisticsStatusMessage = 'Loading...';
-  } else if (statisticsQueryError && statistics === undefined) {
+  const isInitialStatisticsQueryPending = isStatisticsQueryPending && statistics === undefined;
+
+  if (statisticsQueryError && statistics === undefined) {
     statisticsStatusMessage = 'Unable to load statistics';
   }
 
@@ -46,9 +47,11 @@ function ProfileStatisticsPage() {
       <section className='profile-statistics-cards-wrapper'>
         <h2 className='visually-hidden'>Statistics cards view</h2>
 
-        {statisticsStatusMessage &&
+        {isInitialStatisticsQueryPending ? (
+          <Spinner label='Loading statistics...' />
+        ) : (statisticsStatusMessage &&
           <p className='stats-card-list-message'>{statisticsStatusMessage}</p>
-        }
+        )}
 
         {statsCardsData?.map((cardData) => (
           <StatsCard key={cardData.title} {...cardData} />
