@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ROUTES } from '@/app/routes';
 import { useTheme } from '@/features/theme/useTheme';
@@ -9,13 +10,22 @@ import ToggleSwitch from '@/shared/ui/ToggleSwitch';
 import './style.css';
 
 function ProfileInfoPage() {
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
   const { theme, setTheme } = useTheme();
   const { currentUser, signOut } = useAuth();
 
-  function handleLogoutClick() {
-    signOut();
-    void navigate(ROUTES.signIn);
+  async function handleLogoutClick() {
+    setIsLoggingOut(true);
+
+    try {
+      await signOut();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsLoggingOut(false);
+      void navigate(ROUTES.signIn, { replace: true });
+    }
   }
 
   function handleDarkThemeToggle(isDarkThemeSelected: boolean) {
@@ -46,7 +56,9 @@ function ProfileInfoPage() {
         </section>
         <section className='profile-info-section'>
           <h2 className='profile-info-title'>Actions</h2>
-          <Button type='button' onClick={handleLogoutClick}>Logout</Button>
+          <Button type='button' disabled={isLoggingOut} onClick={() => void handleLogoutClick()}>
+            {isLoggingOut ? 'Logging out...' : 'Logout'}
+          </Button>
         </section>
       </div>
     </div>

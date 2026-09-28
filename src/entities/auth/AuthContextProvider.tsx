@@ -1,87 +1,130 @@
-import { useState } from 'react';
-import { isUserModel, toUserView } from '@/entities/User/types';
-import type { UserModel } from '@/entities/User/types';
-import { getAuthUserMock } from '@/shared/mocks/UserMocks';
+import { useEffect, useState } from 'react';
+import { login } from '@/entities/auth/api/login';
+import { logout } from '@/entities/auth/api/logout';
+import { refresh } from '@/entities/auth/api/refresh';
+import { signup } from '@/entities/auth/api/signup';
+import { getCurrentUser } from '@/entities/User/api/getCurrentUser';
+import { toUserView } from '@/entities/User/types';
+import { accessToken } from '@/shared/api/accessToken';
+import { BackendResponseError } from '@/shared/api/backendResponseError';
 import { AuthContext } from './context';
-import type { SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
-
-const CURRENT_USER_STORAGE_KEY = 'currentUser';
+import type { AuthState, SignInPayload, SignUpPayload, UpdateProfilePayload } from './types';
 
 interface AuthContextProviderProps {
   children: React.ReactNode;
 }
 
-function getCurrentUserFromStorage(): UserModel | null {
-  try {
-    const storedUser = localStorage.getItem(CURRENT_USER_STORAGE_KEY);
-
-    if (storedUser === null) {
-      return null;
-    }
-
-    const parsedUser: unknown = JSON.parse(storedUser);
-    const currentUser = isUserModel(parsedUser) ? parsedUser : null;
-
-    return currentUser;
-  } catch (error) {
-    console.error(error);
-
-    return null;
-  }
-}
-
 function AuthContextProvider({ children }: AuthContextProviderProps) {
-  const [currentUser, setCurrentUser] = useState<UserModel | null>(() => getCurrentUserFromStorage());
+  const [authState, setAuthState] = useState<AuthState>({
+    status: 'pending',
+    currentUser: null,
+  });
 
-  function updateCurrentUser(user: UserModel | null) {
-    try {
-      if (user === null) {
-        localStorage.removeItem(CURRENT_USER_STORAGE_KEY);
-      } else {
-        localStorage.setItem(CURRENT_USER_STORAGE_KEY, JSON.stringify(user));
+  useEffect(() => {
+    const sessionAbortController = new AbortController();
+
+    async function restoreSession() {
+      try {
+        const refreshResponsePayload = await refresh();
+
+        if (sessionAbortController.signal.aborted) {
+          return;
+        }
+
+        accessToken.set(refreshResponsePayload.token);
+
+        const currentUser = await getCurrentUser(sessionAbortController.signal);
+
+        setAuthState({
+          status: 'authenticated',
+          currentUser,
+        });
+      } catch (error) {
+        if (sessionAbortController.signal.aborted) {
+          return;
+        }
+
+        if (error instanceof BackendResponseError && (error.status === 400 || error.status === 401)) {
+          accessToken.clear();
+          setAuthState({
+            status: 'guest',
+            currentUser: null,
+          });
+
+          return;
+        }
+
+        console.error(error);
+        setAuthState({
+          status: 'unavailable',
+          currentUser: null,
+        });
       }
-
-      setCurrentUser(user);
-    } catch (error) {
-      console.error(error);
     }
-  }
 
-  function signIn({ email }: SignInPayload) {
-    updateCurrentUser({
-      ...getAuthUserMock(),
-      email
+    void restoreSession();
+
+    return () => {
+      sessionAbortController.abort();
+    };
+  }, []);
+
+  async function signIn(signInPayload: SignInPayload) {
+    const loginResponsePayload = await login(signInPayload);
+
+    accessToken.set(loginResponsePayload.token);
+    setAuthState({
+      status: 'authenticated',
+      currentUser: loginResponsePayload.user,
     });
   }
 
-  function signUp({ email, firstName, secondName }: SignUpPayload) {
-    updateCurrentUser({
-      ...getAuthUserMock(),
-      email,
-      firstName,
-      secondName: secondName ?? null,
+  async function signUp(signUpPayload: SignUpPayload) {
+    const signUpResponsePayload = await signup(signUpPayload);
+
+    await signIn({
+      email: signUpPayload.email,
+      password: signUpPayload.password,
     });
+
+    return signUpResponsePayload;
   }
 
-  function signOut() {
-    updateCurrentUser(null);
+  async function signOut() {
+    try {
+      const logoutResponsePayload = await logout();
+
+      return logoutResponsePayload;
+    } finally {
+      accessToken.clear();
+      setAuthState({
+        status: 'guest',
+        currentUser: null,
+      });
+    }
   }
 
   function updateProfile(updatedFields: UpdateProfilePayload) {
-    if (currentUser === null) {
-      return;
-    }
+    setAuthState((currentState) => {
+      if (currentState.status !== 'authenticated') {
+        return currentState;
+      }
 
-    updateCurrentUser({
-      ...currentUser,
-      ...updatedFields,
+      return {
+        status: currentState.status,
+        currentUser: {
+          ...currentState.currentUser,
+          ...updatedFields,
+        },
+      };
     });
   }
 
   return (
     <AuthContext value={{
-      currentUser: currentUser ? toUserView(currentUser) : null,
-      isUserAuthenticated: currentUser !== null,
+      authStatus: authState.status,
+      currentUser: authState.status === 'authenticated' ? toUserView(authState.currentUser) : null,
+      isUserAuthenticated: authState.status === 'authenticated',
       signIn,
       signUp,
       signOut,

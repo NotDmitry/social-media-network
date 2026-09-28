@@ -3,9 +3,14 @@ import { ROUTES } from '@/app/routes';
 import { useAuth } from '@/entities/auth/useAuth';
 
 function PrivateRoutes() {
-  const { isUserAuthenticated } = useAuth();
+  const { authStatus } = useAuth();
 
-  return isUserAuthenticated ? <Outlet /> : <Navigate to={ROUTES.signIn} replace />;
+  // TODO: show spinner
+  if (authStatus === 'pending') {
+    return null;
+  }
+
+  return authStatus === 'authenticated' ? <Outlet /> : <Navigate to={ROUTES.signIn} replace />;
 }
 
 export default PrivateRoutes;

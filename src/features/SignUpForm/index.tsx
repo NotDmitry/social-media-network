@@ -29,14 +29,21 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
     formState: {
       errors,
       isSubmitted,
+      isSubmitting,
     },
   } = useForm<SignUpFormFields, unknown, SignUpPayload>({
     resolver: zodResolver(signUpFormSchema),
     defaultValues: INITIAL_FORM_FIELDS,
   });
 
-  function handleFormSubmit(signUpPayload: SignUpPayload) {
-    signUp(signUpPayload);
+  async function handleFormSubmit(signUpPayload: SignUpPayload) {
+    try {
+      await signUp(signUpPayload);
+    } catch (error) {
+      console.error(error);
+      return;
+    }
+
     onSubmit?.();
   }
 
@@ -60,6 +67,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           status={getFieldStatus(Boolean(errors.fullName))}
           errorMessage={errors.fullName?.message}
           type='text'
+          disabled={isSubmitting}
         />
         <TextField
           {...register('email')}
@@ -70,6 +78,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           status={getFieldStatus(Boolean(errors.email))}
           errorMessage={errors.email?.message}
           type='email'
+          disabled={isSubmitting}
         />
         <PasswordField
           {...register('password', { deps: 'repeatPassword' })}
@@ -81,6 +90,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           errorMessage={errors.password?.message}
           infoMessage='Your password is correct'
           showVisibilityToggle={true}
+          disabled={isSubmitting}
         />
         <PasswordField
           {...register('repeatPassword')}
@@ -92,9 +102,12 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           errorMessage={errors.repeatPassword?.message}
           infoMessage='Passwords match'
           showVisibilityToggle={true}
+          disabled={isSubmitting}
         />
       </fieldset>
-      <Button type='submit'>Sign Up</Button>
+      <Button type='submit' disabled={isSubmitting}>
+        {isSubmitting ? 'Signing Up...' : 'Sign Up'}
+      </Button>
     </form>
   );
 }
