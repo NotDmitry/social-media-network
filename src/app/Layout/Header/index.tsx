@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
+import AppBar from '@mui/material/AppBar';
+import Avatar from '@mui/material/Avatar';
+import IconButton from '@mui/material/IconButton';
 import { ROUTES } from '@/app/routes';
 import { useAuth } from '@/entities/auth/useAuth';
 import Logo from '@/shared/ui/Logo';
@@ -26,7 +29,11 @@ function Header({ variant }: HeaderProps) {
   }
 
   return (
-    <header className='header'>
+    <AppBar
+      className='header'
+      position='sticky'
+      elevation={0}
+    >
       <Link className='header-external-link' to={ROUTES.home}>
         <Logo />
       </Link>
@@ -39,36 +46,36 @@ function Header({ variant }: HeaderProps) {
         }
 
         {variant === 'user' && currentUser &&
-          <Link className='link' to={ROUTES.profile}>
-            <img
-              className='avatar'
+          <Link className='link header-profile-link' to={ROUTES.profile}>
+            <Avatar
+              className='avatar header-avatar'
               src={currentUser.profileImage ?? undefined}
               alt={`Profile picture of ${currentUser.displayName}`}
-              width={24}
-              height={24}
-            />
-            {currentUser.displayName}
+            >
+              {currentUser.displayName.charAt(0)}
+            </Avatar>
+            <span className='header-profile-name'>{currentUser.displayName}</span>
           </Link>
         }
       </nav>
       {variant !== 'default' &&
         <>
-          <button
+          <IconButton
             className='header-menu-button'
             type='button'
             aria-label='Open mobile navigation'
-            onClick={() => { handleMenuClick() }}
+            onClick={handleMenuClick}
           >
             <BurgerIcon isOpen={isDrawerOpen} />
-          </button>
+          </IconButton>
           <DrawerNavigation
             isOpen={isDrawerOpen}
             variant={variant}
-            onClose={() => { handleDrawerClose() }}
+            onClose={handleDrawerClose}
           />
         </>
       }
-    </header>
+    </AppBar>
   );
 }
 
