@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { CrossIcon } from '@/shared/icons';
 import type { AlertModel } from '@/shared/ui/Alert/model/types';
 import './style.css';
@@ -9,6 +10,7 @@ interface AlertProps extends AlertModel {
 }
 
 function Alert({ id, message, severity, duration, onClose }: AlertProps) {
+  const { t } = useTranslation('common');
   const handleAlertClose = useCallback(() => {
     onClose(id);
   }, [id, onClose]);
@@ -32,7 +34,7 @@ function Alert({ id, message, severity, duration, onClose }: AlertProps) {
         className='alert-button'
         type='button'
         onClick={handleAlertClose}
-        aria-label='Close notification'
+        aria-label={t(($) => $.a11y.closeNotification)}
       >
         <CrossIcon />
       </button>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@apollo/client/react';
 import ChartView from '@/features/ProfileStatistics/ChartView';
 import StatsCard from '@/features/ProfileStatistics/StatsCard';
@@ -13,6 +14,7 @@ import ToggleSwitch from '@/shared/ui/ToggleSwitch';
 import './style.css';
 
 function ProfileStatisticsPage() {
+  const { t } = useTranslation('profile');
   const [isChartViewEnabled, setIsChartViewEnabled] = useState(false);
 
   const {
@@ -34,7 +36,7 @@ function ProfileStatisticsPage() {
   const isInitialStatisticsQueryPending = isStatisticsQueryPending && statistics === undefined;
 
   if (statisticsQueryError && statistics === undefined) {
-    statisticsStatusMessage = 'Unable to load statistics';
+    statisticsStatusMessage = t(($) => $.statistics.error);
   }
 
   function handleChartViewToggle(isToggled: boolean) {
@@ -43,12 +45,12 @@ function ProfileStatisticsPage() {
 
   return (
     <div className='profile-statistics-page-container'>
-      <h1 className='visually-hidden'>Profile statistics page</h1>
+      <h1 className='visually-hidden'>{t(($) => $.statistics.title)}</h1>
       <section className='profile-statistics-cards-wrapper'>
-        <h2 className='visually-hidden'>Statistics cards view</h2>
+        <h2 className='visually-hidden'>{t(($) => $.statistics.cards)}</h2>
 
         {isInitialStatisticsQueryPending ? (
-          <Spinner label='Loading statistics...' />
+          <Spinner label={t(($) => $.statistics.loading)} />
         ) : (statisticsStatusMessage &&
           <p className='stats-card-list-message'>{statisticsStatusMessage}</p>
         )}
@@ -58,13 +60,13 @@ function ProfileStatisticsPage() {
         ))}
       </section>
       <ToggleSwitch
-        label='Enable Chart view'
+        label={t(($) => $.statistics.chartToggle)}
         isToggled={isChartViewEnabled}
         onToggle={handleChartViewToggle}
       />
       <div className='data-views-wrapper'>
         <section className='data-view-container'>
-          <h2 className='data-view-title'>Likes</h2>
+          <h2 className='data-view-title'>{t(($) => $.statistics.likes)}</h2>
           {statsTablesData &&
             <div className={`data-view-card ${isChartViewEnabled ? 'data-view-card_chart' : ''}`}>
               {isChartViewEnabled ? (
@@ -80,7 +82,7 @@ function ProfileStatisticsPage() {
           }
         </section>
         <section className='data-view-container'>
-          <h2 className='data-view-title'>Comments</h2>
+          <h2 className='data-view-title'>{t(($) => $.statistics.comments)}</h2>
           {statsTablesData &&
             <div className={`data-view-card ${isChartViewEnabled ? 'data-view-card_chart' : ''}`}>
               {isChartViewEnabled ? (

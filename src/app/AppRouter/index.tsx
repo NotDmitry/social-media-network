@@ -1,4 +1,5 @@
 import { Outlet, Routes, Route, useLocation } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import ErrorBoundary from '@/app/ErrorBoundary';
 import Layout from '@/app/Layout';
 import PrivateRoutes from '@/app/PrivateRoutes';
@@ -15,11 +16,12 @@ import { useAuth } from '@/entities/auth/useAuth';
 import Spinner from '@/shared/ui/Spinner';
 
 function AppRouter() {
+  const { t } = useTranslation('authentication');
   const { authStatus, isUserAuthenticated } = useAuth();
   const location = useLocation();
 
   if (authStatus === 'pending') {
-    return <Spinner label='Session restoration' />
+    return <Spinner label={t(($) => $.session.restoration.loading)} />
   }
 
   if (authStatus === 'unavailable') {

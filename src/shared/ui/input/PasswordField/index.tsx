@@ -1,5 +1,6 @@
 import { useId, useState } from 'react';
 import type { ComponentProps, ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import InputFieldTooltip from '../InputFieldTooltip';
 import {
   CheckIcon,
@@ -38,6 +39,7 @@ function PasswordField({
   placeholder = 'Enter password...',
   ...restProps
 }: PasswordFieldProps) {
+  const { t } = useTranslation('common');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
   const privateId = useId();
@@ -96,7 +98,9 @@ function PasswordField({
             className='toggle-password-button'
             type='button'
             onClick={handlePasswordVisibilityClick}
-            aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
+            aria-label={isPasswordVisible ?
+              t(($) => $.passwordVisibility.hide) : t(($) => $.passwordVisibility.show)
+            }
           >
             {isPasswordVisible ? <EyeCrossedIcon /> : <EyeIcon />}
           </button>

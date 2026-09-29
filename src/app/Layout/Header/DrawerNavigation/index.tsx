@@ -1,5 +1,6 @@
 import { useEffect, useEffectEvent } from 'react';
 import { useLocation, NavLink } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -21,6 +22,7 @@ interface DrawerNavigationProps {
 }
 
 function DrawerNavigation({ variant, isOpen, onOpen, onClose }: DrawerNavigationProps) {
+  const { t } = useTranslation('common');
   const isMobile = useMediaQuery('screen and (width < 480px)');
   const currentLocation = useLocation();
 
@@ -62,7 +64,7 @@ function DrawerNavigation({ variant, isOpen, onOpen, onClose }: DrawerNavigation
             className='drawer-navigation-avatar'
             displayName={currentUser.displayName}
             photoUrl={currentUser.profileImage}
-            alt={`Profile picture of ${currentUser.displayName}`}
+            alt={t(($) => $.a11y.profilePicture, { name: currentUser.displayName })}
           />
         }
       </header>
@@ -78,14 +80,14 @@ function DrawerNavigation({ variant, isOpen, onOpen, onClose }: DrawerNavigation
               component={NavLink}
               to={ROUTES.signUp}
             >
-              Sign up
+              {t(($) => $.navigation.signUp)}
             </ListItemButton>
             <ListItemButton
               className='drawer-navigation-link'
               component={NavLink}
               to={ROUTES.signIn}
             >
-              Sign in
+              {t(($) => $.navigation.signIn)}
             </ListItemButton>
           </>
         }
@@ -97,14 +99,14 @@ function DrawerNavigation({ variant, isOpen, onOpen, onClose }: DrawerNavigation
               to={ROUTES.profile}
               end
             >
-              Profile info
+              {t(($) => $.navigation.profileInfo)}
             </ListItemButton>
             <ListItemButton
               className='drawer-navigation-link'
               component={NavLink}
               to={ROUTES.statistics}
             >
-              Statistics
+              {t(($) => $.navigation.statistics)}
             </ListItemButton>
           </>
         }
@@ -113,7 +115,7 @@ function DrawerNavigation({ variant, isOpen, onOpen, onClose }: DrawerNavigation
           component={NavLink}
           to={ROUTES.home}
         >
-          Home
+          {t(($) => $.navigation.home)}
         </ListItemButton>
       </List>
     </SwipeableDrawer>

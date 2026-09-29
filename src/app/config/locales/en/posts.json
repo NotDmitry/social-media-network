@@ -1,0 +1,89 @@
+{
+  "feed": {
+    "loading": "Loading posts...",
+    "error": "Unable to fetch posts",
+    "empty": "No posts yet",
+    "pagination": {
+      "loading": "Loading more posts..."
+    },
+    "likes": {
+      "error": "Unable to fetch your likes"
+    },
+    "scrollToStart": "Return to the Feed's start"
+  },
+  "post": {
+    "imageAlt": "Post by {{name}}",
+    "like": {
+      "action": "Like the post",
+      "alert": {
+        "error": "Unable to update like status"
+      },
+      "count_one": "{{count}} like",
+      "count_other": "{{count}} likes"
+    },
+    "comments": {
+      "toggle": "Open / close comments section",
+      "authenticationRequired": "You have to login to see the comments",
+      "loading": "Loading comments...",
+      "error": "Unable to load comments",
+      "empty": "No comments yet",
+      "count_one": "{{count}} comment",
+      "count_other": "{{count}} comments"
+    }
+  },
+  "comment": {
+    "unknownAuthor": "Unknown user",
+    "delete": {
+      "action": "Delete comment",
+      "alert": {
+        "success": "Comment successfully deleted",
+        "error": "Comment deletion failed"
+      }
+    },
+    "create": {
+      "alert": {
+        "success": "Comment successfully created",
+        "error": "Comment creation failed"
+      },
+      "input": {
+        "comment": {
+          "label": "Add a comment",
+          "placeholder": "Write description here...",
+          "hint": "Max 200 characters"
+        }
+      },
+      "button": {
+        "default": "Add a comment",
+        "pending": "Adding a comment..."
+      }
+    }
+  },
+  "createPost": {
+    "title": "Create a new post",
+    "alert": {
+      "success": "Post successfully created",
+      "error": "Post creation failed"
+    },
+    "input": {
+      "title": {
+        "label": "Post Title",
+        "placeholder": "Enter post title"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Write description here...",
+        "hint": "Max 500 characters"
+      },
+      "file": {
+        "select": "Select a file or drag and drop here",
+        "constraints": "JPG or PNG, no more than 10MB",
+        "unsupported": "Unsupported file format",
+        "tooLarge": "The file is too large"
+      }
+    },
+    "button": {
+      "default": "Create",
+      "pending": "Creating..."
+    }
+  }
+}

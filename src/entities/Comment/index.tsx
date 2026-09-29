@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteComment } from '@/entities/Comment/api/deleteComment';
 import type { UserView } from '@/entities/User/types';
@@ -14,6 +15,7 @@ interface CommentProps {
 }
 
 function Comment({ author, comment, canDelete }: CommentProps) {
+  const { t } = useTranslation(['posts', 'common']);
   const queryClient = useQueryClient();
   const { showAlert } = useAlert();
 
@@ -25,10 +27,10 @@ function Comment({ author, comment, canDelete }: CommentProps) {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['comments', comment.postId] });
 
-      showAlert('Comment successfully deleted', 'success');
+      showAlert(t(($) => $.comment.delete.alert.success), 'success');
     },
     onError: (error) => {
-      showAlert('Comment deletion failed', 'error');
+      showAlert(t(($) => $.comment.delete.alert.error), 'error');
       console.error(error);
     },
   });
@@ -44,11 +46,14 @@ function Comment({ author, comment, canDelete }: CommentProps) {
         <img
           className='avatar comment-avatar'
           src={author?.profileImage ?? undefined}
-          alt={`Profile picture of ${author?.displayName ?? 'Unknown user'}`}
+          alt={t(($) => $.a11y.profilePicture, {
+            ns: 'common',
+            name: author?.displayName ?? t(($) => $.comment.unknownAuthor),
+          })}
           width={32}
           height={32}
         />
-        <span className='comment-author'>{author?.displayName ?? 'Unknown user'}</span>
+        <span className='comment-author'>{author?.displayName ?? t(($) => $.comment.unknownAuthor)}</span>
         <time
           className='comment-time'
           dateTime={comment.creationDate}
@@ -59,7 +64,7 @@ function Comment({ author, comment, canDelete }: CommentProps) {
           <button
             className='comment-delete-button'
             type='button'
-            aria-label='Delete comment'
+            aria-label={t(($) => $.comment.delete.action)}
             onClick={handleDeleteClick}
             disabled={isCommentDeletionPending}
           >

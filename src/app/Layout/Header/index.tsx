@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import AppBar from '@mui/material/AppBar';
 import { ROUTES } from '@/app/routes';
 import { useAuth } from '@/entities/auth/useAuth';
@@ -16,6 +17,7 @@ interface HeaderProps {
 }
 
 function Header({ variant }: HeaderProps) {
+  const { t } = useTranslation('common');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const { currentUser } = useAuth();
@@ -40,8 +42,8 @@ function Header({ variant }: HeaderProps) {
       <nav className='nav-panel'>
         {variant === 'guest' &&
           <>
-            <Link className='link' to={ROUTES.signUp}>Sign Up</Link>
-            <Link className='link' to={ROUTES.signIn}>Sign In</Link>
+            <Link className='link' to={ROUTES.signUp}>{t(($) => $.navigation.signUp)}</Link>
+            <Link className='link' to={ROUTES.signIn}>{t(($) => $.navigation.signIn)}</Link>
           </>
         }
 
@@ -51,7 +53,7 @@ function Header({ variant }: HeaderProps) {
               className='header-avatar'
               displayName={currentUser.displayName}
               photoUrl={currentUser.profileImage}
-              alt={`Profile picture of ${currentUser.displayName}`}
+              alt={t(($) => $.a11y.profilePicture, { name: currentUser.displayName })}
             />
             <span className='header-profile-name'>{currentUser.displayName}</span>
           </Link>
@@ -62,7 +64,7 @@ function Header({ variant }: HeaderProps) {
           <IconButton
             className='header-menu-button'
             type='button'
-            aria-label='Open mobile navigation'
+            aria-label={t(($) => $.a11y.openMobileNavigation)}
             onClick={handleDrawerOpen}
           >
             <BurgerIcon isOpen={isDrawerOpen} />

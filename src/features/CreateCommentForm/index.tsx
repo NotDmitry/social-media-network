@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -15,6 +16,7 @@ interface CreateCommentFormProps {
 }
 
 function CreateCommentForm({ postId, onCommentCreated }: CreateCommentFormProps) {
+  const { t } = useTranslation('posts');
   const { showAlert } = useAlert();
   const queryClient = useQueryClient();
 
@@ -42,10 +44,10 @@ function CreateCommentForm({ postId, onCommentCreated }: CreateCommentFormProps)
       onCommentCreated?.();
       reset();
       await queryClient.invalidateQueries({ queryKey: ['comments', postId] });
-      showAlert('Comment successfully created', 'success');
+      showAlert(t(($) => $.comment.create.alert.success), 'success');
     },
     onError: (error) => {
-      showAlert('Comment creation failed', 'error');
+      showAlert(t(($) => $.comment.create.alert.error), 'error');
       console.error(error);
     }
   });
@@ -62,18 +64,21 @@ function CreateCommentForm({ postId, onCommentCreated }: CreateCommentFormProps)
     <form className='create-comment-form' onSubmit={(event) => void handleSubmit(handleFormSubmit)(event)}>
       <TextareaField
         {...register('comment')}
-        label='Add a comment'
+        label={t(($) => $.comment.create.input.comment.label)}
         labelIcon={<PencilIcon />}
-        placeholder='Write description here...'
+        placeholder={t(($) => $.comment.create.input.comment.placeholder)}
         status={getTextareaFieldStatus(Boolean(errors.comment))}
         errorMessage={errors.comment?.message}
-        hintMessage='Max 200 characters'
+        hintMessage={t(($) => $.comment.create.input.comment.hint)}
         maxLength={201}
         rows={1}
         disabled={isCommentCreationPending}
       />
       <Button type='submit' disabled={isCommentCreationPending}>
-        {isCommentCreationPending ? 'Adding a comment...' : 'Add a comment'}
+        {isCommentCreationPending
+          ? t(($) => $.comment.create.button.pending)
+          : t(($) => $.comment.create.button.default)
+        }
       </Button>
     </form>
   );

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/entities/auth/useAuth';
@@ -19,6 +20,7 @@ interface SignInFormProps {
 }
 
 function SignInForm({ onSubmit }: SignInFormProps) {
+  const { t } = useTranslation('authentication');
   const { signIn } = useAuth();
   const { showAlert } = useAlert();
 
@@ -38,9 +40,9 @@ function SignInForm({ onSubmit }: SignInFormProps) {
   async function handleFormSubmit(signInPayload: SignInPayload) {
     try {
       await signIn(signInPayload);
-      showAlert('Sign in successful', 'success');
+      showAlert(t(($) => $.signIn.alert.success), 'success');
     } catch (error) {
-      showAlert(error instanceof Error ? error.message : 'Sign in failed', 'error');
+      showAlert(error instanceof Error ? error.message : t(($) => $.signIn.alert.error), 'error');
       console.error(error);
       return;
     }
@@ -61,31 +63,33 @@ function SignInForm({ onSubmit }: SignInFormProps) {
       <fieldset className='auth-form-fieldset'>
         <TextField
           {...register('email')}
-          label='Email'
+          label={t(($) => $.signIn.input.email.label)}
           labelIcon={<EnvelopeIcon />}
           autoComplete='email'
-          placeholder='Enter email'
+          placeholder={t(($) => $.signIn.input.email.placeholder)}
           status={getFieldStatus(Boolean(errors.email))}
           errorMessage={errors.email?.message}
-          tooltipMessage='Valid email example: example@gmail.com'
+          tooltipMessage={t(($) => $.signIn.input.email.tooltip)}
           type='email'
           disabled={isSubmitting}
         />
         <PasswordField
           {...register('password')}
-          label='Password'
+          label={t(($) => $.signIn.input.password.label)}
           labelIcon={<EyeIcon />}
           autoComplete='current-password'
-          placeholder='Enter password'
+          placeholder={t(($) => $.signIn.input.password.placeholder)}
           status={getFieldStatus(Boolean(errors.password))}
           errorMessage={errors.password?.message}
-          tooltipMessage={'Enter your account\'s password'}
+          tooltipMessage={t(($) => $.signIn.input.password.tooltip)}
           showVisibilityToggle={true}
           disabled={isSubmitting}
         />
       </fieldset>
       <Button type='submit' disabled={isSubmitting}>
-        {isSubmitting ? 'Signing In...' : 'Sign In'}
+        {isSubmitting
+          ? t(($) => $.signIn.button.pending)
+          : t(($) => $.signIn.button.default)}
       </Button>
     </form>
   );

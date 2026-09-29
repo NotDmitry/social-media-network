@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import PostsFeed from '@/widgets/PostsFeed';
 import CreatePostModal from '@/features/CreatePostModal';
@@ -51,6 +52,7 @@ function groupToCardDataView(group: GroupModel): CardData {
 }
 
 function HomePage() {
+  const { t } = useTranslation(['homePage', 'common']);
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
   const [quickPostContent, setQuickPostContent] = useState('');
   const { currentUser } = useAuth();
@@ -96,16 +98,16 @@ function HomePage() {
 
   return (
     <div className='home-page-container'>
-      <h1 className='visually-hidden'>Home page</h1>
+      <h1 className='visually-hidden'>{t(($) => $.title)}</h1>
       <section className='home-page-content'>
-        <h2 className='visually-hidden'>Posts feed</h2>
+        <h2 className='visually-hidden'>{t(($) => $.postsFeedTitle)}</h2>
         {/* Create post input */}
         {currentUser &&
           <div className='create-post-container'>
             <img
               className='avatar create-post-avatar'
               src={currentUser.profileImage ?? undefined}
-              alt={`Picture of ${currentUser.displayName}`}
+              alt={t(($) => $.a11y.picture, { ns: 'common', name: currentUser.displayName })}
               width={64}
               height={64}
             />
@@ -114,11 +116,11 @@ function HomePage() {
                 className='create-post-input'
                 type='text'
                 name='post'
-                placeholder="What's happening?"
+                placeholder={t(($) => $.quickPost.input.post.placeholder)}
                 value={quickPostContent}
                 onChange={handleQuickPostContentChange}
               />
-              <Button type='submit'>Tell everyone</Button>
+              <Button type='submit'>{t(($) => $.quickPost.button.default)}</Button>
             </form>
           </div>
         }
@@ -138,22 +140,24 @@ function HomePage() {
 
       {currentUser &&
         <aside className='home-page-suggested'>
-          <h2 className='visually-hidden'>Suggestions</h2>
+          <h2 className='visually-hidden'>{t(($) => $.suggestions.title)}</h2>
           <CardsList
-            title='Suggested people'
+            title={t(($) => $.suggestions.people.title)}
             cardsData={suggestedUsers}
             isDataFetchPending={isSuggestedUsersQueryPending}
             isDataFetchError={isSuggestedUsersQueryError}
-            errorMessage='Cannot load suggested people'
-            emptyListMessage='No suggested people'
+            loadingMessage={t(($) => $.suggestions.people.loading)}
+            errorMessage={t(($) => $.suggestions.people.error)}
+            emptyListMessage={t(($) => $.suggestions.people.empty)}
           />
           <CardsList
-            title='Communities you might like'
+            title={t(($) => $.suggestions.groups.title)}
             cardsData={suggestedGroups}
             isDataFetchPending={isGroupsQueryPending}
             isDataFetchError={isGroupsQueryError}
-            errorMessage='Cannot load suggested groups'
-            emptyListMessage='No suggested groups'
+            loadingMessage={t(($) => $.suggestions.groups.loading)}
+            errorMessage={t(($) => $.suggestions.groups.error)}
+            emptyListMessage={t(($) => $.suggestions.groups.empty)}
           />
         </aside>
       }

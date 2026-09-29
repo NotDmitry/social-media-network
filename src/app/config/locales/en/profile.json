@@ -1,0 +1,49 @@
+{
+  "info": {
+    "title": "Profile info page",
+    "edit": "Edit profile",
+    "preferences": "Preferences",
+    "actions": "Actions",
+    "darkTheme": "Dark theme"
+  },
+  "update": {
+    "alert": {
+      "success": "Profile update successful",
+      "error": "Profile update failed"
+    },
+    "input": {
+      "avatar": {
+        "label": "Change profile photo",
+        "error": "Non-image file detected"
+      },
+      "username": {
+        "label": "Username",
+        "placeholder": "@username123",
+        "tooltip": "This will be your nickname"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "email@domain.com",
+        "tooltip": "Valid email example: example@gmail.com"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Write description here...",
+        "hint": "Max 200 characters"
+      }
+    },
+    "button": {
+      "default": "Save Profile Changes",
+      "pending": "Saving..."
+    }
+  },
+  "statistics": {
+    "title": "Profile statistics page",
+    "cards": "Statistics cards view",
+    "loading": "Loading statistics...",
+    "error": "Unable to load statistics",
+    "chartToggle": "Enable Chart view",
+    "likes": "Likes",
+    "comments": "Comments"
+  }
+}

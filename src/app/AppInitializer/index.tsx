@@ -1,4 +1,5 @@
 import { useEffect, useEffectEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch } from '@/app/store/hooks';
 import { useTheme } from '@/features/theme/useTheme';
 import { sessionCleared, sessionEstablished, sessionUnavailable } from '@/entities/auth/model/authSlice';
@@ -9,11 +10,13 @@ import { accessToken } from '@/shared/api/accessToken';
 import { BackendResponseError } from '@/shared/api/backendResponseError';
 
 function AppInitializer() {
+  const { t } = useTranslation('authentication');
   const dispatch = useAppDispatch();
   const { showAlert } = useAlert();
   const { theme } = useTheme();
 
-  const showAlertWithError = useEffectEvent((message: string) => {
+  const showSessionError = useEffectEvent((error: unknown) => {
+    const message = error instanceof Error ? error.message : t(($) => $.session.restoration.error);
     showAlert(message, 'error');
   });
 
@@ -44,7 +47,7 @@ function AppInitializer() {
 
         if (error instanceof BackendResponseError && (error.status === 400 || error.status === 401)) {
           if (error.code !== 'REFRESH_TOKEN_REQUIRED') {
-            showAlertWithError(error.message);
+            showSessionError(error);
           }
 
           dispatch(sessionCleared());
@@ -52,7 +55,7 @@ function AppInitializer() {
           return;
         }
 
-        showAlertWithError(error instanceof Error ? error.message : 'Service unavailable');
+        showSessionError(error);
         console.error(error);
         dispatch(sessionUnavailable());
       }
