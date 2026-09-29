@@ -10,6 +10,9 @@ import enProfileTranslations from './locales/en/profile.json';
 import ruCommonTranslations from './locales/ru/common.json';
 import ruErrorPageTranslations from './locales/ru/errorPage.json';
 import ruAuthenticationTranslations from './locales/ru/authentication.json';
+import ruHomePageTranslations from './locales/ru/homePage.json';
+import ruPostsTranslations from './locales/ru/posts.json';
+import ruProfileTranslations from './locales/ru/profile.json';
 
 export const defaultNS = 'common';
 
@@ -35,6 +38,9 @@ export const resources = {
     common: ruCommonTranslations,
     errorPage: ruErrorPageTranslations,
     authentication: ruAuthenticationTranslations,
+    homePage: ruHomePageTranslations,
+    posts: ruPostsTranslations,
+    profile: ruProfileTranslations,
   },
 } as const;
 

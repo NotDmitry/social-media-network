@@ -3,5 +3,28 @@
     "label": "Язык",
     "en": "English",
     "ru": "Русский"
+  },
+  "pageNotFound": "Страница не найдена",
+  "data": {
+    "loading": "Загрузка...",
+    "error": "Не удалось загрузить данные",
+    "empty": "Данных пока нет"
+  },
+  "passwordVisibility": {
+    "show": "Показать пароль",
+    "hide": "Скрыть пароль"
+  },
+  "navigation": {
+    "signUp": "Регистрация",
+    "signIn": "Вход",
+    "profileInfo": "Профиль",
+    "statistics": "Статистика",
+    "home": "Главная"
+  },
+  "a11y": {
+    "openMobileNavigation": "Открыть мобильную навигацию",
+    "profilePicture": "Фото профиля пользователя {{name}}",
+    "picture": "Изображение {{name}}",
+    "closeNotification": "Закрыть уведомление"
   }
 }
