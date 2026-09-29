@@ -1,3 +1,4 @@
+import { lazy } from 'react';
 import { Outlet, Routes, Route, useLocation } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import ErrorBoundary from '@/app/ErrorBoundary';
@@ -8,12 +9,13 @@ import { ROUTES } from '@/app/routes';
 import ErrorPage from '@/pages/ErrorPage';
 import HomePage from '@/pages/HomePage';
 import NotFoundPage from '@/pages/NotFoundPage';
-import ProfileInfoPage from '@/pages/ProfileInfoPage';
-import ProfileStatisticsPage from '@/pages/ProfileStatisticsPage';
-import SignInPage from '@/pages/SignInPage';
-import SignUpPage from '@/pages/SignUpPage';
 import { useAuth } from '@/entities/auth/useAuth';
 import Spinner from '@/shared/ui/Spinner';
+
+const ProfileInfoPage = lazy(() => import('@/pages/ProfileInfoPage'));
+const ProfileStatisticsPage = lazy(() => import('@/pages/ProfileStatisticsPage'));
+const SignInPage = lazy(() => import('@/pages/SignInPage'));
+const SignUpPage = lazy(() => import('@/pages/SignUpPage'));
 
 function AppRouter() {
   const { t } = useTranslation('authentication');
