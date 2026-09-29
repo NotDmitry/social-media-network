@@ -1,5 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { getSavedLanguageFromStorage, DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from '@/features/language/model';
 import enCommonTranslations from './locales/en/common.json';
 import enErrorPageTranslations from './locales/en/errorPage.json';
 import ruCommonTranslations from './locales/ru/common.json';
@@ -29,9 +30,9 @@ void i18n
     resources,
     ns: namespaces,
     defaultNS,
-    lng: 'ru',
-    fallbackLng: 'en',
-    supportedLngs: ['en', 'ru'],
+    lng: getSavedLanguageFromStorage(),
+    fallbackLng: DEFAULT_LANGUAGE,
+    supportedLngs: SUPPORTED_LANGUAGES,
     interpolation: {
       escapeValue: false
     }

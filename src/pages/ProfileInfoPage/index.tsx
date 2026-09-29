@@ -9,6 +9,7 @@ import { useAlert } from '@/shared/ui/Alert/useAlert';
 import Button from '@/shared/ui/Button';
 import ToggleSwitch from '@/shared/ui/ToggleSwitch';
 import './style.css';
+import LanguageSwitcher from '@/features/language/LanguageSwitcher';
 
 function ProfileInfoPage() {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -52,11 +53,14 @@ function ProfileInfoPage() {
       <div className='profile-info-side-container'>
         <section className='profile-info-section'>
           <h2 className='profile-info-title'>Preferences</h2>
-          <ToggleSwitch
-            label='Dark theme'
-            isToggled={theme === 'dark'}
-            onToggle={handleDarkThemeToggle}
-          />
+          <div className='profile-info-preferences'>
+            <ToggleSwitch
+              label='Dark theme'
+              isToggled={theme === 'dark'}
+              onToggle={handleDarkThemeToggle}
+            />
+            <LanguageSwitcher />
+          </div>
         </section>
         <section className='profile-info-section'>
           <h2 className='profile-info-title'>Actions</h2>
