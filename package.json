@@ -36,6 +36,7 @@
     "react-router": "^8.3.0",
     "recharts": "^3.10.1",
     "rxjs": "^7.8.2",
+    "styled-components": "^6.5.3",
     "zod": "^4.6.1",
     "zustand": "^5.0.15"
   },
