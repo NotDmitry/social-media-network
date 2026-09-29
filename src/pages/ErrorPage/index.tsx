@@ -1,10 +1,12 @@
 import { useLocation, useNavigate } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { errorRouteStateSchema, ROUTES } from '@/app/routes';
 import { ErrorIcon } from '@/shared/icons';
 import Button from '@/shared/ui/Button';
 import './style.css';
 
 function ErrorPage() {
+  const { t } = useTranslation('errorPage');
   const location = useLocation();
   const navigate = useNavigate();
   const errorRouteState = errorRouteStateSchema.safeParse(location.state);
@@ -29,13 +31,13 @@ function ErrorPage() {
       <ErrorIcon className='error-page-icon' />
       <div className='error-page-main-content'>
         <h1 className='error-page-title'>
-          <span>Oops...</span>
-          Something bad just happened
+          <span>{t(($) => $.title.prefix)}</span>
+          {t(($) => $.title.main)}
         </h1>
-        <p className='error-page-message'>Please try again or navigate Home</p>
+        <p className='error-page-message'>{t(($) => $.message)}</p>
         <div className='error-page-actions'>
-          <Button type='button' onClick={handleRetry}>Retry</Button>
-          <Button type='button' onClick={handleHomeNavigation}>Home</Button>
+          <Button type='button' onClick={handleRetry}>{t(($) => $.actions.retry)}</Button>
+          <Button type='button' onClick={handleHomeNavigation}>{t(($) => $.actions.home)}</Button>
         </div>
       </div>
     </div>
