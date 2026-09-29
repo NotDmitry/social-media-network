@@ -1,0 +1,11 @@
+{
+  "title": {
+    "prefix": "Oops...",
+    "main": "Something bad just happened"
+  },
+  "message": "Please try again or navigate Home",
+  "actions": {
+    "retry": "Retry",
+    "home": "Home"
+  }
+}
