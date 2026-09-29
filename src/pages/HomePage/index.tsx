@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import PostsFeed from '@/widgets/PostsFeed';
 import CreatePostModal from '@/features/CreatePostModal';
 import { useAuth } from '@/entities/auth/useAuth';
-import Button from '@/shared/ui/Button';
 import { getGroups } from '@/entities/Group/api/getGroups';
 import { getSuggestedUsers } from '@/entities/User/api/getSuggestedUsers';
 import { getUserDisplayName } from '@/entities/User/utilities';
@@ -12,6 +11,7 @@ import type { GroupModel } from '@/entities/Group/types';
 import type { SuggestedUserModel } from '@/entities/User/types';
 import CardsList from './CardsList';
 import type { CardData } from './CardsList';
+import QuickPostForm from './QuickPostForm';
 import './style.css';
 
 const MAX_POST_FILE_SIZE = 10 * 1024 * 1024;
@@ -54,7 +54,7 @@ function groupToCardDataView(group: GroupModel): CardData {
 function HomePage() {
   const { t } = useTranslation(['homePage', 'common']);
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
-  const [quickPostContent, setQuickPostContent] = useState('');
+  const [initialPostDescription, setInitialPostDescription] = useState('');
   const { currentUser } = useAuth();
 
   const {
@@ -79,7 +79,8 @@ function HomePage() {
     enabled: currentUser !== null,
   });
 
-  function handleCreatePostModalOpen() {
+  function handleQuickPostSubmit(description: string) {
+    setInitialPostDescription(description);
     setIsCreatePostModalOpen(true);
   }
 
@@ -87,48 +88,19 @@ function HomePage() {
     setIsCreatePostModalOpen(false);
   }
 
-  function handleQuickPostContentChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setQuickPostContent(event.target.value);
-  }
-
-  function handleQuickPostSubmit(event: React.SubmitEvent<HTMLFormElement>) {
-    event.preventDefault();
-    handleCreatePostModalOpen();
-  }
-
   return (
     <div className='home-page-container'>
       <h1 className='visually-hidden'>{t(($) => $.title)}</h1>
       <section className='home-page-content'>
         <h2 className='visually-hidden'>{t(($) => $.postsFeedTitle)}</h2>
-        {/* Create post input */}
         {currentUser &&
-          <div className='create-post-container'>
-            <img
-              className='avatar create-post-avatar'
-              src={currentUser.profileImage ?? undefined}
-              alt={t(($) => $.a11y.picture, { ns: 'common', name: currentUser.displayName })}
-              width={64}
-              height={64}
-            />
-            <form className='create-post-input-section' onSubmit={handleQuickPostSubmit}>
-              <input
-                className='create-post-input'
-                type='text'
-                name='post'
-                placeholder={t(($) => $.quickPost.input.post.placeholder)}
-                value={quickPostContent}
-                onChange={handleQuickPostContentChange}
-              />
-              <Button type='submit'>{t(($) => $.quickPost.button.default)}</Button>
-            </form>
-          </div>
+          <QuickPostForm currentUser={currentUser} onSubmit={handleQuickPostSubmit} />
         }
 
         {currentUser &&
           <CreatePostModal
             isOpen={isCreatePostModalOpen}
-            initialDescription={quickPostContent}
+            initialDescription={initialPostDescription}
             maxFileSize={MAX_POST_FILE_SIZE}
             acceptedFileTypes={ACCEPTED_POST_FILE_TYPES}
             onClose={handleCreatePostModalClose}
