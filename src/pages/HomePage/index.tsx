@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import PostsFeed from '@/widgets/PostsFeed';
-import CreatePostModal from '@/features/CreatePostModal';
+import CreatePost from '@/features/CreatePost';
 import { useAuth } from '@/entities/auth/useAuth';
 import { getGroups } from '@/entities/Group/api/getGroups';
 import { getSuggestedUsers } from '@/entities/User/api/getSuggestedUsers';
@@ -11,11 +10,8 @@ import type { GroupModel } from '@/entities/Group/types';
 import type { SuggestedUserModel } from '@/entities/User/types';
 import CardsList from './CardsList';
 import type { CardData } from './CardsList';
-import QuickPostForm from './QuickPostForm';
 import './style.css';
 
-const MAX_POST_FILE_SIZE = 10 * 1024 * 1024;
-const ACCEPTED_POST_FILE_TYPES = ['image/png', 'image/jpeg'];
 const MAX_SUGGESTED_USERS_COUNT = 5;
 const MAX_SUGGESTED_GROUPS_COUNT = 3;
 
@@ -53,8 +49,6 @@ function groupToCardDataView(group: GroupModel): CardData {
 
 function HomePage() {
   const { t } = useTranslation(['homePage', 'common']);
-  const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
-  const [initialPostDescription, setInitialPostDescription] = useState('');
   const { currentUser } = useAuth();
 
   const {
@@ -79,34 +73,14 @@ function HomePage() {
     enabled: currentUser !== null,
   });
 
-  function handleQuickPostSubmit(description: string) {
-    setInitialPostDescription(description);
-    setIsCreatePostModalOpen(true);
-  }
-
-  function handleCreatePostModalClose() {
-    setIsCreatePostModalOpen(false);
-  }
-
   return (
     <div className='home-page-container'>
       <h1 className='visually-hidden'>{t(($) => $.title)}</h1>
       <section className='home-page-content'>
         <h2 className='visually-hidden'>{t(($) => $.postsFeedTitle)}</h2>
         {currentUser &&
-          <QuickPostForm currentUser={currentUser} onSubmit={handleQuickPostSubmit} />
+          <CreatePost currentUser={currentUser} />
         }
-
-        {currentUser &&
-          <CreatePostModal
-            isOpen={isCreatePostModalOpen}
-            initialDescription={initialPostDescription}
-            maxFileSize={MAX_POST_FILE_SIZE}
-            acceptedFileTypes={ACCEPTED_POST_FILE_TYPES}
-            onClose={handleCreatePostModalClose}
-          />
-        }
-
         <PostsFeed />
       </section>
 
