@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createComment } from '@/entities/Comment/api/createComment';
+import type { CommentModel } from '@/entities/Comment/types';
 import { useAlert } from '@/shared/ui/Alert/useAlert';
 import Button from '@/shared/ui/Button';
 import TextareaField, { type TextareaFieldStatus } from '@/shared/ui/input/TextareaField';
@@ -40,10 +41,24 @@ function CreateCommentForm({ postId, onCommentCreated }: CreateCommentFormProps)
     isPending: isCommentCreationPending,
   } = useMutation({
     mutationFn: (text: string) => createComment({ postId, text }),
-    onSuccess: async () => {
+    onSuccess: async (newComment) => {
+      const updatedCommentsCache = queryClient.setQueryData<CommentModel[]>(
+        ['comments', postId],
+        (cachedComments) => {
+          if (cachedComments === undefined) {
+            return cachedComments;
+          }
+
+          return [...cachedComments, newComment];
+        }
+      );
+
+      if (updatedCommentsCache === undefined) {
+        await queryClient.invalidateQueries({ queryKey: ['comments', postId] });
+      }
+
       onCommentCreated?.();
       reset();
-      await queryClient.invalidateQueries({ queryKey: ['comments', postId] });
       showAlert(t(($) => $.comment.create.alert.success), 'success');
     },
     onError: (error) => {

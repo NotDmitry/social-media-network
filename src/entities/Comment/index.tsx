@@ -24,8 +24,14 @@ function Comment({ author, comment, canDelete }: CommentProps) {
     isPending: isCommentDeletionPending,
   } = useMutation({
     mutationFn: () => deleteComment(comment.id),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['comments', comment.postId] });
+    onSuccess: () => {
+      queryClient.setQueryData<CommentModel[]>(['comments', comment.postId], (cachedComments) => {
+        if (cachedComments === undefined) {
+          return cachedComments;
+        }
+
+        return cachedComments.filter((cachedComment) => cachedComment.id !== comment.id);
+      });
 
       showAlert(t(($) => $.comment.delete.alert.success), 'success');
     },
