@@ -1,14 +1,14 @@
 import './style.css';
 
 export interface StatsCardProps {
-  title?: string;
-  data?: string;
+  title: string;
+  data: string;
   trendText?: string;
 }
 
 function StatsCard({
-  title = 'Card title',
-  data = 'unspecified data',
+  title,
+  data,
   trendText,
 }: StatsCardProps) {
   return (

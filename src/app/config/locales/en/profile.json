@@ -42,11 +42,36 @@
   },
   "statistics": {
     "title": "Profile statistics page",
-    "cards": "Statistics cards view",
+    "cards": {
+      "title": "Statistics cards view",
+      "posts": "My Posts",
+      "likes": "My Likes",
+      "comments": "My Comments",
+      "trend": {
+        "noActivity": "No activity in the previous week",
+        "weekOverWeek": "week over week"
+      }
+    },
     "loading": "Loading statistics...",
     "error": "Unable to load statistics",
     "chartToggle": "Enable Chart view",
     "likes": "Likes",
-    "comments": "Comments"
+    "comments": "Comments",
+    "tables": {
+      "likes": {
+        "caption": "Likes for the last 10 days",
+        "columns": {
+          "date": "Date",
+          "likes": "Likes"
+        }
+      },
+      "comments": {
+        "caption": "Comments for the last year",
+        "columns": {
+          "month": "Month",
+          "comments": "Comments"
+        }
+      }
+    }
   }
 }

@@ -12,6 +12,7 @@ const displayedUnitsMsThresholds: Partial<Record<Intl.RelativeTimeFormatUnit, nu
 
 const relativeTimeFormatters = new Map<string, Intl.RelativeTimeFormat>();
 const dateTimeFormatters = new Map<string, Intl.DateTimeFormat>();
+const shortMonthFormatters = new Map<string, Intl.DateTimeFormat>();
 
 function getRelativeTimeFormatter(locale: string) {
   let relativeTimeFormatter = relativeTimeFormatters.get(locale);
@@ -44,13 +45,27 @@ function getDateTimeFormatter(locale: string) {
   return dateTimeFormatter;
 }
 
+function getShortMonthFormatter(locale: string) {
+  let shortMonthFormatter = shortMonthFormatters.get(locale);
+
+  if (shortMonthFormatter === undefined) {
+    shortMonthFormatter = new Intl.DateTimeFormat(locale, {
+      month: 'short',
+    });
+
+    shortMonthFormatters.set(locale, shortMonthFormatter);
+  }
+
+  return shortMonthFormatter;
+}
+
 export function getRelativeTimePresentationString(dateTimeString: string, locale: string) {
   const nowTimestamp = Date.now();
   const date = new Date(dateTimeString);
   const dateTimestamp = date.getTime();
 
   if (Number.isNaN(dateTimestamp)) {
-    return 'TIME_ERROR';
+    return null;
   }
 
   const dateDiff = dateTimestamp - nowTimestamp;
@@ -71,4 +86,8 @@ export function getRelativeTimePresentationString(dateTimeString: string, locale
   }
 
   return relativeTimeFormatter.format(0, 'second');
+}
+
+export function getShortMonthPresentationString(date: Date, locale: string) {
+  return getShortMonthFormatter(locale).format(date);
 }
