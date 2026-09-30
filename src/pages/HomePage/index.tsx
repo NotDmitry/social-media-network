@@ -30,6 +30,10 @@ function suggestedUserToCardDataView(user: SuggestedUserModel): CardData {
   };
 }
 
+function selectSuggestedUsers(users: SuggestedUserModel[]) {
+  return users.slice(0, MAX_SUGGESTED_USERS_COUNT).map(suggestedUserToCardDataView);
+}
+
 function groupToCardDataView(group: GroupModel): CardData {
   let membersCountView;
 
@@ -47,6 +51,10 @@ function groupToCardDataView(group: GroupModel): CardData {
   }
 }
 
+function selectSuggestedGroups(groups: GroupModel[]) {
+  return groups.slice(0, MAX_SUGGESTED_GROUPS_COUNT).map(groupToCardDataView)
+}
+
 function HomePage() {
   const { t } = useTranslation(['homePage', 'common']);
   const { currentUser } = useAuth();
@@ -58,7 +66,7 @@ function HomePage() {
   } = useQuery({
     queryKey: ['suggestedUsers'],
     queryFn: ({ signal }) => getSuggestedUsers(signal),
-    select: (users) => users.slice(0, MAX_SUGGESTED_USERS_COUNT).map(suggestedUserToCardDataView),
+    select: selectSuggestedUsers,
     enabled: currentUser !== null,
   });
 
@@ -69,7 +77,7 @@ function HomePage() {
   } = useQuery({
     queryKey: ['groups'],
     queryFn: ({ signal }) => getGroups(signal),
-    select: (groups) => groups.slice(0, MAX_SUGGESTED_GROUPS_COUNT).map(groupToCardDataView),
+    select: selectSuggestedGroups,
     enabled: currentUser !== null,
   });
 
