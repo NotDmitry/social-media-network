@@ -1,14 +1,23 @@
+import i18next from 'i18next';
 import { z } from 'zod';
 
 export const createPostFormSchema = z.object({
   title: z.string()
     .trim()
-    .nonempty('The post title can\'t be empty')
-    .max(80, 'Reached 80 characters limit'),
+    .nonempty({
+      error: () => i18next.t(($) => $.createPost.input.title.validation.required, { ns: 'posts' }),
+    })
+    .max(80, {
+      error: () => i18next.t(($) => $.createPost.input.title.validation.maxLength, { ns: 'posts' }),
+    }),
   description: z.string()
     .trim()
-    .nonempty('The post description can\'t be empty')
-    .max(500, 'Reached 500 characters limit'),
+    .nonempty({
+      error: () => i18next.t(($) => $.createPost.input.description.validation.required, { ns: 'posts' }),
+    })
+    .max(500, {
+      error: () => i18next.t(($) => $.createPost.input.description.validation.maxLength, { ns: 'posts' }),
+    }),
 });
 
 export type CreatePostFormFields = z.input<typeof createPostFormSchema>;

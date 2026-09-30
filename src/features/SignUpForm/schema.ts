@@ -1,19 +1,29 @@
+import i18next from 'i18next';
 import { z } from 'zod';
 import type { SignUpPayload } from '@/entities/auth/types';
 import { emailSchema, nameSchema } from '@/shared/schemas';
 
 const signUpPasswordSchema = z.string()
-  .nonempty('Password is required')
-  .min(8, 'Password minimum length: 8');
+  .nonempty({
+    error: () => i18next.t(($) => $.signUp.input.password.validation.required, { ns: 'authentication' }),
+  })
+  .min(8, {
+    error: () => i18next.t(($) => $.signUp.input.password.validation.minLength, { ns: 'authentication' }),
+  });
 
-const repeatPasswordSchema = z.string().nonempty('Password confirmation is required');
+const repeatPasswordSchema = z.string()
+  .nonempty({
+    error: () => i18next.t(($) => $.signUp.input.repeatPassword.validation.required, { ns: 'authentication' }),
+  });
 
 const fullNameSchema = nameSchema.refine(
   (fullName) => {
     const names = fullName.split(' ').filter((word) => word !== '');
     return names.length <= 2;
   },
-  'Fullname must contain at most 2 words'
+  {
+    error: () => i18next.t(($) => $.signUp.input.fullName.validation.maxWords, { ns: 'authentication' }),
+  }
 );
 
 export const signUpFormSchema = z.object({
@@ -22,7 +32,7 @@ export const signUpFormSchema = z.object({
   password: signUpPasswordSchema,
   repeatPassword: repeatPasswordSchema,
 }).refine(({ password, repeatPassword }) => password === repeatPassword, {
-  error: 'Passwords do not match',
+  error: () => i18next.t(($) => $.signUp.input.repeatPassword.validation.mismatch, { ns: 'authentication' }),
   path: ['repeatPassword'],
 }).transform(({ fullName, email, password }) => {
   const [firstName, secondName] = fullName.split(' ').filter((word) => word !== '');

@@ -14,6 +14,23 @@
     "show": "Show password",
     "hide": "Hide password"
   },
+  "input": {
+    "email": {
+      "validation": {
+        "invalid": "Invalid email address"
+      }
+    },
+    "name": {
+      "validation": {
+        "required": "The name can't be empty"
+      }
+    },
+    "username": {
+      "validation": {
+        "required": "The username can't be empty"
+      }
+    }
+  },
   "navigation": {
     "signUp": "Sign Up",
     "signIn": "Sign In",

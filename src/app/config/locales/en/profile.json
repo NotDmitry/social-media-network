@@ -29,7 +29,10 @@
       "description": {
         "label": "Description",
         "placeholder": "Write description here...",
-        "hint": "Max 200 characters"
+        "hint": "Max 200 characters",
+        "validation": {
+          "maxLength": "Reached 200 characters limit"
+        }
       }
     },
     "button": {
