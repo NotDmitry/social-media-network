@@ -15,7 +15,7 @@ interface CommentProps {
 }
 
 function Comment({ author, comment, canDelete }: CommentProps) {
-  const { t } = useTranslation(['posts', 'common']);
+  const { t, i18n } = useTranslation(['posts', 'common']);
   const queryClient = useQueryClient();
   const { showAlert } = useAlert();
 
@@ -64,7 +64,7 @@ function Comment({ author, comment, canDelete }: CommentProps) {
           className='comment-time'
           dateTime={comment.creationDate}
         >
-          {getRelativeTimePresentationString(comment.creationDate)}
+          {getRelativeTimePresentationString(comment.creationDate, i18n.resolvedLanguage ?? i18n.language)}
         </time>
         {canDelete &&
           <button

@@ -10,20 +10,43 @@ const displayedUnitsMsThresholds: Partial<Record<Intl.RelativeTimeFormatUnit, nu
   minute: MS_IN_MINUTE,
 };
 
-const relativeTimeFormatter = new Intl.RelativeTimeFormat('en', {
-  numeric: 'auto',
-  style: 'short',
-});
+const relativeTimeFormatters = new Map<string, Intl.RelativeTimeFormat>();
+const dateTimeFormatters = new Map<string, Intl.DateTimeFormat>();
 
-const dateTimeFormatter = new Intl.DateTimeFormat('en', {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-});
+function getRelativeTimeFormatter(locale: string) {
+  let relativeTimeFormatter = relativeTimeFormatters.get(locale);
 
-export function getRelativeTimePresentationString(dateTimeString: string) {
+  if (relativeTimeFormatter === undefined) {
+    relativeTimeFormatter = new Intl.RelativeTimeFormat(locale, {
+      numeric: 'auto',
+      style: 'short',
+    });
+
+    relativeTimeFormatters.set(locale, relativeTimeFormatter);
+  }
+
+  return relativeTimeFormatter;
+}
+
+function getDateTimeFormatter(locale: string) {
+  let dateTimeFormatter = dateTimeFormatters.get(locale);
+
+  if (dateTimeFormatter === undefined) {
+    dateTimeFormatter = new Intl.DateTimeFormat(locale, {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
+
+    dateTimeFormatters.set(locale, dateTimeFormatter);
+  }
+
+  return dateTimeFormatter;
+}
+
+export function getRelativeTimePresentationString(dateTimeString: string, locale: string) {
   const nowTimestamp = Date.now();
-  const date = new Date(dateTimeString)
+  const date = new Date(dateTimeString);
   const dateTimestamp = date.getTime();
 
   if (Number.isNaN(dateTimestamp)) {
@@ -34,8 +57,10 @@ export function getRelativeTimePresentationString(dateTimeString: string) {
   const absoluteDateDiff = Math.abs(dateDiff);
 
   if (absoluteDateDiff > MS_IN_WEEK) {
-    return dateTimeFormatter.format(date);
+    return getDateTimeFormatter(locale).format(date);
   }
+
+  const relativeTimeFormatter = getRelativeTimeFormatter(locale);
 
   for (const [unit, msThreshold] of Object.entries(displayedUnitsMsThresholds) as
     [Intl.RelativeTimeFormatUnit, number][]) {
@@ -45,5 +70,5 @@ export function getRelativeTimePresentationString(dateTimeString: string) {
     }
   }
 
-  return 'now';
+  return relativeTimeFormatter.format(0, 'second');
 }
