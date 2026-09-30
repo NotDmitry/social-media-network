@@ -15,9 +15,12 @@ function AppInitializer() {
   const { showAlert } = useAlert();
   const { theme } = useTheme();
 
-  const showSessionError = useEffectEvent((error: unknown) => {
-    const message = error instanceof Error ? error.message : t(($) => $.session.restoration.error);
-    showAlert(message, 'error');
+  const showSessionError = useEffectEvent(() => {
+    showAlert(t(($) => $.session.restoration.error), 'error');
+  });
+
+  const showSessionTokenError = useEffectEvent(() => {
+    showAlert(t(($) => $.session.restoration.tokenError), 'error');
   });
 
   useEffect(() => {
@@ -47,7 +50,8 @@ function AppInitializer() {
 
         if (error instanceof BackendResponseError && (error.status === 400 || error.status === 401)) {
           if (error.code !== 'REFRESH_TOKEN_REQUIRED') {
-            showSessionError(error);
+            showSessionTokenError();
+            console.error(error);
           }
 
           dispatch(sessionCleared());
@@ -55,7 +59,7 @@ function AppInitializer() {
           return;
         }
 
-        showSessionError(error);
+        showSessionError();
         console.error(error);
         dispatch(sessionUnavailable());
       }

@@ -9,7 +9,8 @@
     "link": "Sign up",
     "alert": {
       "success": "Sign in successful",
-      "error": "Sign in failed"
+      "error": "Sign in failed",
+      "invalidCredentials": "Incorrect email or password"
     },
     "button": {
       "default": "Sign In",
@@ -47,7 +48,8 @@
     "link": "Sign in",
     "alert": {
       "success": "Account successfully created",
-      "error": "Sign up failed"
+      "error": "Sign up failed",
+      "emailTaken": "An account with this email already exists"
     },
     "button": {
       "default": "Sign Up",
@@ -102,7 +104,8 @@
   "session": {
     "restoration": {
       "loading": "Session restoration",
-      "error": "Service unavailable"
+      "error": "Service unavailable",
+      "tokenError": "Session could not be restored. Please sign in again"
     },
     "permissions": {
       "loading": "Checking your permissions"

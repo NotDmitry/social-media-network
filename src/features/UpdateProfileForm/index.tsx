@@ -76,7 +76,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         setSelectedAvatar(null);
         showAlert(t(($) => $.update.alert.success), 'success');
       } catch (error) {
-        showAlert(error instanceof Error ? error.message : t(($) => $.update.alert.error), 'error');
+        showAlert(t(($) => $.update.alert.error), 'error');
         console.error(error);
         return;
       }

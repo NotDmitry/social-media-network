@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/entities/auth/useAuth';
 import type { SignUpPayload } from '@/entities/auth/types';
 import { useAlert } from '@/shared/ui/Alert/useAlert';
+import { BackendResponseError } from '@/shared/api/backendResponseError';
 import Button from '@/shared/ui/Button';
 import PasswordField from '@/shared/ui/input/PasswordField';
 import TextField, { type TextFieldStatus } from '@/shared/ui/input/TextField';
@@ -42,10 +43,13 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
 
   async function handleFormSubmit(signUpPayload: SignUpPayload) {
     try {
-      const { message } = await signUp(signUpPayload);
-      showAlert(message || t(($) => $.signUp.alert.success), 'success');
+      await signUp(signUpPayload);
+      showAlert(t(($) => $.signUp.alert.success), 'success');
     } catch (error) {
-      showAlert(error instanceof Error ? error.message : t(($) => $.signUp.alert.error), 'error');
+      const errorMessage = error instanceof BackendResponseError && error.code === 'EMAIL_TAKEN' ?
+        t(($) => $.signUp.alert.emailTaken) : t(($) => $.signUp.alert.error);
+
+      showAlert(errorMessage, 'error');
       console.error(error);
       return;
     }
