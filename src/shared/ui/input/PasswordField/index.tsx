@@ -16,7 +16,7 @@ import './style.css';
 export type PasswordFieldStatus = 'default' | 'valid' | 'invalid';
 
 interface PasswordFieldProps extends Omit<ComponentProps<'input'>, 'type'> {
-  label?: string;
+  label: string;
   labelIcon?: ReactNode;
   status?: PasswordFieldStatus;
   showVisibilityToggle?: boolean;
@@ -26,7 +26,7 @@ interface PasswordFieldProps extends Omit<ComponentProps<'input'>, 'type'> {
 }
 
 function PasswordField({
-  label = 'Password',
+  label,
   labelIcon = <KeyboardIcon />,
   showVisibilityToggle = true,
   status = 'default',
@@ -36,7 +36,6 @@ function PasswordField({
   className = '',
   disabled,
   id,
-  placeholder = 'Enter password...',
   ...restProps
 }: PasswordFieldProps) {
   const { t } = useTranslation('common');
@@ -91,7 +90,6 @@ function PasswordField({
           className={`input-field password-input-field ${isInvalid ? 'input-field_invalid' : ''} ${className}`}
           disabled={disabled}
           id={passwordInputId}
-          placeholder={placeholder}
         />
         {showVisibilityToggle &&
           <button

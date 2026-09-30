@@ -23,7 +23,6 @@ function TextareaField({
   disabled,
   id,
   maxLength = 200,
-  placeholder = 'Write description here...',
   rows = 1,
   ...restProps
 }: TextareaFieldProps) {
@@ -58,7 +57,6 @@ function TextareaField({
         disabled={disabled}
         id={textareaId}
         maxLength={maxLength}
-        placeholder={placeholder}
         rows={rows}
       />
 

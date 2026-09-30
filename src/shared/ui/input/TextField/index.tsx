@@ -6,7 +6,7 @@ import InputFieldTooltip from '../InputFieldTooltip';
 export type TextFieldStatus = 'default' | 'valid' | 'invalid';
 
 interface TextFieldProps extends Omit<ComponentProps<'input'>, 'type'> {
-  label?: string;
+  label: string;
   labelIcon?: ReactNode;
   status?: TextFieldStatus;
   errorMessage?: string;
@@ -15,7 +15,7 @@ interface TextFieldProps extends Omit<ComponentProps<'input'>, 'type'> {
 }
 
 function TextField({
-  label = 'Text',
+  label,
   labelIcon = <PencilIcon />,
   status = 'default',
   errorMessage,
@@ -24,7 +24,6 @@ function TextField({
   className = '',
   disabled,
   id,
-  placeholder = 'Enter some text...',
   ...restProps
 }: TextFieldProps) {
   const privateId = useId();
@@ -62,7 +61,6 @@ function TextField({
         className={`input-field ${isInvalid ? 'input-field_invalid' : ''} ${className}`}
         disabled={disabled}
         id={textInputId}
-        placeholder={placeholder}
       />
 
       {!disabled && validationMessage &&
