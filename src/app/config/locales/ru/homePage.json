@@ -23,7 +23,11 @@
       "title": "Сообщества, которые могут вам понравиться",
       "loading": "Загрузка...",
       "error": "Не удалось загрузить рекомендуемые сообщества",
-      "empty": "Нет рекомендуемых сообществ"
+      "empty": "Нет рекомендуемых сообществ",
+      "members_one": "{{count, number(notation: compact; compactDisplay: short; maximumFractionDigits: 1)}} участник",
+      "members_few": "{{count, number(notation: compact; compactDisplay: short; maximumFractionDigits: 1)}} участника",
+      "members_many": "{{count, number(notation: compact; compactDisplay: short; maximumFractionDigits: 1)}} участников",
+      "members_other": "{{count, number(notation: compact; compactDisplay: short; maximumFractionDigits: 1)}} участников"
     }
   }
 }

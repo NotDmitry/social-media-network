@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import PostsFeed from '@/widgets/PostsFeed';
@@ -15,12 +16,6 @@ import './style.css';
 const MAX_SUGGESTED_USERS_COUNT = 5;
 const MAX_SUGGESTED_GROUPS_COUNT = 3;
 
-const numberFormatter = new Intl.NumberFormat('en-GB', {
-  notation: 'compact',
-  compactDisplay: 'short',
-  maximumFractionDigits: 1,
-});
-
 function suggestedUserToCardDataView(user: SuggestedUserModel): CardData {
   return {
     id: user.id,
@@ -34,15 +29,7 @@ function selectSuggestedUsers(users: SuggestedUserModel[]) {
   return users.slice(0, MAX_SUGGESTED_USERS_COUNT).map(suggestedUserToCardDataView);
 }
 
-function groupToCardDataView(group: GroupModel): CardData {
-  let membersCountView;
-
-  if (group.membersCount === 1) {
-    membersCountView = '1 member';
-  } else {
-    membersCountView = `${numberFormatter.format(group.membersCount).toLowerCase()} members`;
-  }
-
+function groupToCardDataView(group: GroupModel, membersCountView: string): CardData {
   return {
     id: group.id,
     pictureUrl: group.photo,
@@ -51,13 +38,17 @@ function groupToCardDataView(group: GroupModel): CardData {
   }
 }
 
-function selectSuggestedGroups(groups: GroupModel[]) {
-  return groups.slice(0, MAX_SUGGESTED_GROUPS_COUNT).map(groupToCardDataView)
-}
-
 function HomePage() {
   const { t } = useTranslation(['homePage', 'common']);
   const { currentUser } = useAuth();
+
+  const selectSuggestedGroups = useCallback((groups: GroupModel[]) => {
+    return groups.slice(0, MAX_SUGGESTED_GROUPS_COUNT)
+      .map((group) => groupToCardDataView(
+        group,
+        t(($) => $.suggestions.groups.members, { count: group.membersCount })
+      ));
+  }, [t]);
 
   const {
     data: suggestedUsers,

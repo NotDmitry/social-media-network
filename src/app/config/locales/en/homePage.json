@@ -23,7 +23,9 @@
       "title": "Communities you might like",
       "loading": "Loading...",
       "error": "Cannot load suggested groups",
-      "empty": "No suggested groups"
+      "empty": "No suggested groups",
+      "members_one": "{{count, number(notation: compact; compactDisplay: short; maximumFractionDigits: 1)}} member",
+      "members_other": "{{count, number(notation: compact; compactDisplay: short; maximumFractionDigits: 1)}} members"
     }
   }
 }
