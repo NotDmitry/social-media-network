@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteComment } from '@/entities/Comment/api/deleteComment';
+import { getProfileImageFallbackUrl } from '@/entities/User/utilities';
 import type { UserView } from '@/entities/User/types';
 import type { CommentModel } from '@/entities/Comment/types';
 import { TrashIcon } from '@/shared/icons';
@@ -51,7 +52,7 @@ function Comment({ author, comment, canDelete }: CommentProps) {
       <header className='comment-header'>
         <img
           className='avatar comment-avatar'
-          src={author?.profileImage ?? undefined}
+          src={getProfileImageFallbackUrl(canDelete, author?.profileImage)}
           alt={t(($) => $.a11y.profilePicture, {
             ns: 'common',
             name: author?.displayName ?? t(($) => $.comment.unknownAuthor),

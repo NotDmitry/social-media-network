@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import AppBar from '@mui/material/AppBar';
 import { ROUTES } from '@/app/routes';
 import { useAuth } from '@/entities/auth/useAuth';
+import { getProfileImageFallbackUrl } from '@/entities/User/utilities';
 import Logo from '@/shared/ui/Logo';
 import BurgerIcon from '@/shared/ui/BurgerIcon';
 import IconButton from '@/shared/ui/IconButton';
@@ -52,7 +53,7 @@ function Header({ variant }: HeaderProps) {
             <UserAvatar
               className='header-avatar'
               displayName={currentUser.displayName}
-              photoUrl={currentUser.profileImage}
+              photoUrl={getProfileImageFallbackUrl(true, currentUser.profileImage)}
               alt={t(($) => $.a11y.profilePicture, { name: currentUser.displayName })}
             />
             <span className='header-profile-name'>{currentUser.displayName}</span>

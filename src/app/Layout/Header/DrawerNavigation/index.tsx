@@ -8,6 +8,7 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { ROUTES } from '@/app/routes';
 import type { HeaderVariant } from '@/app/Layout/Header/types';
 import { useAuth } from '@/entities/auth/useAuth';
+import { getProfileImageFallbackUrl } from '@/entities/User/utilities';
 import Logo from '@/shared/ui/Logo';
 import UserAvatar from '@/shared/ui/UserAvatar';
 import './style.css';
@@ -63,7 +64,7 @@ function DrawerNavigation({ variant, isOpen, onOpen, onClose }: DrawerNavigation
           <UserAvatar
             className='drawer-navigation-avatar'
             displayName={currentUser.displayName}
-            photoUrl={currentUser.profileImage}
+            photoUrl={getProfileImageFallbackUrl(true, currentUser.profileImage)}
             alt={t(($) => $.a11y.profilePicture, { name: currentUser.displayName })}
           />
         }

@@ -5,6 +5,7 @@ import PostsFeed from '@/widgets/PostsFeed';
 import CreatePost from '@/features/CreatePost';
 import { useAuth } from '@/entities/auth/useAuth';
 import { getGroups } from '@/entities/Group/api/getGroups';
+import { getProfileImageFallbackUrl } from '@/entities/User/utilities';
 import { getSuggestedUsers } from '@/entities/User/api/getSuggestedUsers';
 import { getUserDisplayName } from '@/entities/User/utilities';
 import type { GroupModel } from '@/entities/Group/types';
@@ -19,7 +20,7 @@ const MAX_SUGGESTED_GROUPS_COUNT = 3;
 function suggestedUserToCardDataView(user: SuggestedUserModel): CardData {
   return {
     id: user.id,
-    pictureUrl: user.photo,
+    pictureUrl: getProfileImageFallbackUrl(false, user.photo),
     title: getUserDisplayName(user),
     subtitle: user.username.startsWith('@') ? user.username : `@${user.username}`,
   };
