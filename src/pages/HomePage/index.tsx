@@ -10,6 +10,7 @@ import { getSuggestedUsers } from '@/entities/User/api/getSuggestedUsers';
 import { getUserDisplayName } from '@/entities/User/utilities';
 import type { GroupModel } from '@/entities/Group/types';
 import type { SuggestedUserModel } from '@/entities/User/types';
+import defaultGroup from '@/assets/images/test_community_bcs.jpg';
 import CardsList from './CardsList';
 import type { CardData } from './CardsList';
 import './style.css';
@@ -33,7 +34,7 @@ function selectSuggestedUsers(users: SuggestedUserModel[]) {
 function groupToCardDataView(group: GroupModel, membersCountView: string): CardData {
   return {
     id: group.id,
-    pictureUrl: group.photo,
+    pictureUrl: defaultGroup,
     title: group.title,
     subtitle: membersCountView,
   }

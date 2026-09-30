@@ -16,6 +16,7 @@ import { useAlert } from '@/shared/ui/Alert/useAlert';
 import Spinner from '@/shared/ui/Spinner';
 import { HeartIcon, CommentIcon, ChevronDownIcon } from '@/shared/icons';
 import { getRelativeTimePresentationString } from '@/shared/utilities/time';
+import defaultPost from '@/assets/images/test_post_3.jpg';
 import type { PostModel, PostsPage } from './types';
 import './style.css';
 
@@ -174,7 +175,7 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
       {post.image &&
         <img
           className='post-image'
-          src={post.image}
+          src={defaultPost}
           width={500}
           alt={t(($) => $.post.imageAlt, { name: author.displayName })}
         />
