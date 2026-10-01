@@ -1,6 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Fab from '@mui/material/Fab';
-import useScrollTrigger from '@mui/material/useScrollTrigger';
 import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
 import Post from '@/entities/Post';
 import { useAuth } from '@/entities/auth/useAuth';
@@ -21,7 +20,9 @@ function getLikedPostIdsSet(likedPostIds: number[]) {
 
 function PostsFeed() {
   const { currentUser, isUserAuthenticated } = useAuth();
-  const isPageScrolled = useScrollTrigger({ disableHysteresis: true });
+  const [isFeedScrolled, setIsFeedScrolled] = useState<boolean>(false);
+  const sentinelRef = useRef<HTMLParagraphElement>(null);
+  const postsFeedRef = useRef<HTMLDivElement>(null);
 
   const {
     data,
@@ -122,12 +123,25 @@ function PostsFeed() {
     postsFeedStatusMessage = 'Unable to fetch your likes';
   }
 
-  const sentinelRef = useRef<HTMLParagraphElement>(null);
-  const postsFeedRef = useRef<HTMLDivElement>(null);
-
   function handleScrollToPostsFeedStart() {
     postsFeedRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
+
+  useEffect(() => {
+    const handlePostsFeedScroll = () => {
+      if (postsFeedRef.current === null) {
+        return;
+      }
+
+      setIsFeedScrolled(postsFeedRef.current.getBoundingClientRect().top < 0);
+    }
+
+    window.addEventListener('scroll', handlePostsFeedScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handlePostsFeedScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -190,7 +204,7 @@ function PostsFeed() {
         {isFetchingNextPage && <Spinner label='Loading more posts...' />}
       </p>
 
-      {isPageScrolled &&
+      {isFeedScrolled &&
         <Fab
           className='posts-feed-scroll-button'
           size='small'
