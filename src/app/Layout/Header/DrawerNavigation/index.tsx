@@ -34,9 +34,7 @@ function DrawerNavigation({ variant, isOpen, onOpen, onClose }: DrawerNavigation
   }, [isMobile, isOpen]);
 
   useEffect(() => {
-    return () => {
-      closeDrawer();
-    }
+    closeDrawer();
   }, [currentLocation]);
 
   return (
@@ -80,7 +78,6 @@ function DrawerNavigation({ variant, isOpen, onOpen, onClose }: DrawerNavigation
               className='drawer-navigation-link'
               component={NavLink}
               to={ROUTES.signUp}
-              onClick={onClose}
             >
               Sign up
             </ListItemButton>
@@ -88,7 +85,6 @@ function DrawerNavigation({ variant, isOpen, onOpen, onClose }: DrawerNavigation
               className='drawer-navigation-link'
               component={NavLink}
               to={ROUTES.signIn}
-              onClick={onClose}
             >
               Sign in
             </ListItemButton>
@@ -101,7 +97,6 @@ function DrawerNavigation({ variant, isOpen, onOpen, onClose }: DrawerNavigation
               component={NavLink}
               to={ROUTES.profile}
               end
-              onClick={onClose}
             >
               Profile info
             </ListItemButton>
@@ -109,7 +104,6 @@ function DrawerNavigation({ variant, isOpen, onOpen, onClose }: DrawerNavigation
               className='drawer-navigation-link'
               component={NavLink}
               to={ROUTES.statistics}
-              onClick={onClose}
             >
               Statistics
             </ListItemButton>
@@ -119,7 +113,6 @@ function DrawerNavigation({ variant, isOpen, onOpen, onClose }: DrawerNavigation
           className='drawer-navigation-link'
           component={NavLink}
           to={ROUTES.home}
-          onClick={onClose}
         >
           Home
         </ListItemButton>
