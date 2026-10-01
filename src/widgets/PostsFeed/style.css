@@ -19,12 +19,6 @@
   position: fixed;
   right: 12px;
   bottom: 12px;
-  background-color: var(--component-fill-positive);
-  color: var(--icon-light-fixed);
-
-  &:hover {
-    background-color: var(--component-hover-primary);
-  }
 }
 
 .posts-feed-scroll-icon {

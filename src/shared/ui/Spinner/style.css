@@ -6,10 +6,6 @@
   padding: 6px;
 }
 
-.spinner-progress {
-  color: var(--component-stroke-primary);
-}
-
 .spinner-label {
   color: var(--component-text-dark);
   font-family: var(--second-family);

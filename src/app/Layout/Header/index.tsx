@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import AppBar from '@mui/material/AppBar';
-import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
 import { ROUTES } from '@/app/routes';
 import { useAuth } from '@/entities/auth/useAuth';
 import Logo from '@/shared/ui/Logo';
 import BurgerIcon from '@/shared/ui/BurgerIcon';
+import IconButton from '@/shared/ui/IconButton';
+import UserAvatar from '@/shared/ui/UserAvatar';
 import DrawerNavigation from './DrawerNavigation';
 import type { HeaderVariant } from './types';
 import './style.css';
@@ -47,13 +47,12 @@ function Header({ variant }: HeaderProps) {
 
         {variant === 'user' && currentUser &&
           <Link className='link header-profile-link' to={ROUTES.profile}>
-            <Avatar
-              className='avatar header-avatar'
-              src={currentUser.profileImage ?? undefined}
+            <UserAvatar
+              className='header-avatar'
+              displayName={currentUser.displayName}
+              photoUrl={currentUser.profileImage}
               alt={`Profile picture of ${currentUser.displayName}`}
-            >
-              {currentUser.displayName.charAt(0)}
-            </Avatar>
+            />
             <span className='header-profile-name'>{currentUser.displayName}</span>
           </Link>
         }

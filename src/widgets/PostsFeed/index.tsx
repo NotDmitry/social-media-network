@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import Fab from '@mui/material/Fab';
 import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
 import Post from '@/entities/Post';
 import { useAuth } from '@/entities/auth/useAuth';
@@ -8,6 +7,7 @@ import { getPosts } from '@/entities/Post/api/getPosts';
 import { getUserById } from '@/entities/User/api/getUserById';
 import { toUserView } from '@/entities/User/utilities';
 import type { UserView } from '@/entities/User/types';
+import FloatingActionButton from '@/shared/ui/FloatingActionButton';
 import Spinner from '@/shared/ui/Spinner';
 import { ChevronDownIcon } from '@/shared/icons';
 import './style.css';
@@ -205,14 +205,14 @@ function PostsFeed() {
       </p>
 
       {isFeedScrolled &&
-        <Fab
+        <FloatingActionButton
           className='posts-feed-scroll-button'
           size='small'
           aria-label={'Return to the Feed\'s start'}
           onClick={handleScrollToPostsFeedStart}
         >
           <ChevronDownIcon className='posts-feed-scroll-icon' />
-        </Fab>
+        </FloatingActionButton>
       }
     </div>
   );

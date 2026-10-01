@@ -8,7 +8,7 @@ interface SpinnerProps {
 function Spinner({ label }: SpinnerProps) {
   return (
     <span className='spinner-wrapper'>
-      <CircularProgress className='spinner-progress' />
+      <CircularProgress />
       {label &&
         <span className='spinner-label'>{label}</span>
       }

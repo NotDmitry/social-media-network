@@ -1,13 +1,12 @@
 import { useId, useState } from 'react';
 import type { ComponentProps, ReactNode } from 'react';
-import Tooltip from '@mui/material/Tooltip';
+import InputFieldTooltip from '../InputFieldTooltip';
 import {
   CheckIcon,
   CrossIcon,
   EyeCrossedIcon,
   EyeIcon,
   InfoIcon,
-  InfoTooltipIcon,
   KeyboardIcon,
   ThumbUpIcon,
 } from '@/shared/icons';
@@ -111,11 +110,7 @@ function PasswordField({
             <span className='input-field-validation-text'>{validationMessage}</span>
           </div>
           {tooltipMessage && isInvalid &&
-            <Tooltip title={tooltipMessage}>
-              <span className='input-field-tooltip-icon'>
-                <InfoTooltipIcon />
-              </span>
-            </Tooltip>
+            <InputFieldTooltip title={tooltipMessage} />
           }
         </div>
       }

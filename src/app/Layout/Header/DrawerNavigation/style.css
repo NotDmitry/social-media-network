@@ -20,11 +20,6 @@
 }
 
 .drawer-navigation-avatar {
-  width: 24px;
-  height: 24px;
-  background-color: var(--color-brand-primary-500);
-  color: var(--color-neutral-white);
-  font-family: var(--font-family);
   font-size: 0.75rem;
 }
 

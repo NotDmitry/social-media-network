@@ -1,7 +1,6 @@
 import { useEffect, useEffectEvent } from 'react';
 import { useLocation, NavLink } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import Avatar from '@mui/material/Avatar';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -9,6 +8,7 @@ import { ROUTES } from '@/app/routes';
 import type { HeaderVariant } from '@/app/Layout/Header/types';
 import { useAuth } from '@/entities/auth/useAuth';
 import Logo from '@/shared/ui/Logo';
+import UserAvatar from '@/shared/ui/UserAvatar';
 import './style.css';
 
 type DrawerVariant = Exclude<HeaderVariant, 'default'>;
@@ -58,13 +58,12 @@ function DrawerNavigation({ variant, isOpen, onOpen, onClose }: DrawerNavigation
       <header className='drawer-navigation-header'>
         <Logo />
         {variant === 'user' && currentUser &&
-          <Avatar
+          <UserAvatar
             className='drawer-navigation-avatar'
-            src={currentUser.profileImage ?? undefined}
+            displayName={currentUser.displayName}
+            photoUrl={currentUser.profileImage}
             alt={`Profile picture of ${currentUser.displayName}`}
-          >
-            {currentUser.displayName.charAt(0)}
-          </Avatar>
+          />
         }
       </header>
       <List

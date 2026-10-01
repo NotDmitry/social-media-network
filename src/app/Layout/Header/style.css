@@ -15,11 +15,6 @@
 }
 
 .header-avatar {
-  width: 24px;
-  height: 24px;
-  background-color: var(--color-brand-primary-500);
-  color: var(--color-neutral-white);
-  font-family: var(--font-family);
   font-size: 0.875rem;
 }
 
@@ -35,12 +30,6 @@
   display: none;
   padding: 0;
   border-radius: 0;
-  color: var(--icon-dark);
-  transition: all 0.25s ease-in-out;
-
-  &:hover {
-    background-color: var(--component-fill-primary-soft);
-  }
 }
 
 @media screen and (width < 480px) {
