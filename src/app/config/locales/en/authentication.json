@@ -1,0 +1,97 @@
+{
+  "signIn": {
+    "title": "Sign in into an account",
+    "description": {
+      "main": "Enter your email and password",
+      "postfix": "to sign in into this app"
+    },
+    "prompt": "Forgot to create an account?",
+    "link": "Sign up",
+    "alert": {
+      "success": "Sign in successful",
+      "error": "Sign in failed"
+    },
+    "button": {
+      "default": "Sign In",
+      "pending": "Signing In..."
+    },
+    "input": {
+      "email": {
+        "label": "Email",
+        "placeholder": "Enter email",
+        "tooltip": "Valid email example: example@gmail.com"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter password",
+        "tooltip": "Enter your account's password"
+      }
+    }
+  },
+  "signUp": {
+    "title": "Create an account",
+    "description": {
+      "main": "Enter your profile credentials",
+      "postfix": "to sign up for this app"
+    },
+    "agreement": {
+      "prefix": "By clicking continue, you agree to our",
+      "terms": "Terms of Service",
+      "conjunction": "and",
+      "policy": "Privacy Policy"
+    },
+    "prompt": "Already have an account?",
+    "link": "Sign in",
+    "alert": {
+      "success": "Account successfully created",
+      "error": "Sign up failed"
+    },
+    "button": {
+      "default": "Sign Up",
+      "pending": "Signing Up..."
+    },
+    "input": {
+      "fullName": {
+        "label": "Full name",
+        "placeholder": "Enter your full name",
+        "tooltip": "Enter your first name (required) and second or family name (optional)"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Enter email",
+        "tooltip": "Valid email example: example@gmail.com"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter password",
+        "tooltip": "Strong password is at least 8 characters long",
+        "info": "Your password is correct"
+      },
+      "repeatPassword": {
+        "label": "Repeat password",
+        "placeholder": "Enter password again",
+        "tooltip": "Repeat previously entered password",
+        "info": "Passwords match"
+      }
+    }
+  },
+  "signOut": {
+    "alert": {
+      "success": "Successfully logged out",
+      "warning": "Server session error. Logout succeed locally"
+    },
+    "button": {
+      "default": "Logout",
+      "pending": "Logging out..."
+    }
+  },
+  "session": {
+    "restoration": {
+      "loading": "Session restoration",
+      "error": "Service unavailable"
+    },
+    "permissions": {
+      "loading": "Checking your permissions"
+    }
+  }
+}

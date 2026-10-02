@@ -1,0 +1,30 @@
+{
+  "languages": {
+    "label": "Language",
+    "en": "English",
+    "ru": "Русский"
+  },
+  "pageNotFound": "Page not found",
+  "data": {
+    "loading": "Loading...",
+    "error": "Unable to load data",
+    "empty": "No data yet"
+  },
+  "passwordVisibility": {
+    "show": "Show password",
+    "hide": "Hide password"
+  },
+  "navigation": {
+    "signUp": "Sign Up",
+    "signIn": "Sign In",
+    "profileInfo": "Profile info",
+    "statistics": "Statistics",
+    "home": "Home"
+  },
+  "a11y": {
+    "openMobileNavigation": "Open mobile navigation",
+    "profilePicture": "Profile picture of {{name}}",
+    "picture": "Picture of {{name}}",
+    "closeNotification": "Close notification"
+  }
+}

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/entities/auth/useAuth';
@@ -22,6 +23,7 @@ interface SignUpFormProps {
 }
 
 function SignUpForm({ onSubmit }: SignUpFormProps) {
+  const { t } = useTranslation('authentication');
   const { signUp } = useAuth();
   const { showAlert } = useAlert();
 
@@ -41,9 +43,9 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
   async function handleFormSubmit(signUpPayload: SignUpPayload) {
     try {
       const { message } = await signUp(signUpPayload);
-      showAlert(message || 'Account successfully created', 'success');
+      showAlert(message || t(($) => $.signUp.alert.success), 'success');
     } catch (error) {
-      showAlert(error instanceof Error ? error.message : 'Sign up failed', 'error');
+      showAlert(error instanceof Error ? error.message : t(($) => $.signUp.alert.error), 'error');
       console.error(error);
       return;
     }
@@ -64,57 +66,59 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
       <fieldset className='auth-form-fieldset'>
         <TextField
           {...register('fullName')}
-          label='Full name'
+          label={t(($) => $.signUp.input.fullName.label)}
           labelIcon={<PersonIcon />}
           autoComplete='name'
-          placeholder='Enter your full name'
+          placeholder={t(($) => $.signUp.input.fullName.placeholder)}
           status={getFieldStatus(Boolean(errors.fullName))}
           errorMessage={errors.fullName?.message}
-          tooltipMessage='Enter your first name (required) and second or family name (optional)'
+          tooltipMessage={t(($) => $.signUp.input.fullName.tooltip)}
           type='text'
           disabled={isSubmitting}
         />
         <TextField
           {...register('email')}
-          label='Email'
+          label={t(($) => $.signUp.input.email.label)}
           labelIcon={<EnvelopeIcon />}
           autoComplete='email'
-          placeholder='Enter email'
+          placeholder={t(($) => $.signUp.input.email.placeholder)}
           status={getFieldStatus(Boolean(errors.email))}
           errorMessage={errors.email?.message}
-          tooltipMessage='Valid email example: example@gmail.com'
+          tooltipMessage={t(($) => $.signUp.input.email.tooltip)}
           type='email'
           disabled={isSubmitting}
         />
         <PasswordField
           {...register('password', { deps: 'repeatPassword' })}
-          label='Password'
+          label={t(($) => $.signUp.input.password.label)}
           labelIcon={<EyeIcon />}
           autoComplete='new-password'
-          placeholder='Enter password'
+          placeholder={t(($) => $.signUp.input.password.placeholder)}
           status={getFieldStatus(Boolean(errors.password))}
           errorMessage={errors.password?.message}
-          tooltipMessage='Strong password is at least 8 characters long'
-          infoMessage='Your password is correct'
+          tooltipMessage={t(($) => $.signUp.input.password.tooltip)}
+          infoMessage={t(($) => $.signUp.input.password.info)}
           showVisibilityToggle={true}
           disabled={isSubmitting}
         />
         <PasswordField
           {...register('repeatPassword')}
-          label='Repeat password'
+          label={t(($) => $.signUp.input.repeatPassword.label)}
           labelIcon={<EyeIcon />}
           autoComplete='new-password'
-          placeholder='Enter password again'
+          placeholder={t(($) => $.signUp.input.repeatPassword.placeholder)}
           status={getFieldStatus(Boolean(errors.repeatPassword))}
           errorMessage={errors.repeatPassword?.message}
-          tooltipMessage='Repeat previously entered password'
-          infoMessage='Passwords match'
+          tooltipMessage={t(($) => $.signUp.input.repeatPassword.tooltip)}
+          infoMessage={t(($) => $.signUp.input.repeatPassword.info)}
           showVisibilityToggle={true}
           disabled={isSubmitting}
         />
       </fieldset>
       <Button type='submit' disabled={isSubmitting}>
-        {isSubmitting ? 'Signing Up...' : 'Sign Up'}
+        {isSubmitting
+          ? t(($) => $.signUp.button.pending)
+          : t(($) => $.signUp.button.default)}
       </Button>
     </form>
   );

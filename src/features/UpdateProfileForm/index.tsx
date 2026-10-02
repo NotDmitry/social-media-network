@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/entities/auth/useAuth';
@@ -23,6 +24,7 @@ interface SelectedAvatar {
 }
 
 function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
+  const { t } = useTranslation(['profile', 'common']);
   const [selectedAvatar, setSelectedAvatar] = useState<SelectedAvatar | null>(null);
   const [selectedAvatarErrorMessage, setSelectedAvatarErrorMessage] = useState<string | null>(null);
 
@@ -72,9 +74,9 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         await updateProfile(changedFields);
 
         setSelectedAvatar(null);
-        showAlert('Profile update successful', 'success');
+        showAlert(t(($) => $.update.alert.success), 'success');
       } catch (error) {
-        showAlert(error instanceof Error ? error.message : 'Profile update failed', 'error');
+        showAlert(error instanceof Error ? error.message : t(($) => $.update.alert.error), 'error');
         console.error(error);
         return;
       }
@@ -97,7 +99,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
     if (!file.type.startsWith('image/')) {
       fileInput.value = '';
       setSelectedAvatar(null);
-      setSelectedAvatarErrorMessage('Non-image file detected');
+      setSelectedAvatarErrorMessage(t(($) => $.update.input.avatar.error));
 
       return;
     }
@@ -140,7 +142,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
         <img
           className='avatar change-avatar-photo'
           src={selectedAvatar?.url ?? user.profileImage ?? undefined}
-          alt={`Profile picture of ${user.displayName}`}
+          alt={t(($) => $.a11y.profilePicture, { ns: 'common', name: user.displayName })}
           width={64}
           height={64}
         />
@@ -155,7 +157,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
               onChange={handleAvatarChange}
               disabled={isSubmitting}
             />
-            Change profile photo
+            {t(($) => $.update.input.avatar.label)}
           </label>
           {selectedAvatarErrorMessage &&
             <p className='change-avatar-error'>
@@ -166,42 +168,44 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
       </div>
       <TextField
         {...register('username')}
-        label='Username'
+        label={t(($) => $.update.input.username.label)}
         labelIcon={<PersonIcon />}
         autoComplete='username'
-        placeholder='@username123'
+        placeholder={t(($) => $.update.input.username.placeholder)}
         status={getTextFieldStatus(Boolean(errors.username))}
         errorMessage={errors.username?.message}
-        tooltipMessage='This will be your nickname'
+        tooltipMessage={t(($) => $.update.input.username.tooltip)}
         type='text'
         disabled={isSubmitting}
       />
       <TextField
         {...register('email')}
-        label='Email'
+        label={t(($) => $.update.input.email.label)}
         labelIcon={<EnvelopeIcon />}
         autoComplete='email'
-        placeholder='email@domain.com'
+        placeholder={t(($) => $.update.input.email.placeholder)}
         status={getTextFieldStatus(Boolean(errors.email))}
         errorMessage={errors.email?.message}
-        tooltipMessage='Valid email example: example@gmail.com'
+        tooltipMessage={t(($) => $.update.input.email.tooltip)}
         type='email'
         disabled={isSubmitting}
       />
       <TextareaField
         {...register('description')}
-        label='Description'
+        label={t(($) => $.update.input.description.label)}
         labelIcon={<PencilIcon />}
-        placeholder='Write description here...'
+        placeholder={t(($) => $.update.input.description.placeholder)}
         status={getTextareaFieldStatus(Boolean(errors.description))}
         errorMessage={errors.description?.message}
-        hintMessage='Max 200 characters'
+        hintMessage={t(($) => $.update.input.description.hint)}
         maxLength={201}
         rows={1}
         disabled={isSubmitting}
       />
       <Button type='submit' disabled={isSubmitting}>
-        {isSubmitting ? 'Saving...' : 'Save Profile Changes'}
+        {isSubmitting
+          ? t(($) => $.update.button.pending)
+          : t(($) => $.update.button.default)}
       </Button>
     </form>
   );

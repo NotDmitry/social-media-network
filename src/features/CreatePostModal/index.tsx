@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -27,6 +28,7 @@ function CreatePostModal({
   acceptedFileTypes,
   onClose,
 }: CreatePostModalProps) {
+  const { t } = useTranslation('posts');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [selectedFileErrorMessage, setSelectedFileErrorMessage] = useState<string | null>(null);
   const [isFileDraggedOver, setIsFileDraggedOver] = useState(false);
@@ -60,10 +62,10 @@ function CreatePostModal({
       await queryClient.invalidateQueries({ queryKey: ['posts'] });
 
       handleModalClose();
-      showAlert('Post successfully created', 'success');
+      showAlert(t(($) => $.createPost.alert.success), 'success');
     },
     onError: (error) => {
-      showAlert('Post creation failed', 'error');
+      showAlert(t(($) => $.createPost.alert.error), 'error');
       console.error(error);
     },
   });
@@ -152,14 +154,14 @@ function CreatePostModal({
 
     if (!acceptedFileTypes.includes(file.type)) {
       setSelectedFile(null);
-      setSelectedFileErrorMessage('Unsupported file format');
+      setSelectedFileErrorMessage(t(($) => $.createPost.input.file.unsupported));
 
       return;
     }
 
     if (file.size > maxFileSize) {
       setSelectedFile(null);
-      setSelectedFileErrorMessage('The file is too large');
+      setSelectedFileErrorMessage(t(($) => $.createPost.input.file.tooLarge));
 
       return;
     }
@@ -208,7 +210,7 @@ function CreatePostModal({
     >
       <div className='create-post-modal-content'>
         <header className='create-post-modal-header'>
-          <p className='create-post-modal-title'>Create a new post</p>
+          <p className='create-post-modal-title'>{t(($) => $.createPost.title)}</p>
           <button
             className='create-post-modal-close-button'
             type='button'
@@ -225,9 +227,9 @@ function CreatePostModal({
         >
           <TextField
             {...register('title')}
-            label='Post Title'
+            label={t(($) => $.createPost.input.title.label)}
             labelIcon={<PencilIcon />}
-            placeholder='Enter post title'
+            placeholder={t(($) => $.createPost.input.title.placeholder)}
             status={getTextFieldStatus(Boolean(errors.title))}
             errorMessage={errors.title?.message}
             maxLength={81}
@@ -236,12 +238,12 @@ function CreatePostModal({
           />
           <TextAreaField
             {...register('description')}
-            label='Description'
+            label={t(($) => $.createPost.input.description.label)}
             labelIcon={<PencilIcon />}
-            placeholder='Write description here...'
+            placeholder={t(($) => $.createPost.input.description.placeholder)}
             status={getTextareaFieldStatus(Boolean(errors.description))}
             errorMessage={errors.description?.message}
-            hintMessage='Max 500 characters'
+            hintMessage={t(($) => $.createPost.input.description.hint)}
             maxLength={501}
             rows={1}
             disabled={isPostCreationPending}
@@ -264,13 +266,13 @@ function CreatePostModal({
             <FileUploadIcon className='create-post-file-dropzone-icon' />
             <span className='create-post-file-dropzone-text'>
               <span className='create-post-file-dropzone-hint'>
-                {selectedFile?.name ?? 'Select a file or drag and drop here'}
+                {selectedFile?.name ?? t(($) => $.createPost.input.file.select)}
               </span>
               <span
                 className={`create-post-file-dropzone-constraint ${selectedFileErrorMessage ?
                   'create-post-file-dropzone-constraint_invalid' : ''}`}
               >
-                {selectedFileErrorMessage ?? 'JPG or PNG, no more than 10MB'}
+                {selectedFileErrorMessage ?? t(($) => $.createPost.input.file.constraints)}
               </span>
             </span>
           </label>
@@ -281,7 +283,10 @@ function CreatePostModal({
             form={formId}
             disabled={isPostCreationPending || selectedFileErrorMessage !== null}
           >
-            {isPostCreationPending ? 'Creating...' : 'Create'}
+            {isPostCreationPending
+              ? t(($) => $.createPost.button.pending)
+              : t(($) => $.createPost.button.default)
+            }
           </Button>
         </div>
       </div>

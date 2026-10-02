@@ -1,0 +1,29 @@
+{
+  "title": "Home page",
+  "postsFeedTitle": "Posts feed",
+  "quickPost": {
+    "input": {
+      "post": {
+        "placeholder": "What's happening?"
+      }
+    },
+    "button": {
+      "default": "Tell everyone"
+    }
+  },
+  "suggestions": {
+    "title": "Suggestions",
+    "people": {
+      "title": "Suggested people",
+      "loading": "Loading...",
+      "error": "Cannot load suggested people",
+      "empty": "No suggested people"
+    },
+    "groups": {
+      "title": "Communities you might like",
+      "loading": "Loading...",
+      "error": "Cannot load suggested groups",
+      "empty": "No suggested groups"
+    }
+  }
+}

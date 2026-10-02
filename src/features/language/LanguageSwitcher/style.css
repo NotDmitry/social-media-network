@@ -1,0 +1,43 @@
+.language-switcher {
+  min-width: 200px;
+}
+
+.language-switcher-label,
+.language-switcher-select,
+.language-switcher-option {
+  color: var(--component-text-dark);
+  font-family: var(--second-family);
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 150%;
+}
+
+.language-switcher-label {
+  font-size: 0.875rem;
+}
+
+.language-switcher-outline {
+  border-color: var(--component-stroke-dark-soft);
+}
+
+.language-switcher-select {
+  background-color: var(--component-fill-light);
+
+  &:hover .language-switcher-outline {
+    border-color: var(--component-stroke-primary);
+  }
+}
+
+.language-switcher-menu {
+  background-color: var(--background-fill-surface);
+  color: var(--component-text-dark);
+}
+
+.language-switcher-option:hover {
+  background-color: var(--component-hover-primary-soft);
+}
+
+.language-switcher-option.Mui-selected,
+.language-switcher-option.Mui-selected:hover {
+  background-color: var(--component-fill-primary-soft);
+}

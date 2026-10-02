@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import Spinner from '@/shared/ui/Spinner';
 import './style.css';
 
@@ -13,6 +14,7 @@ interface CardsListProps {
   cardsData?: CardData[];
   isDataFetchPending: boolean;
   isDataFetchError: boolean;
+  loadingMessage?: string;
   errorMessage?: string;
   emptyListMessage?: string;
 }
@@ -22,15 +24,17 @@ function CardsList({
   cardsData,
   isDataFetchPending,
   isDataFetchError,
+  loadingMessage,
   errorMessage,
   emptyListMessage,
 }: CardsListProps) {
+  const { t } = useTranslation('common');
   let cardsListStatusMessage: string | null = null;
 
   if (isDataFetchError && cardsData === undefined) {
-    cardsListStatusMessage = errorMessage ?? 'Unable to load data';
+    cardsListStatusMessage = errorMessage ?? t(($) => $.data.error);
   } else if (cardsData === undefined || cardsData.length === 0) {
-    cardsListStatusMessage = emptyListMessage ?? 'No data yet';
+    cardsListStatusMessage = emptyListMessage ?? t(($) => $.data.empty);
   }
 
   return (
@@ -38,7 +42,7 @@ function CardsList({
       <h3 className='cards-list-title'>{title}</h3>
 
       {isDataFetchPending ? (
-        <Spinner label='Loading...' />
+        <Spinner label={loadingMessage ?? t(($) => $.data.loading)} />
       ) : (cardsListStatusMessage &&
         <p className='cards-list-message'>{cardsListStatusMessage}</p>
       )}
@@ -48,7 +52,7 @@ function CardsList({
           <img
             className='avatar'
             src={cardData.pictureUrl ?? undefined}
-            alt={`Profile picture of ${cardData.title}`}
+            alt={t(($) => $.a11y.picture, { name: cardData.title })}
             width={48}
             height={48}
           />

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
 import Post from '@/entities/Post';
 import { useAuth } from '@/entities/auth/useAuth';
@@ -19,6 +20,7 @@ function getLikedPostIdsSet(likedPostIds: number[]) {
 }
 
 function PostsFeed() {
+  const { t } = useTranslation('posts');
   const { currentUser, isUserAuthenticated } = useAuth();
   const [isFeedScrolled, setIsFeedScrolled] = useState<boolean>(false);
   const sentinelRef = useRef<HTMLParagraphElement>(null);
@@ -116,11 +118,11 @@ function PostsFeed() {
   let postsFeedStatusMessage: string | null = null;
 
   if (isGlobalFetchError) {
-    postsFeedStatusMessage = 'Unable to fetch posts';
+    postsFeedStatusMessage = t(($) => $.feed.error);
   } else if (posts.length === 0) {
-    postsFeedStatusMessage = 'No posts yet';
+    postsFeedStatusMessage = t(($) => $.feed.empty);
   } else if (isCurrentUserLikesUnavailable) {
-    postsFeedStatusMessage = 'Unable to fetch your likes';
+    postsFeedStatusMessage = t(($) => $.feed.likes.error);
   }
 
   function handleScrollToPostsFeedStart() {
@@ -171,7 +173,7 @@ function PostsFeed() {
   return (
     <div className='posts-feed' ref={postsFeedRef}>
       {isInitialPending ? (
-        <Spinner label='Loading posts...' />
+        <Spinner label={t(($) => $.feed.loading)} />
       ) : (postsFeedStatusMessage &&
         <p className='posts-feed-message'>{postsFeedStatusMessage}</p>
       )}
@@ -201,14 +203,14 @@ function PostsFeed() {
         ref={sentinelRef}
         hidden={!hasNextPage || isAuthorsQueryPending || isFetchNextPageError || isGlobalFetchError}
       >
-        {isFetchingNextPage && <Spinner label='Loading more posts...' />}
+        {isFetchingNextPage && <Spinner label={t(($) => $.feed.pagination.loading)} />}
       </p>
 
       {isFeedScrolled &&
         <FloatingActionButton
           className='posts-feed-scroll-button'
           size='small'
-          aria-label={'Return to the Feed\'s start'}
+          aria-label={t(($) => $.feed.scrollToStart)}
           onClick={handleScrollToPostsFeedStart}
         >
           <ChevronDownIcon className='posts-feed-scroll-icon' />

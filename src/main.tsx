@@ -4,6 +4,7 @@ import { Provider } from 'react-redux';
 import { HashRouter } from 'react-router';
 import { store } from '@/app/store';
 import App from '@/app/App';
+import '@/app/config/i18n';
 import '@/app/styles/globals.css';
 
 const root = document.getElementById('root');

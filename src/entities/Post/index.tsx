@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { animated, easings, useTransition } from '@react-spring/web';
 import { useMutation, useQueries, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import CreateCommentForm from '@/features/CreateCommentForm';
@@ -25,6 +26,7 @@ interface PostProps {
 }
 
 function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
+  const { t } = useTranslation(['posts', 'common']);
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const { currentUser, isUserAuthenticated } = useAuth();
   const queryClient = useQueryClient();
@@ -77,7 +79,7 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
       });
     },
     onError: (error) => {
-      showAlert('Unable to update like status', 'error');
+      showAlert(t(($) => $.post.like.alert.error), 'error');
       console.error(error);
     },
   });
@@ -111,8 +113,7 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
   });
 
   const displayedCommentsCount = comments?.length ?? post.commentsCount;
-  const commentsButtonLabel =
-    `${String(displayedCommentsCount)} ${post.commentsCount === 1 ? 'comment' : 'comments'}`;
+  const commentsButtonLabel = t(($) => $.post.comments.count, { count: displayedCommentsCount });
   const isCommentsSectionPending = isCommentsQueryPending || isCommentAuthorsQueryPending;
 
   const isLikedOptimistic = isLikeTogglePending ? willBeLiked : isLiked;
@@ -156,7 +157,7 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
         <img
           className='avatar post-avatar'
           src={author.profileImage ?? undefined}
-          alt={`Profile picture of ${author.displayName}`}
+          alt={t(($) => $.a11y.profilePicture, { ns: 'common', name: author.displayName })}
           width={48}
           height={48}
         />
@@ -174,7 +175,7 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
           className='post-image'
           src={post.image}
           width={500}
-          alt={`Post by ${author.displayName}`}
+          alt={t(($) => $.post.imageAlt, { name: author.displayName })}
         />
       }
 
@@ -185,23 +186,25 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
           <button
             className='post-menu-button'
             disabled={!isUserAuthenticated || isLikeDisabled || isLikeTogglePending}
-            aria-label='Like the post'
+            aria-label={t(($) => $.post.like.action)}
             onClick={handleLikeClick}
           >
             <HeartIcon className={`post-menu-like-icon ${isLikedOptimistic ? 'post-menu-like-icon_active' : ''}`} />
-            <span className='post-menu-label'>{likesCountOptimistic} likes</span>
+            <span className='post-menu-label'>
+              {t(($) => $.post.like.count, { count: likesCountOptimistic })}
+            </span>
           </button>
         </li>
         <li>
           <button
             className='post-menu-button'
             disabled={!isUserAuthenticated}
-            aria-label='Open / close comments section'
+            aria-label={t(($) => $.post.comments.toggle)}
             onClick={handleCommentsSectionClick}
           >
             <CommentIcon className='post-menu-comment-icon' />
             <span className='post-menu-label'>
-              {isUserAuthenticated ? commentsButtonLabel : 'You have to login to see the comments'}
+              {isUserAuthenticated ? commentsButtonLabel : t(($) => $.post.comments.authenticationRequired)}
             </span>
             {isUserAuthenticated &&
               <ChevronDownIcon className={`chevron-icon ${isCommentsOpen ? 'chevron-icon_open' : ''}`} />
@@ -214,15 +217,15 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
         <animated.div className='post-comments-section' style={style}>
           <div className='post-comments-section-content'>
             {isCommentsSectionPending &&
-              <Spinner label='Loading comments...' />
+              <Spinner label={t(($) => $.post.comments.loading)} />
             }
 
             {!isCommentsSectionPending && isCommentsQueryError && comments === undefined &&
-              <p className='post-comments-message'>Unable to load comments</p>
+              <p className='post-comments-message'>{t(($) => $.post.comments.error)}</p>
             }
 
             {!isCommentsSectionPending && comments?.length === 0 &&
-              <p className='post-comments-message'>No comments yet</p>
+              <p className='post-comments-message'>{t(($) => $.post.comments.empty)}</p>
             }
 
             {!isCommentsSectionPending && comments !== undefined && comments.length > 0 &&
