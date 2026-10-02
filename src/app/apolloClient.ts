@@ -1,12 +1,12 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import { authListenerMiddleware } from '@/entities/auth/model/authListener';
 import { sessionCleared } from '@/entities/auth/model/authSlice';
-import { protectedGraphqlFetch } from '@/shared/api/protectedGraphqlFetch';
+// import { protectedGraphqlFetch } from '@/shared/api/protectedGraphqlFetch';
 
 export const apolloClient = new ApolloClient({
   link: new HttpLink({
-    uri: '/api/graphql',
-    fetch: protectedGraphqlFetch,
+    uri: 'https://rickandmortyapi.com/graphql',
+    // fetch: protectedGraphqlFetch,
   }),
   cache: new InMemoryCache(),
 });
