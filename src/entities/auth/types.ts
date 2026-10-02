@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { UpdateProfilePayload, UserModel, UserView } from '@/entities/User/types';
+import type { CurrentUserView, UpdateProfilePayload, UserModel } from '@/entities/User/types';
 import { loginResponseSchema, logoutResponseSchema, refreshResponseSchema, signUpResponseSchema } from './schema';
 
 export type AuthStatus = 'pending' | 'guest' | 'authenticated' | 'unavailable';
@@ -28,7 +28,7 @@ export type RefreshResponsePayload = z.output<typeof refreshResponseSchema>;
 
 export interface AuthExposedApi {
   authStatus: AuthStatus;
-  currentUser: UserView | null;
+  currentUser: CurrentUserView | null;
   isUserAuthenticated: boolean;
   signIn: (signInPayload: SignInPayload) => Promise<void>;
   signUp: (signUpPayload: SignUpPayload) => Promise<SignUpResponsePayload>;
