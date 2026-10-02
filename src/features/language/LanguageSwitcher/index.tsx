@@ -1,3 +1,4 @@
+import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -16,6 +17,8 @@ function LanguageSwitcher() {
   const { t, i18n } = useTranslation('common');
   const savedLanguage = isSupportedLanguage(i18n.resolvedLanguage) ? i18n.resolvedLanguage : DEFAULT_LANGUAGE;
   const label = t(($) => $.languages.label);
+  const labelId = useId();
+  const selectId = useId();
 
   async function handleLanguageChange(event: SelectChangeEvent<SupportedLanguage>) {
     const selectedLanguage = event.target.value;
@@ -30,14 +33,14 @@ function LanguageSwitcher() {
 
   return (
     <FormControl className='language-switcher' size='medium'>
-      <InputLabel className='language-switcher-label' id='language-select-label'>
+      <InputLabel className='language-switcher-label' id={labelId}>
         {label}
       </InputLabel>
       <Select
         className='language-switcher-select'
-        id='language-select'
+        id={selectId}
         label={label}
-        labelId='language-select-label'
+        labelId={labelId}
         value={savedLanguage}
         onChange={(event) => void handleLanguageChange(event)}
         slotProps={{
