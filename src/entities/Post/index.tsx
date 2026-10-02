@@ -26,7 +26,7 @@ interface PostProps {
 }
 
 function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
-  const { t } = useTranslation(['posts', 'common']);
+  const { t, i18n } = useTranslation(['posts', 'common']);
   const [isCommentsOpen, setIsCommentsOpen] = useState(false);
   const { currentUser, isUserAuthenticated } = useAuth();
   const queryClient = useQueryClient();
@@ -166,7 +166,7 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
           className='post-time'
           dateTime={post.creationDate}
         >
-          {getRelativeTimePresentationString(post.creationDate)}
+          {getRelativeTimePresentationString(post.creationDate, i18n.resolvedLanguage ?? i18n.language)}
         </time>
       </header>
 

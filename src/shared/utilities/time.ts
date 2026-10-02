@@ -10,32 +10,72 @@ const displayedUnitsMsThresholds: Partial<Record<Intl.RelativeTimeFormatUnit, nu
   minute: MS_IN_MINUTE,
 };
 
-const relativeTimeFormatter = new Intl.RelativeTimeFormat('en', {
-  numeric: 'auto',
-  style: 'short',
-});
+const relativeTimeFormatters = new Map<string, Intl.RelativeTimeFormat>();
+const dateTimeFormatters = new Map<string, Intl.DateTimeFormat>();
+const shortMonthFormatters = new Map<string, Intl.DateTimeFormat>();
 
-const dateTimeFormatter = new Intl.DateTimeFormat('en', {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-});
+function getRelativeTimeFormatter(locale: string) {
+  let relativeTimeFormatter = relativeTimeFormatters.get(locale);
 
-export function getRelativeTimePresentationString(dateTimeString: string) {
+  if (relativeTimeFormatter === undefined) {
+    relativeTimeFormatter = new Intl.RelativeTimeFormat(locale, {
+      numeric: 'auto',
+      style: 'short',
+    });
+
+    relativeTimeFormatters.set(locale, relativeTimeFormatter);
+  }
+
+  return relativeTimeFormatter;
+}
+
+function getDateTimeFormatter(locale: string) {
+  let dateTimeFormatter = dateTimeFormatters.get(locale);
+
+  if (dateTimeFormatter === undefined) {
+    dateTimeFormatter = new Intl.DateTimeFormat(locale, {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+    });
+
+    dateTimeFormatters.set(locale, dateTimeFormatter);
+  }
+
+  return dateTimeFormatter;
+}
+
+function getShortMonthFormatter(locale: string) {
+  let shortMonthFormatter = shortMonthFormatters.get(locale);
+
+  if (shortMonthFormatter === undefined) {
+    shortMonthFormatter = new Intl.DateTimeFormat(locale, {
+      month: 'short',
+    });
+
+    shortMonthFormatters.set(locale, shortMonthFormatter);
+  }
+
+  return shortMonthFormatter;
+}
+
+export function getRelativeTimePresentationString(dateTimeString: string, locale: string) {
   const nowTimestamp = Date.now();
-  const date = new Date(dateTimeString)
+  const date = new Date(dateTimeString);
   const dateTimestamp = date.getTime();
 
   if (Number.isNaN(dateTimestamp)) {
-    return 'TIME_ERROR';
+    return null;
   }
 
   const dateDiff = dateTimestamp - nowTimestamp;
   const absoluteDateDiff = Math.abs(dateDiff);
 
   if (absoluteDateDiff > MS_IN_WEEK) {
-    return dateTimeFormatter.format(date);
+    return getDateTimeFormatter(locale).format(date);
   }
+
+  const relativeTimeFormatter = getRelativeTimeFormatter(locale);
 
   for (const [unit, msThreshold] of Object.entries(displayedUnitsMsThresholds) as
     [Intl.RelativeTimeFormatUnit, number][]) {
@@ -45,5 +85,9 @@ export function getRelativeTimePresentationString(dateTimeString: string) {
     }
   }
 
-  return 'now';
+  return relativeTimeFormatter.format(0, 'second');
+}
+
+export function getShortMonthPresentationString(date: Date, locale: string) {
+  return getShortMonthFormatter(locale).format(date);
 }

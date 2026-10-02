@@ -5,17 +5,44 @@ import ChartView from '@/features/ProfileStatistics/ChartView';
 import StatsCard from '@/features/ProfileStatistics/StatsCard';
 import TableView from '@/features/ProfileStatistics/TableView';
 import { GET_PROFILE_STATISTICS } from '@/features/ProfileStatistics/api/getProfileStatistics';
-import {
-  toProfileStatisticsCardsView,
-  toProfileStatisticsTablesView
-} from '@/features/ProfileStatistics/utilities';
+import { toActivityTableView } from '@/features/ProfileStatistics/TableView/utilities';
+import { toWeeklyStatsCardDataView } from '@/features/ProfileStatistics/StatsCard/utilities';
 import Spinner from '@/shared/ui/Spinner';
 import ToggleSwitch from '@/shared/ui/ToggleSwitch';
 import './style.css';
 
 function ProfileStatisticsPage() {
-  const { t } = useTranslation('profile');
+  const { t, i18n } = useTranslation('profile');
   const [isChartViewEnabled, setIsChartViewEnabled] = useState(false);
+  const locale = i18n.resolvedLanguage ?? i18n.language;
+
+  const statsCardsTitles = {
+    posts: t(($) => $.statistics.cards.posts),
+    likes: t(($) => $.statistics.cards.likes),
+    comments: t(($) => $.statistics.cards.comments),
+  }
+
+  const statsCardsTrendLabels = {
+    noActivity: t(($) => $.statistics.cards.trend.noActivity),
+    weekOverWeek: t(($) => $.statistics.cards.trend.weekOverWeek),
+  };
+
+  const statsTablesLabels = {
+    likes: {
+      caption: t(($) => $.statistics.tables.likes.caption),
+      columnHeaders: [
+        t(($) => $.statistics.tables.likes.columns.date),
+        t(($) => $.statistics.tables.likes.columns.likes)
+      ],
+    },
+    comments: {
+      caption: t(($) => $.statistics.tables.comments.caption),
+      columnHeaders: [
+        t(($) => $.statistics.tables.comments.columns.month),
+        t(($) => $.statistics.tables.comments.columns.comments),
+      ],
+    },
+  }
 
   const {
     data: statistics,
@@ -27,8 +54,34 @@ function ProfileStatisticsPage() {
   let statsTablesData;
 
   if (statistics) {
-    statsCardsData = toProfileStatisticsCardsView(statistics);
-    statsTablesData = toProfileStatisticsTablesView(statistics);
+    statsCardsData = [
+      toWeeklyStatsCardDataView(statsCardsTitles.posts, statistics.mePosts, statsCardsTrendLabels),
+      toWeeklyStatsCardDataView(statsCardsTitles.likes, statistics.meLikes, statsCardsTrendLabels),
+      toWeeklyStatsCardDataView(statsCardsTitles.comments, statistics.meComments, statsCardsTrendLabels),
+    ];
+
+    statsTablesData = {
+      likes: toActivityTableView(
+        statistics.meLikes,
+        {
+          caption: statsTablesLabels.likes.caption,
+          columnHeaders: statsTablesLabels.likes.columnHeaders,
+          dataPeriod: 'day',
+          periodsCount: 10,
+          locale,
+        }
+      ),
+      comments: toActivityTableView(
+        statistics.meComments,
+        {
+          caption: statsTablesLabels.comments.caption,
+          columnHeaders: statsTablesLabels.comments.columnHeaders,
+          dataPeriod: 'month',
+          periodsCount: 12,
+          locale,
+        }
+      ),
+    };
   }
 
   let statisticsStatusMessage: string | null = null;
@@ -47,7 +100,7 @@ function ProfileStatisticsPage() {
     <div className='profile-statistics-page-container'>
       <h1 className='visually-hidden'>{t(($) => $.statistics.title)}</h1>
       <section className='profile-statistics-cards-wrapper'>
-        <h2 className='visually-hidden'>{t(($) => $.statistics.cards)}</h2>
+        <h2 className='visually-hidden'>{t(($) => $.statistics.cards.title)}</h2>
 
         {isInitialStatisticsQueryPending ? (
           <Spinner label={t(($) => $.statistics.loading)} />

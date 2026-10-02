@@ -7,3 +7,7 @@ export interface ProfileStatisticsQueryData {
   meLikes: Pick<LikeModel, 'id' | 'creationDate'>[],
   meComments: Pick<CommentModel, 'id' | 'creationDate'>[],
 }
+
+export interface Activity {
+  creationDate: string;
+}

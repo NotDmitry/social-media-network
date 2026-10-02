@@ -49,7 +49,11 @@
         "comment": {
           "label": "Add a comment",
           "placeholder": "Write description here...",
-          "hint": "Max 200 characters"
+          "hint": "Max 200 characters",
+          "validation": {
+            "required": "The comment can't be empty",
+            "maxLength": "Reached 200 characters limit"
+          }
         }
       },
       "button": {
@@ -67,12 +71,20 @@
     "input": {
       "title": {
         "label": "Post Title",
-        "placeholder": "Enter post title"
+        "placeholder": "Enter post title",
+        "validation": {
+          "required": "The post title can't be empty",
+          "maxLength": "Reached 80 characters limit"
+        }
       },
       "description": {
         "label": "Description",
         "placeholder": "Write description here...",
-        "hint": "Max 500 characters"
+        "hint": "Max 500 characters",
+        "validation": {
+          "required": "The post description can't be empty",
+          "maxLength": "Reached 500 characters limit"
+        }
       },
       "file": {
         "select": "Select a file or drag and drop here",

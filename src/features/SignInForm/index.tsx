@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/entities/auth/useAuth';
 import type { SignInPayload } from '@/entities/auth/types';
 import { useAlert } from '@/shared/ui/Alert/useAlert';
+import { BackendResponseError } from '@/shared/api/backendResponseError';
 import Button from '@/shared/ui/Button';
 import PasswordField from '@/shared/ui/input/PasswordField';
 import TextField, { type TextFieldStatus } from '@/shared/ui/input/TextField';
@@ -42,7 +43,10 @@ function SignInForm({ onSubmit }: SignInFormProps) {
       await signIn(signInPayload);
       showAlert(t(($) => $.signIn.alert.success), 'success');
     } catch (error) {
-      showAlert(error instanceof Error ? error.message : t(($) => $.signIn.alert.error), 'error');
+      const errorMessage = error instanceof BackendResponseError && error.status === 401 ?
+        t(($) => $.signIn.alert.invalidCredentials) : t(($) => $.signIn.alert.error);
+
+      showAlert(errorMessage, 'error');
       console.error(error);
       return;
     }

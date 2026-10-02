@@ -24,8 +24,8 @@ function ProfileInfoPage() {
     setIsLoggingOut(true);
 
     try {
-      const { message } = await signOut();
-      showAlert(message || t(($) => $.signOut.alert.success, { ns: 'authentication' }), 'success');
+      await signOut();
+      showAlert(t(($) => $.signOut.alert.success, { ns: 'authentication' }), 'success');
     } catch (error) {
       showAlert(t(($) => $.signOut.alert.warning, { ns: 'authentication' }), 'warning');
       console.error(error);

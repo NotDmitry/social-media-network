@@ -14,6 +14,23 @@
     "show": "Показать пароль",
     "hide": "Скрыть пароль"
   },
+  "input": {
+    "email": {
+      "validation": {
+        "invalid": "Неверный адрес электронной почты"
+      }
+    },
+    "name": {
+      "validation": {
+        "required": "Имя не может быть пустым"
+      }
+    },
+    "username": {
+      "validation": {
+        "required": "Имя пользователя не может быть пустым"
+      }
+    }
+  },
   "navigation": {
     "signUp": "Регистрация",
     "signIn": "Вход",
