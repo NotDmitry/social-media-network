@@ -35,9 +35,6 @@ function LanguageSwitcher() {
       </InputLabel>
       <Select
         className='language-switcher-select'
-        classes={{
-          icon: 'language-switcher-icon',
-        }}
         id='language-select'
         label={label}
         labelId='language-select-label'

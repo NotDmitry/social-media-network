@@ -28,10 +28,6 @@
   }
 }
 
-.language-switcher-icon {
-  color: var(--icon-dark);
-}
-
 .language-switcher-menu {
   background-color: var(--background-fill-surface);
   color: var(--component-text-dark);
