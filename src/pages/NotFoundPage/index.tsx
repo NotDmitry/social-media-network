@@ -1,81 +1,74 @@
 import { useTranslation } from 'react-i18next';
+import { useQuery } from '@tanstack/react-query';
 import { NotFoundIcon } from '@/shared/icons';
-// import { useQuery } from '@tanstack/react-query';
-// import type { TypedDocumentNode } from '@apollo/client';
-// import { useQuery as useQueryApollo } from '@apollo/client/react';
 import './style.css';
-// import { gql } from '@apollo/client';
 
-// const GET_LOCATION: TypedDocumentNode<DataResponse> = gql`
-// query {
-//      location(id: 4) {
-//        id,
-//        name,
-//        type,
-//      }
-//    }
-// `;
+interface Location {
+  location: {
+    id: string | number;
+    name: string;
+    type: string;
+  }
+};
 
-// function GET_QUERY_STRING() {
-//   return `query {
-//     location(id: 4) {
-//       id,
-//       name,
-//       type,
-//     }
-//   }`;
-// };
+interface LocationResponse {
+  data: Location,
+}
 
-// async function getLocationById() {
-//   let response: Response;
+const GET_LOCATION_BY_ID_QUERY = `
+  query GetLocationById($locationId: ID!){
+    location(id: $locationId) {
+      id
+      name
+      type
+    }
+  }
+`;
 
-//   try {
-//     response = await fetch('https://rickandmortyapi.com/graphql', {
-//       method: 'GET',
-//       headers: {
-//         'Content-Type': 'application/json',
-//       },
-//       body: GET_QUERY_STRING(),
-//     });
-//   } catch {
-//     throw new Error('Bad fetch');
-//   }
+async function getLocationById(locationId: number | string) {
+  let response: Response;
 
-//   const data = await response.json() as LocationResponse;
-//   return data;
-// }
+  try {
+    response = await fetch('https://rickandmortyapi.com/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: GET_LOCATION_BY_ID_QUERY,
+        variables: {
+          locationId,
+        }
+      }),
+    });
+  } catch {
+    throw new Error('Invalid graphql request');
+  }
 
-
-// interface LocationResponse {
-//   id: number;
-//   name: string;
-//   type: string;
-// };
-
-// interface DataResponse {
-//   data: LocationResponse;
-// }
+  try {
+    return await response.json() as LocationResponse;
+  } catch {
+    throw new Error('Response data type mismatch');
+  }
+}
 
 function NotFoundPage() {
   const { t } = useTranslation('common');
 
-  // const {
-  //   data,
-  // } = useQueryApollo(GET_LOCATION, { fetchPolicy: 'cache-and-network' });
-
-
-  // const {
-  //   data,
-  // } = useQuery({
-  //   queryKey: ['rick'],
-  //   queryFn: () => getLocationById(),
-  // });
+  const {
+    data: queryResponse,
+  } = useQuery({
+    queryKey: ['rick'],
+    queryFn: () => getLocationById(4),
+    staleTime: 0,
+    gcTime: 0,
+  });
 
   return (
     <div className='not-found-page-container'>
-      <p>{'Undefined'}</p>
-      {/* <p>{data?.data.name ?? 'undefined'}</p> */}
-      {/* <p>{data?.data.type ?? 'undefined'}</p> */}
+      <p>Id: {queryResponse?.data.location.id ?? 'undefined'}</p>
+      <p>Name: {queryResponse?.data.location.name ?? 'undefined'}</p>
+      <p>Type: {queryResponse?.data.location.type ?? 'undefined'}</p>
       <NotFoundIcon className='not-found-page-icon' />
       <h1 className='not-found-page-title'>{t(($) => $.pageNotFound)}</h1>
     </div>
