@@ -1,4 +1,5 @@
 .posts-feed {
+  scroll-margin-top: 9999px;
   display: flex;
   flex-direction: column;
   background-color: var(--background-fill-surface);
@@ -12,4 +13,20 @@
   font-weight: 500;
   line-height: 156%;
   text-align: center;
+}
+
+.posts-feed-scroll-button {
+  position: fixed;
+  right: 12px;
+  bottom: 12px;
+}
+
+.posts-feed-scroll-icon {
+  transform: rotate(180deg);
+}
+
+@media screen and (width < 480px) {
+  .posts-feed {
+    background-color: var(--background-fill-middle);
+  }
 }

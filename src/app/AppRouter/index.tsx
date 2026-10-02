@@ -12,14 +12,14 @@ import ProfileStatisticsPage from '@/pages/ProfileStatisticsPage';
 import SignInPage from '@/pages/SignInPage';
 import SignUpPage from '@/pages/SignUpPage';
 import { useAuth } from '@/entities/auth/useAuth';
+import Spinner from '@/shared/ui/Spinner';
 
 function AppRouter() {
   const { authStatus, isUserAuthenticated } = useAuth();
   const location = useLocation();
 
-  // TODO: show spinner
   if (authStatus === 'pending') {
-    return null;
+    return <Spinner label='Session restoration' />
   }
 
   if (authStatus === 'unavailable') {

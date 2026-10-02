@@ -11,6 +11,7 @@ import { getUserById } from '@/entities/User/api/getUserById';
 import { toUserView } from '@/entities/User/utilities';
 import type { UserView } from '@/entities/User/types';
 import { useAlert } from '@/shared/ui/Alert/useAlert';
+import Spinner from '@/shared/ui/Spinner';
 import { HeartIcon, CommentIcon, ChevronDownIcon } from '@/shared/icons';
 import { getRelativeTimePresentationString } from '@/shared/utilities/time';
 import type { PostModel, PostsPage } from './types';
@@ -213,7 +214,7 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
         <animated.div className='post-comments-section' style={style}>
           <div className='post-comments-section-content'>
             {isCommentsSectionPending &&
-              <p className='post-comments-message'>Loading comments...</p>
+              <Spinner label='Loading comments...' />
             }
 
             {!isCommentsSectionPending && isCommentsQueryError && comments === undefined &&

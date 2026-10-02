@@ -130,10 +130,6 @@ input::-ms-clear {
   color: var(--icon-negative);
 }
 
-.input-field-tooltip-icon {
-  color: var(--icon-disabled);
-}
-
 .input-field {
   width: 100%;
   padding: 14px;

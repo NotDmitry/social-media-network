@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
+import AppBar from '@mui/material/AppBar';
 import { ROUTES } from '@/app/routes';
 import { useAuth } from '@/entities/auth/useAuth';
 import Logo from '@/shared/ui/Logo';
 import BurgerIcon from '@/shared/ui/BurgerIcon';
+import IconButton from '@/shared/ui/IconButton';
+import UserAvatar from '@/shared/ui/UserAvatar';
 import DrawerNavigation from './DrawerNavigation';
 import type { HeaderVariant } from './types';
 import './style.css';
@@ -17,7 +20,7 @@ function Header({ variant }: HeaderProps) {
 
   const { currentUser } = useAuth();
 
-  function handleMenuClick() {
+  function handleDrawerOpen() {
     setIsDrawerOpen(true);
   }
 
@@ -26,7 +29,11 @@ function Header({ variant }: HeaderProps) {
   }
 
   return (
-    <header className='header'>
+    <AppBar
+      className='header'
+      position='sticky'
+      elevation={0}
+    >
       <Link className='header-external-link' to={ROUTES.home}>
         <Logo />
       </Link>
@@ -39,36 +46,36 @@ function Header({ variant }: HeaderProps) {
         }
 
         {variant === 'user' && currentUser &&
-          <Link className='link' to={ROUTES.profile}>
-            <img
-              className='avatar'
-              src={currentUser.profileImage ?? undefined}
+          <Link className='link header-profile-link' to={ROUTES.profile}>
+            <UserAvatar
+              className='header-avatar'
+              displayName={currentUser.displayName}
+              photoUrl={currentUser.profileImage}
               alt={`Profile picture of ${currentUser.displayName}`}
-              width={24}
-              height={24}
             />
-            {currentUser.displayName}
+            <span className='header-profile-name'>{currentUser.displayName}</span>
           </Link>
         }
       </nav>
       {variant !== 'default' &&
         <>
-          <button
+          <IconButton
             className='header-menu-button'
             type='button'
             aria-label='Open mobile navigation'
-            onClick={() => { handleMenuClick() }}
+            onClick={handleDrawerOpen}
           >
             <BurgerIcon isOpen={isDrawerOpen} />
-          </button>
+          </IconButton>
           <DrawerNavigation
             isOpen={isDrawerOpen}
             variant={variant}
-            onClose={() => { handleDrawerClose() }}
+            onOpen={handleDrawerOpen}
+            onClose={handleDrawerClose}
           />
         </>
       }
-    </header>
+    </AppBar>
   );
 }
 

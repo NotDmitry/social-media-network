@@ -1,6 +1,7 @@
 import { useId } from 'react';
 import type { ComponentProps, ReactNode } from 'react';
-import { CheckIcon, CrossIcon, InfoIcon, InfoTooltipIcon, PencilIcon } from '@/shared/icons';
+import { CheckIcon, CrossIcon, InfoIcon, PencilIcon } from '@/shared/icons';
+import InputFieldTooltip from '../InputFieldTooltip';
 
 export type TextFieldStatus = 'default' | 'valid' | 'invalid';
 
@@ -74,9 +75,7 @@ function TextField({
             <span className='input-field-validation-text'>{validationMessage}</span>
           </div>
           {tooltipMessage &&
-            <span title={tooltipMessage} className='input-field-tooltip-icon' aria-label='Tooltip icon'>
-              <InfoTooltipIcon />
-            </span>
+            <InputFieldTooltip title={tooltipMessage} />
           }
         </div>
       }

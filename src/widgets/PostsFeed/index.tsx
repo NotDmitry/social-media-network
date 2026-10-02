@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
 import Post from '@/entities/Post';
 import { useAuth } from '@/entities/auth/useAuth';
@@ -7,6 +7,9 @@ import { getPosts } from '@/entities/Post/api/getPosts';
 import { getUserById } from '@/entities/User/api/getUserById';
 import { toUserView } from '@/entities/User/utilities';
 import type { UserView } from '@/entities/User/types';
+import FloatingActionButton from '@/shared/ui/FloatingActionButton';
+import Spinner from '@/shared/ui/Spinner';
+import { ChevronDownIcon } from '@/shared/icons';
 import './style.css';
 
 const POSTS_PAGE_SIZE = 10;
@@ -17,6 +20,9 @@ function getLikedPostIdsSet(likedPostIds: number[]) {
 
 function PostsFeed() {
   const { currentUser, isUserAuthenticated } = useAuth();
+  const [isFeedScrolled, setIsFeedScrolled] = useState<boolean>(false);
+  const sentinelRef = useRef<HTMLParagraphElement>(null);
+  const postsFeedRef = useRef<HTMLDivElement>(null);
 
   const {
     data,
@@ -109,9 +115,7 @@ function PostsFeed() {
 
   let postsFeedStatusMessage: string | null = null;
 
-  if (isInitialPending) {
-    postsFeedStatusMessage = 'Loading...';
-  } else if (isGlobalFetchError) {
+  if (isGlobalFetchError) {
     postsFeedStatusMessage = 'Unable to fetch posts';
   } else if (posts.length === 0) {
     postsFeedStatusMessage = 'No posts yet';
@@ -119,7 +123,25 @@ function PostsFeed() {
     postsFeedStatusMessage = 'Unable to fetch your likes';
   }
 
-  const sentinelRef = useRef<HTMLParagraphElement>(null);
+  function handleScrollToPostsFeedStart() {
+    postsFeedRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    const handlePostsFeedScroll = () => {
+      if (postsFeedRef.current === null) {
+        return;
+      }
+
+      setIsFeedScrolled(postsFeedRef.current.getBoundingClientRect().top < 0);
+    }
+
+    window.addEventListener('scroll', handlePostsFeedScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handlePostsFeedScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -147,10 +169,12 @@ function PostsFeed() {
   }, [fetchNextPage, hasNextPage, isPostsQueryFetching, isGlobalFetchError]);
 
   return (
-    <div className='posts-feed'>
-      {postsFeedStatusMessage &&
+    <div className='posts-feed' ref={postsFeedRef}>
+      {isInitialPending ? (
+        <Spinner label='Loading posts...' />
+      ) : (postsFeedStatusMessage &&
         <p className='posts-feed-message'>{postsFeedStatusMessage}</p>
-      }
+      )}
 
       {!isInitialPending && !isGlobalFetchError &&
         posts.map((post) => {
@@ -177,8 +201,19 @@ function PostsFeed() {
         ref={sentinelRef}
         hidden={!hasNextPage || isAuthorsQueryPending || isFetchNextPageError || isGlobalFetchError}
       >
-        {isFetchingNextPage && 'Loading more posts...'}
+        {isFetchingNextPage && <Spinner label='Loading more posts...' />}
       </p>
+
+      {isFeedScrolled &&
+        <FloatingActionButton
+          className='posts-feed-scroll-button'
+          size='small'
+          aria-label={'Return to the Feed\'s start'}
+          onClick={handleScrollToPostsFeedStart}
+        >
+          <ChevronDownIcon className='posts-feed-scroll-icon' />
+        </FloatingActionButton>
+      }
     </div>
   );
 }

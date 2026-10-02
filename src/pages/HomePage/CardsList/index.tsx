@@ -1,3 +1,4 @@
+import Spinner from '@/shared/ui/Spinner';
 import './style.css';
 
 export interface CardData {
@@ -26,9 +27,7 @@ function CardsList({
 }: CardsListProps) {
   let cardsListStatusMessage: string | null = null;
 
-  if (isDataFetchPending) {
-    cardsListStatusMessage = 'Loading...';
-  } else if (isDataFetchError && cardsData === undefined) {
+  if (isDataFetchError && cardsData === undefined) {
     cardsListStatusMessage = errorMessage ?? 'Unable to load data';
   } else if (cardsData === undefined || cardsData.length === 0) {
     cardsListStatusMessage = emptyListMessage ?? 'No data yet';
@@ -38,9 +37,11 @@ function CardsList({
     <div className='cards-list-container'>
       <h3 className='cards-list-title'>{title}</h3>
 
-      {cardsListStatusMessage &&
+      {isDataFetchPending ? (
+        <Spinner label='Loading...' />
+      ) : (cardsListStatusMessage &&
         <p className='cards-list-message'>{cardsListStatusMessage}</p>
-      }
+      )}
 
       {cardsData?.map((cardData) => (
         <article className='cards-list-item-container' key={cardData.id}>

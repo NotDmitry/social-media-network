@@ -70,6 +70,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           placeholder='Enter your full name'
           status={getFieldStatus(Boolean(errors.fullName))}
           errorMessage={errors.fullName?.message}
+          tooltipMessage='Enter your first name (required) and second or family name (optional)'
           type='text'
           disabled={isSubmitting}
         />
@@ -81,6 +82,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           placeholder='Enter email'
           status={getFieldStatus(Boolean(errors.email))}
           errorMessage={errors.email?.message}
+          tooltipMessage='Valid email example: example@gmail.com'
           type='email'
           disabled={isSubmitting}
         />
@@ -92,6 +94,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           placeholder='Enter password'
           status={getFieldStatus(Boolean(errors.password))}
           errorMessage={errors.password?.message}
+          tooltipMessage='Strong password is at least 8 characters long'
           infoMessage='Your password is correct'
           showVisibilityToggle={true}
           disabled={isSubmitting}
@@ -104,6 +107,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           placeholder='Enter password again'
           status={getFieldStatus(Boolean(errors.repeatPassword))}
           errorMessage={errors.repeatPassword?.message}
+          tooltipMessage='Repeat previously entered password'
           infoMessage='Passwords match'
           showVisibilityToggle={true}
           disabled={isSubmitting}
