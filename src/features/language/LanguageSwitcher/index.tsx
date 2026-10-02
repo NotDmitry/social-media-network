@@ -8,7 +8,6 @@ import {
   DEFAULT_LANGUAGE,
   SUPPORTED_LANGUAGES,
   isSupportedLanguage,
-  saveLanguage,
   type SupportedLanguage
 } from '../model';
 import './style.css';
@@ -25,7 +24,6 @@ function LanguageSwitcher() {
 
     try {
       await i18n.changeLanguage(selectedLanguage);
-      saveLanguage(selectedLanguage);
     } catch (error) {
       console.error(error);
     }

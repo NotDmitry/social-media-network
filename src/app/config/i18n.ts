@@ -1,6 +1,12 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import { getSavedLanguageFromStorage, DEFAULT_LANGUAGE, SUPPORTED_LANGUAGES } from '@/features/language/model';
+import {
+  getSavedLanguageFromStorage,
+  isSupportedLanguage,
+  DEFAULT_LANGUAGE,
+  SUPPORTED_LANGUAGES,
+  saveLanguage
+} from '@/features/language/model';
 import enCommonTranslations from './locales/en/common.json';
 import enErrorPageTranslations from './locales/en/errorPage.json';
 import enAuthenticationTranslations from './locales/en/authentication.json';
@@ -43,6 +49,15 @@ export const resources = {
     profile: ruProfileTranslations,
   },
 } as const;
+
+i18n.on('languageChanged', (language) => {
+  if (!isSupportedLanguage(language)) {
+    return;
+  }
+
+  document.documentElement.lang = language;
+  saveLanguage(language);
+});
 
 void i18n
   .use(initReactI18next)
