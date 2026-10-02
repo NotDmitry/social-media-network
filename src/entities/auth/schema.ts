@@ -24,3 +24,11 @@ export const signUpResponseSchema = z.object({
 });
 
 export const refreshResponseSchema = tokensSchema;
+
+export const changeEmailResponseSchema = z.object({
+  message: z.string(),
+  user: userModelSchema,
+  token: singleTokenSchema,
+  refreshToken: singleTokenSchema,
+  expiresIn: z.int().nonnegative(),
+});

@@ -1,215 +1,222 @@
-import { useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from '@/entities/auth/useAuth';
-import { getProfileImageFallbackUrl } from '@/entities/User/utilities';
-import type { CurrentUserView, UpdateProfilePayload } from '@/entities/User/types';
-import { useAlert } from '@/shared/ui/Alert/useAlert';
-import Button from '@/shared/ui/Button';
-import { uploadImage } from '@/shared/api/uploadImage';
-import TextareaField, { type TextareaFieldStatus } from '@/shared/ui/input/TextareaField';
-import TextField, { type TextFieldStatus } from '@/shared/ui/input/TextField';
-import { EnvelopeIcon, PencilIcon, PersonIcon } from '@/shared/icons';
-import { updateProfileFormSchema, type UpdateProfileFormFields } from './schema';
-import './style.css';
+// import { useEffect, useState } from 'react';
+// import { useTranslation } from 'react-i18next';
+// import { useForm } from 'react-hook-form';
+// import { zodResolver } from '@hookform/resolvers/zod';
+// import { useAuth } from '@/entities/auth/useAuth';
+// import { getProfileImageFallbackUrl } from '@/entities/User/utilities';
+// import type { CurrentUserView, UpdateProfilePayload } from '@/entities/User/types';
+// import { useAlert } from '@/shared/ui/Alert/useAlert';
+// import Button from '@/shared/ui/Button';
+// import { uploadImage } from '@/shared/api/uploadImage';
+// import TextareaField, { type TextareaFieldStatus } from '@/shared/ui/input/TextareaField';
+// import TextField, { type TextFieldStatus } from '@/shared/ui/input/TextField';
+// import { EnvelopeIcon, PencilIcon, PersonIcon } from '@/shared/icons';
+// // import { changeEmail } from '@/entities/auth/api/changeEmail';
+// // import PasswordConfirmationModal from './PasswordConfirmationModal';
+// import { updateProfileFormSchema, type UpdateProfileFormFields } from './schema';
+// import './style.css';
 
-interface UpdateProfileFormProps {
-  user: CurrentUserView;
-  onSubmit?: () => void;
-}
+// interface UpdateProfileFormProps {
+//   user: CurrentUserView;
+//   onSubmit?: () => void;
+// }
 
-interface SelectedAvatar {
-  url: string;
-  file: File;
-}
+// interface SelectedAvatar {
+//   url: string;
+//   file: File;
+// }
 
-function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
-  const { t } = useTranslation(['profile', 'common']);
-  const [selectedAvatar, setSelectedAvatar] = useState<SelectedAvatar | null>(null);
-  const [selectedAvatarErrorMessage, setSelectedAvatarErrorMessage] = useState<string | null>(null);
+// function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
+//   const { t } = useTranslation(['profile', 'common']);
+//   const [selectedAvatar, setSelectedAvatar] = useState<SelectedAvatar | null>(null);
+//   const [selectedAvatarErrorMessage, setSelectedAvatarErrorMessage] = useState<string | null>(null);
+//   // const [confirmationPassword, setConfirmationPassword] = useState<string>('');
 
-  const { updateProfile } = useAuth();
-  const { showAlert } = useAlert();
+//   const { updateProfile } = useAuth();
+//   const { showAlert } = useAlert();
 
-  const {
-    register,
-    handleSubmit,
-    formState: {
-      errors,
-      isSubmitted,
-      isSubmitting,
-    },
-  } = useForm<UpdateProfileFormFields>({
-    resolver: zodResolver(updateProfileFormSchema),
-    defaultValues: {
-      username: user.username,
-      email: user.email ?? '',
-      description: user.description ?? '',
-    },
-  });
+//   const {
+//     register,
+//     handleSubmit,
+//     formState: {
+//       errors,
+//       isSubmitted,
+//       isSubmitting,
+//     },
+//   } = useForm<UpdateProfileFormFields>({
+//     resolver: zodResolver(updateProfileFormSchema),
+//     defaultValues: {
+//       username: user.username,
+//       email: user.email ?? '',
+//       description: user.description ?? '',
+//     },
+//   });
 
-  async function handleFormSubmit(updateProfileFields: UpdateProfileFormFields) {
-    const formFieldsNames = Object.keys(updateProfileFields) as (keyof UpdateProfileFormFields)[];
+//   // function handleConfirmationPasswordChange(password: string) {
+//   //   setConfirmationPassword(password);
+//   // }
 
-    const changedFields = formFieldsNames.reduce<UpdateProfilePayload>((changes, fieldName) => {
-      const savedValue = user[fieldName] ?? '';
-      const currentValue = updateProfileFields[fieldName];
+//   async function handleFormSubmit(updateProfileFields: UpdateProfileFormFields) {
+//     const formFieldsNames = Object.keys(updateProfileFields) as (keyof UpdateProfileFormFields)[];
 
-      if (currentValue !== savedValue) {
-        changes[fieldName] = currentValue;
-      }
+//     const changedFields = formFieldsNames.reduce<UpdateProfilePayload>((changes, fieldName) => {
+//       const savedValue = user[fieldName] ?? '';
+//       const currentValue = updateProfileFields[fieldName];
 
-      return changes;
-    }, {});
+//       if (currentValue !== savedValue) {
+//         changes[fieldName] = currentValue;
+//       }
 
-    const updatedFieldsCount = Object.keys(changedFields).length;
+//       return changes;
+//     }, {});
 
-    if (updatedFieldsCount > 0 || selectedAvatar !== null) {
-      try {
-        if (selectedAvatar !== null) {
-          const { url: avatarUrl } = await uploadImage(selectedAvatar.file);
-          changedFields.profileImage = avatarUrl;
-        }
+//     const updatedFieldsCount = Object.keys(changedFields).length;
 
-        await updateProfile(changedFields);
+//     if (updatedFieldsCount > 0 || selectedAvatar !== null) {
+//       try {
+//         if (selectedAvatar !== null) {
+//           const { url: avatarUrl } = await uploadImage(selectedAvatar.file);
+//           changedFields.profileImage = avatarUrl;
+//         }
 
-        setSelectedAvatar(null);
-        showAlert(t(($) => $.update.alert.success), 'success');
-      } catch (error) {
-        showAlert(t(($) => $.update.alert.error), 'error');
-        console.error(error);
-        return;
-      }
+//         await updateProfile(changedFields);
 
-      onSubmit?.();
-    }
-  }
+//         setSelectedAvatar(null);
+//         showAlert(t(($) => $.update.alert.success), 'success');
+//       } catch (error) {
+//         showAlert(t(($) => $.update.alert.error), 'error');
+//         console.error(error);
+//         return;
+//       }
 
-  function handleAvatarChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const fileInput = event.currentTarget;
-    const file = fileInput.files?.[0];
+//       onSubmit?.();
+//     }
+//   }
 
-    if (!file) {
-      setSelectedAvatar(null);
-      setSelectedAvatarErrorMessage(null);
+//   function handleAvatarChange(event: React.ChangeEvent<HTMLInputElement>) {
+//     const fileInput = event.currentTarget;
+//     const file = fileInput.files?.[0];
 
-      return;
-    }
+//     if (!file) {
+//       setSelectedAvatar(null);
+//       setSelectedAvatarErrorMessage(null);
 
-    if (!file.type.startsWith('image/')) {
-      fileInput.value = '';
-      setSelectedAvatar(null);
-      setSelectedAvatarErrorMessage(t(($) => $.update.input.avatar.error));
+//       return;
+//     }
 
-      return;
-    }
+//     if (!file.type.startsWith('image/')) {
+//       fileInput.value = '';
+//       setSelectedAvatar(null);
+//       setSelectedAvatarErrorMessage(t(($) => $.update.input.avatar.error));
 
-    const newAvatarUrl = URL.createObjectURL(file);
-    fileInput.value = '';
-    setSelectedAvatar({
-      url: newAvatarUrl,
-      file,
-    });
-    setSelectedAvatarErrorMessage(null);
-  }
+//       return;
+//     }
 
-  function getTextFieldStatus(hasError: boolean): TextFieldStatus {
-    if (!isSubmitted) {
-      return 'default';
-    }
+//     const newAvatarUrl = URL.createObjectURL(file);
+//     fileInput.value = '';
+//     setSelectedAvatar({
+//       url: newAvatarUrl,
+//       file,
+//     });
+//     setSelectedAvatarErrorMessage(null);
+//   }
 
-    return hasError ? 'invalid' : 'valid';
-  }
+//   function getTextFieldStatus(hasError: boolean): TextFieldStatus {
+//     if (!isSubmitted) {
+//       return 'default';
+//     }
 
-  function getTextareaFieldStatus(hasError: boolean): TextareaFieldStatus {
-    return isSubmitted && hasError ? 'invalid' : 'default';
-  }
+//     return hasError ? 'invalid' : 'valid';
+//   }
 
-  useEffect(() => {
-    if (selectedAvatar === null) {
-      return;
-    }
+//   function getTextareaFieldStatus(hasError: boolean): TextareaFieldStatus {
+//     return isSubmitted && hasError ? 'invalid' : 'default';
+//   }
 
-    return () => {
-      URL.revokeObjectURL(selectedAvatar.url);
-    }
-  }, [selectedAvatar]);
+//   useEffect(() => {
+//     if (selectedAvatar === null) {
+//       return;
+//     }
 
-  return (
-    <form className='profile-update-form' onSubmit={(event) => void handleSubmit(handleFormSubmit)(event)}>
-      {/* TODO: Replace this and Post's header with UserCard */}
-      <div className='change-avatar-container'>
-        <img
-          className='avatar change-avatar-photo'
-          src={selectedAvatar?.url ?? getProfileImageFallbackUrl(true, user.profileImage)}
-          alt={t(($) => $.a11y.profilePicture, { ns: 'common', name: user.displayName })}
-          width={64}
-          height={64}
-        />
-        <div className='change-avatar-text-wrapper'>
-          <p className='change-avatar-user'>{user.displayName}</p>
-          <label className='change-avatar-label'>
-            <input
-              accept='image/*'
-              className='visually-hidden'
-              type='file'
-              name='avatar'
-              onChange={handleAvatarChange}
-              disabled={isSubmitting}
-            />
-            {t(($) => $.update.input.avatar.label)}
-          </label>
-          {selectedAvatarErrorMessage &&
-            <p className='change-avatar-error'>
-              {selectedAvatarErrorMessage}
-            </p>
-          }
-        </div>
-      </div>
-      <TextField
-        {...register('username')}
-        label={t(($) => $.update.input.username.label)}
-        labelIcon={<PersonIcon />}
-        autoComplete='username'
-        placeholder={t(($) => $.update.input.username.placeholder)}
-        status={getTextFieldStatus(Boolean(errors.username))}
-        errorMessage={errors.username?.message}
-        tooltipMessage={t(($) => $.update.input.username.tooltip)}
-        type='text'
-        disabled={isSubmitting}
-      />
-      <TextField
-        {...register('email')}
-        label={t(($) => $.update.input.email.label)}
-        labelIcon={<EnvelopeIcon />}
-        autoComplete='email'
-        placeholder={t(($) => $.update.input.email.placeholder)}
-        status={getTextFieldStatus(Boolean(errors.email))}
-        errorMessage={errors.email?.message}
-        tooltipMessage={t(($) => $.update.input.email.tooltip)}
-        type='email'
-        disabled={isSubmitting}
-      />
-      <TextareaField
-        {...register('description')}
-        label={t(($) => $.update.input.description.label)}
-        labelIcon={<PencilIcon />}
-        placeholder={t(($) => $.update.input.description.placeholder)}
-        status={getTextareaFieldStatus(Boolean(errors.description))}
-        errorMessage={errors.description?.message}
-        hintMessage={t(($) => $.update.input.description.hint)}
-        maxLength={201}
-        rows={1}
-        disabled={isSubmitting}
-      />
-      <Button type='submit' disabled={isSubmitting}>
-        {isSubmitting
-          ? t(($) => $.update.button.pending)
-          : t(($) => $.update.button.default)}
-      </Button>
-    </form>
-  );
-}
+//     return () => {
+//       URL.revokeObjectURL(selectedAvatar.url);
+//     }
+//   }, [selectedAvatar]);
 
-export default UpdateProfileForm;
+//   return (
+//     <form className='profile-update-form' onSubmit={(event) => void handleSubmit(handleFormSubmit)(event)}>
+//       {/* TODO: Replace this and Post's header with UserCard */}
+//       <div className='change-avatar-container'>
+//         <img
+//           className='avatar change-avatar-photo'
+//           src={selectedAvatar?.url ?? getProfileImageFallbackUrl(true, user.profileImage)}
+//           alt={t(($) => $.a11y.profilePicture, { ns: 'common', name: user.displayName })}
+//           width={64}
+//           height={64}
+//         />
+//         <div className='change-avatar-text-wrapper'>
+//           <p className='change-avatar-user'>{user.displayName}</p>
+//           <label className='change-avatar-label'>
+//             <input
+//               accept='image/*'
+//               className='visually-hidden'
+//               type='file'
+//               name='avatar'
+//               onChange={handleAvatarChange}
+//               disabled={isSubmitting}
+//             />
+//             {t(($) => $.update.input.avatar.label)}
+//           </label>
+//           {selectedAvatarErrorMessage &&
+//             <p className='change-avatar-error'>
+//               {selectedAvatarErrorMessage}
+//             </p>
+//           }
+//         </div>
+//       </div>
+//       <TextField
+//         {...register('username')}
+//         label={t(($) => $.update.input.username.label)}
+//         labelIcon={<PersonIcon />}
+//         autoComplete='username'
+//         placeholder={t(($) => $.update.input.username.placeholder)}
+//         status={getTextFieldStatus(Boolean(errors.username))}
+//         errorMessage={errors.username?.message}
+//         tooltipMessage={t(($) => $.update.input.username.tooltip)}
+//         type='text'
+//         disabled={isSubmitting}
+//       />
+//       <TextField
+//         {...register('email')}
+//         label={t(($) => $.update.input.email.label)}
+//         labelIcon={<EnvelopeIcon />}
+//         autoComplete='email'
+//         placeholder={t(($) => $.update.input.email.placeholder)}
+//         status={getTextFieldStatus(Boolean(errors.email))}
+//         errorMessage={errors.email?.message}
+//         tooltipMessage={t(($) => $.update.input.email.tooltip)}
+//         type='email'
+//         disabled={isSubmitting}
+//       />
+//       <TextareaField
+//         {...register('description')}
+//         label={t(($) => $.update.input.description.label)}
+//         labelIcon={<PencilIcon />}
+//         placeholder={t(($) => $.update.input.description.placeholder)}
+//         status={getTextareaFieldStatus(Boolean(errors.description))}
+//         errorMessage={errors.description?.message}
+//         hintMessage={t(($) => $.update.input.description.hint)}
+//         maxLength={201}
+//         rows={1}
+//         disabled={isSubmitting}
+//       />
+//       <Button type='submit' disabled={isSubmitting}>
+//         {isSubmitting
+//           ? t(($) => $.update.button.pending)
+//           : t(($) => $.update.button.default)}
+//       </Button>
+//     </form>
+//   );
+// }
+
+// export default UpdateProfileForm;

@@ -15,7 +15,6 @@ export interface CurrentUserView extends UserModel {
 
 export interface UpdateProfilePayload {
   username?: string;
-  email?: string;
   firstName?: string;
   secondName?: string;
   profileImage?: string;

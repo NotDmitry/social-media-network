@@ -1,6 +1,12 @@
 import { z } from 'zod';
 import type { CurrentUserView, UpdateProfilePayload, UserModel } from '@/entities/User/types';
-import { loginResponseSchema, logoutResponseSchema, refreshResponseSchema, signUpResponseSchema } from './schema';
+import {
+  changeEmailResponseSchema,
+  loginResponseSchema,
+  logoutResponseSchema,
+  refreshResponseSchema,
+  signUpResponseSchema
+} from './schema';
 
 export type AuthStatus = 'pending' | 'guest' | 'authenticated' | 'unavailable';
 
@@ -21,6 +27,12 @@ export interface SignUpPayload {
   secondName?: string;
 }
 
+export interface ChangeEmailPayload {
+  currentPassword: string;
+  email: string;
+}
+
+export type ChangeResponsePayload = z.output<typeof changeEmailResponseSchema>;
 export type LoginResponsePayload = z.output<typeof loginResponseSchema>;
 export type LogoutResponsePayload = z.output<typeof logoutResponseSchema>;
 export type SignUpResponsePayload = z.output<typeof signUpResponseSchema>;
