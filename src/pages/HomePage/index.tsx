@@ -5,10 +5,12 @@ import PostsFeed from '@/widgets/PostsFeed';
 import CreatePost from '@/features/CreatePost';
 import { useAuth } from '@/entities/auth/useAuth';
 import { getGroups } from '@/entities/Group/api/getGroups';
+import { getProfileImageFallbackUrl } from '@/entities/User/utilities';
 import { getSuggestedUsers } from '@/entities/User/api/getSuggestedUsers';
 import { getUserDisplayName } from '@/entities/User/utilities';
 import type { GroupModel } from '@/entities/Group/types';
 import type { SuggestedUserModel } from '@/entities/User/types';
+import defaultGroup from '@/assets/images/test_community_bcs.jpg';
 import CardsList from './CardsList';
 import type { CardData } from './CardsList';
 import './style.css';
@@ -19,7 +21,7 @@ const MAX_SUGGESTED_GROUPS_COUNT = 3;
 function suggestedUserToCardDataView(user: SuggestedUserModel): CardData {
   return {
     id: user.id,
-    pictureUrl: user.photo,
+    pictureUrl: getProfileImageFallbackUrl(false, user.photo),
     title: getUserDisplayName(user),
     subtitle: user.username.startsWith('@') ? user.username : `@${user.username}`,
   };
@@ -32,7 +34,7 @@ function selectSuggestedUsers(users: SuggestedUserModel[]) {
 function groupToCardDataView(group: GroupModel, membersCountView: string): CardData {
   return {
     id: group.id,
-    pictureUrl: group.photo,
+    pictureUrl: defaultGroup,
     title: group.title,
     subtitle: membersCountView,
   }

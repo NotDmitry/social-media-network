@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/entities/auth/useAuth';
+import { getProfileImageFallbackUrl } from '@/entities/User/utilities';
 import type { UpdateProfilePayload, UserView } from '@/entities/User/types';
 import { useAlert } from '@/shared/ui/Alert/useAlert';
 import Button from '@/shared/ui/Button';
@@ -141,7 +142,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
       <div className='change-avatar-container'>
         <img
           className='avatar change-avatar-photo'
-          src={selectedAvatar?.url ?? user.profileImage ?? undefined}
+          src={selectedAvatar?.url ?? getProfileImageFallbackUrl(true, user.profileImage)}
           alt={t(($) => $.a11y.profilePicture, { ns: 'common', name: user.displayName })}
           width={64}
           height={64}

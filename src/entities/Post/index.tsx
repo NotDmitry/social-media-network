@@ -9,12 +9,14 @@ import { getPostComments } from '@/entities/Comment/api/getPostComments';
 import { likePost } from '@/entities/Like/api/likePost';
 import { dislikePost } from '@/entities/Like/api/dislikePost';
 import { getUserById } from '@/entities/User/api/getUserById';
+import { getProfileImageFallbackUrl } from '@/entities/User/utilities';
 import { toUserView } from '@/entities/User/utilities';
 import type { UserView } from '@/entities/User/types';
 import { useAlert } from '@/shared/ui/Alert/useAlert';
 import Spinner from '@/shared/ui/Spinner';
 import { HeartIcon, CommentIcon, ChevronDownIcon } from '@/shared/icons';
 import { getRelativeTimePresentationString } from '@/shared/utilities/time';
+import defaultPost from '@/assets/images/test_post_3.jpg';
 import type { PostModel, PostsPage } from './types';
 import './style.css';
 
@@ -156,7 +158,7 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
       <header className='post-header'>
         <img
           className='avatar post-avatar'
-          src={author.profileImage ?? undefined}
+          src={getProfileImageFallbackUrl(author.id === currentUser?.id, author.profileImage)}
           alt={t(($) => $.a11y.profilePicture, { ns: 'common', name: author.displayName })}
           width={48}
           height={48}
@@ -173,7 +175,7 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
       {post.image &&
         <img
           className='post-image'
-          src={post.image}
+          src={defaultPost}
           width={500}
           alt={t(($) => $.post.imageAlt, { name: author.displayName })}
         />

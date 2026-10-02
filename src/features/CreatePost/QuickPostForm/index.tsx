@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { getProfileImageFallbackUrl } from '@/entities/User/utilities';
 import type { UserView } from '@/entities/User/types';
 import Button from '@/shared/ui/Button';
 import './style.css';
@@ -26,7 +27,7 @@ function QuickPostForm({ currentUser, onSubmit }: QuickPostFormProps) {
     <div className='create-post-container'>
       <img
         className='avatar create-post-avatar'
-        src={currentUser.profileImage ?? undefined}
+        src={getProfileImageFallbackUrl(true, currentUser.profileImage)}
         alt={t(($) => $.a11y.picture, { ns: 'common', name: currentUser.displayName })}
         width={64}
         height={64}
