@@ -8,8 +8,16 @@ import { muiGlobalTheme } from '@/app/muiThemeConfig';
 import AlertStack from '@/shared/ui/Alert/AlertStack';
 
 const ALERT_DURATION_MS = 5000;
+const QUERY_STALE_CACHE_TIME = 20 * 1000; // 20s
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: QUERY_STALE_CACHE_TIME,
+      retry: false,
+    }
+  }
+});
 
 function App() {
   return (

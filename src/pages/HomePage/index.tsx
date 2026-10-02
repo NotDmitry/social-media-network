@@ -1,10 +1,8 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from '@tanstack/react-query';
 import PostsFeed from '@/widgets/PostsFeed';
-import CreatePostModal from '@/features/CreatePostModal';
+import CreatePost from '@/features/CreatePost';
 import { useAuth } from '@/entities/auth/useAuth';
-import Button from '@/shared/ui/Button';
 import { getGroups } from '@/entities/Group/api/getGroups';
 import { getSuggestedUsers } from '@/entities/User/api/getSuggestedUsers';
 import { getUserDisplayName } from '@/entities/User/utilities';
@@ -14,8 +12,6 @@ import CardsList from './CardsList';
 import type { CardData } from './CardsList';
 import './style.css';
 
-const MAX_POST_FILE_SIZE = 10 * 1024 * 1024;
-const ACCEPTED_POST_FILE_TYPES = ['image/png', 'image/jpeg'];
 const MAX_SUGGESTED_USERS_COUNT = 5;
 const MAX_SUGGESTED_GROUPS_COUNT = 3;
 
@@ -32,6 +28,10 @@ function suggestedUserToCardDataView(user: SuggestedUserModel): CardData {
     title: getUserDisplayName(user),
     subtitle: user.username.startsWith('@') ? user.username : `@${user.username}`,
   };
+}
+
+function selectSuggestedUsers(users: SuggestedUserModel[]) {
+  return users.slice(0, MAX_SUGGESTED_USERS_COUNT).map(suggestedUserToCardDataView);
 }
 
 function groupToCardDataView(group: GroupModel): CardData {
@@ -51,10 +51,12 @@ function groupToCardDataView(group: GroupModel): CardData {
   }
 }
 
+function selectSuggestedGroups(groups: GroupModel[]) {
+  return groups.slice(0, MAX_SUGGESTED_GROUPS_COUNT).map(groupToCardDataView)
+}
+
 function HomePage() {
   const { t } = useTranslation(['homePage', 'common']);
-  const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
-  const [quickPostContent, setQuickPostContent] = useState('');
   const { currentUser } = useAuth();
 
   const {
@@ -64,7 +66,7 @@ function HomePage() {
   } = useQuery({
     queryKey: ['suggestedUsers'],
     queryFn: ({ signal }) => getSuggestedUsers(signal),
-    select: (users) => users.slice(0, MAX_SUGGESTED_USERS_COUNT).map(suggestedUserToCardDataView),
+    select: selectSuggestedUsers,
     enabled: currentUser !== null,
   });
 
@@ -75,66 +77,18 @@ function HomePage() {
   } = useQuery({
     queryKey: ['groups'],
     queryFn: ({ signal }) => getGroups(signal),
-    select: (groups) => groups.slice(0, MAX_SUGGESTED_GROUPS_COUNT).map(groupToCardDataView),
+    select: selectSuggestedGroups,
     enabled: currentUser !== null,
   });
-
-  function handleCreatePostModalOpen() {
-    setIsCreatePostModalOpen(true);
-  }
-
-  function handleCreatePostModalClose() {
-    setIsCreatePostModalOpen(false);
-  }
-
-  function handleQuickPostContentChange(event: React.ChangeEvent<HTMLInputElement>) {
-    setQuickPostContent(event.target.value);
-  }
-
-  function handleQuickPostSubmit(event: React.SubmitEvent<HTMLFormElement>) {
-    event.preventDefault();
-    handleCreatePostModalOpen();
-  }
 
   return (
     <div className='home-page-container'>
       <h1 className='visually-hidden'>{t(($) => $.title)}</h1>
       <section className='home-page-content'>
         <h2 className='visually-hidden'>{t(($) => $.postsFeedTitle)}</h2>
-        {/* Create post input */}
         {currentUser &&
-          <div className='create-post-container'>
-            <img
-              className='avatar create-post-avatar'
-              src={currentUser.profileImage ?? undefined}
-              alt={t(($) => $.a11y.picture, { ns: 'common', name: currentUser.displayName })}
-              width={64}
-              height={64}
-            />
-            <form className='create-post-input-section' onSubmit={handleQuickPostSubmit}>
-              <input
-                className='create-post-input'
-                type='text'
-                name='post'
-                placeholder={t(($) => $.quickPost.input.post.placeholder)}
-                value={quickPostContent}
-                onChange={handleQuickPostContentChange}
-              />
-              <Button type='submit'>{t(($) => $.quickPost.button.default)}</Button>
-            </form>
-          </div>
+          <CreatePost currentUser={currentUser} />
         }
-
-        {currentUser &&
-          <CreatePostModal
-            isOpen={isCreatePostModalOpen}
-            initialDescription={quickPostContent}
-            maxFileSize={MAX_POST_FILE_SIZE}
-            acceptedFileTypes={ACCEPTED_POST_FILE_TYPES}
-            onClose={handleCreatePostModalClose}
-          />
-        }
-
         <PostsFeed />
       </section>
 
