@@ -1,10 +1,10 @@
-import { userModelSchema } from '@/entities/User/schema';
-import type { UserModel } from '@/entities/User/types';
+import { publicUserModelSchema } from '@/entities/User/schema';
+import type { PublicUserModel } from '@/entities/User/types';
 import { apiRequest } from '@/shared/api/apiRequest';
 
 const GET_USER_BY_ID_ERROR_MESSAGE = 'Can\'t get the specified user';
 
-export async function getUserById(userId: number, signal?: AbortSignal): Promise<UserModel> {
+export async function getUserById(userId: number, signal?: AbortSignal): Promise<PublicUserModel> {
   return apiRequest(
     `/api/users/${String(userId)}`,
     {
@@ -12,7 +12,7 @@ export async function getUserById(userId: number, signal?: AbortSignal): Promise
       signal,
     },
     {
-      responseValidationSchema: userModelSchema,
+      responseValidationSchema: publicUserModelSchema,
       fallbackErrorMessage: GET_USER_BY_ID_ERROR_MESSAGE,
     }
   );

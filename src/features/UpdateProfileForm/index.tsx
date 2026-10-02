@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '@/entities/auth/useAuth';
 import { getProfileImageFallbackUrl } from '@/entities/User/utilities';
-import type { UpdateProfilePayload, UserView } from '@/entities/User/types';
+import type { CurrentUserView, UpdateProfilePayload } from '@/entities/User/types';
 import { useAlert } from '@/shared/ui/Alert/useAlert';
 import Button from '@/shared/ui/Button';
 import { uploadImage } from '@/shared/api/uploadImage';
@@ -15,7 +15,7 @@ import { updateProfileFormSchema, type UpdateProfileFormFields } from './schema'
 import './style.css';
 
 interface UpdateProfileFormProps {
-  user: UserView;
+  user: CurrentUserView;
   onSubmit?: () => void;
 }
 

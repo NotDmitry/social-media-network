@@ -1,11 +1,11 @@
 import { groupsSchema } from '@/entities/Group/schema';
 import type { GroupModel } from '@/entities/Group/types';
-import { protectedApiRequest } from '@/shared/api/protectedApiRequest';
+import { apiRequest } from '@/shared/api/apiRequest';
 
 const GET_GROUPS_ERROR_MESSAGE = 'Can\'t get suggested groups';
 
 export async function getGroups(signal?: AbortSignal): Promise<GroupModel[]> {
-  return protectedApiRequest(
+  return apiRequest(
     '/api/groups',
     {
       method: 'GET',
