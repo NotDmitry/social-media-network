@@ -108,6 +108,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           errorMessage={errors.password?.message}
           tooltipMessage={t(($) => $.signUp.input.password.tooltip)}
           infoMessage={t(($) => $.signUp.input.password.info)}
+          maxLength={129}
           showVisibilityToggle={true}
           disabled={isSubmitting}
         />
@@ -121,6 +122,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
           errorMessage={errors.repeatPassword?.message}
           tooltipMessage={t(($) => $.signUp.input.repeatPassword.tooltip)}
           infoMessage={t(($) => $.signUp.input.repeatPassword.info)}
+          maxLength={129}
           showVisibilityToggle={true}
           disabled={isSubmitting}
         />

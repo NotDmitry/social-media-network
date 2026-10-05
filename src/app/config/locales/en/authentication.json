@@ -78,7 +78,8 @@
         "info": "Your password is correct",
         "validation": {
           "required": "Password is required",
-          "minLength": "Password minimum length: 8"
+          "minLength": "Password minimum length: 8",
+          "maxLength": "Password maximum length: 128"
         }
       },
       "repeatPassword": {
