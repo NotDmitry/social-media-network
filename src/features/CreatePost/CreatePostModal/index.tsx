@@ -61,7 +61,7 @@ function CreatePostModal({
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['posts'] });
 
-      handleModalClose();
+      closeModal();
       showAlert(t(($) => $.createPost.alert.success), 'success');
     },
     onError: (error) => {
@@ -85,10 +85,17 @@ function CreatePostModal({
     });
   }
 
-  function handleModalClose() {
+  function closeModal() {
     setSelectedFile(null);
     setSelectedFileErrorMessage(null);
+    setIsFileDraggedOver(false);
     onClose();
+  }
+
+  function handleModalClose() {
+    if (!isPostCreationPending) {
+      closeModal();
+    }
   }
 
   function handleModalCancel(event: React.SyntheticEvent<HTMLDialogElement>) {
@@ -98,7 +105,7 @@ function CreatePostModal({
   }
 
   function handleBackdropClick(event: React.MouseEvent<HTMLDialogElement>) {
-    if (event.target === event.currentTarget && !isPostCreationPending) {
+    if (event.target === event.currentTarget) {
       handleModalClose();
     }
   }
@@ -212,6 +219,7 @@ function CreatePostModal({
         <header className='create-post-modal-header'>
           <p className='create-post-modal-title'>{t(($) => $.createPost.title)}</p>
           <button
+            aria-label={t(($) => $.createPost.close)}
             className='create-post-modal-close-button'
             type='button'
             onClick={handleModalClose}
