@@ -9,17 +9,20 @@ import {
   usernameSchema,
 } from '@/shared/schemas';
 
-export const userModelSchema = z.object({
+export const publicUserModelSchema = z.object({
   id: idSchema,
   username: usernameSchema,
-  email: emailSchema.nullable(),
   firstName: nameSchema.nullable(),
-  profileImage: imageUrlSchema.nullable(),
+  secondName: nameSchema.nullable(),
   description: descriptionSchema.nullable(),
   bio: descriptionSchema.nullable(),
-  secondName: nameSchema.nullable(),
-  lastLogin: dateTimeSchema.nullable(),
+  profileImage: imageUrlSchema.nullable(),
   creationDate: dateTimeSchema.nullable(),
+});
+
+export const userModelSchema = publicUserModelSchema.extend({
+  email: emailSchema.nullable(),
+  lastLogin: dateTimeSchema.nullable(),
   modifiedDate: dateTimeSchema.nullable(),
 });
 

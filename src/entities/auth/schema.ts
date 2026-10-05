@@ -24,3 +24,8 @@ export const signUpResponseSchema = z.object({
 });
 
 export const refreshResponseSchema = tokensSchema;
+
+export const updateEmailResponseSchema = z.object({
+  message: z.string(),
+  user: userModelSchema,
+});

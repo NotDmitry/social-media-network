@@ -8,7 +8,8 @@ import {
 import { login } from '@/entities/auth/api/login';
 import { logout } from '@/entities/auth/api/logout';
 import { signup } from '@/entities/auth/api/signup';
-import type { AuthExposedApi, SignInPayload, SignUpPayload } from '@/entities/auth/types';
+import { updateEmail as requestEmailUpdate } from '@/entities/auth/api/updateEmail';
+import type { AuthExposedApi, SignInPayload, SignUpPayload, UpdateEmailPayload } from '@/entities/auth/types';
 import { updateProfile as requestProfileUpdate } from '@/entities/User/api/updateProfile';
 import { toUserView } from '@/entities/User/utilities';
 import type { UpdateProfilePayload } from '@/entities/User/types';
@@ -26,21 +27,17 @@ export function useAuth(): AuthExposedApi {
   }
 
   async function signUp(signUpPayload: SignUpPayload) {
-    const signUpResponsePayload = await signup(signUpPayload);
+    await signup(signUpPayload);
 
     await signIn({
       email: signUpPayload.email,
       password: signUpPayload.password,
     });
-
-    return signUpResponsePayload;
   }
 
   async function signOut() {
     try {
-      const logoutResponsePayload = await logout();
-
-      return logoutResponsePayload;
+      await logout();
     } finally {
       dispatch(sessionCleared());
     }
@@ -50,6 +47,12 @@ export function useAuth(): AuthExposedApi {
     const updatedUser = await requestProfileUpdate(updatedFields);
 
     dispatch(userProfileUpdated(updatedUser));
+  }
+
+  async function updateEmail(updateEmailPayload: UpdateEmailPayload) {
+    const updateEmailResponsePayload = await requestEmailUpdate(updateEmailPayload);
+
+    dispatch(userProfileUpdated(updateEmailResponsePayload.user));
   }
 
   const currentUser = authState.status === 'authenticated' && authState.currentUser !== null ?
@@ -63,5 +66,6 @@ export function useAuth(): AuthExposedApi {
     signUp,
     signOut,
     updateProfile,
+    updateEmail,
   };
 }

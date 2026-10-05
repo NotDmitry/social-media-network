@@ -1,6 +1,12 @@
 import { z } from 'zod';
-import type { UpdateProfilePayload, UserModel, UserView } from '@/entities/User/types';
-import { loginResponseSchema, logoutResponseSchema, refreshResponseSchema, signUpResponseSchema } from './schema';
+import type { CurrentUserView, UpdateProfilePayload, UserModel } from '@/entities/User/types';
+import {
+  updateEmailResponseSchema,
+  loginResponseSchema,
+  logoutResponseSchema,
+  refreshResponseSchema,
+  signUpResponseSchema,
+} from './schema';
 
 export type AuthStatus = 'pending' | 'guest' | 'authenticated' | 'unavailable';
 
@@ -21,17 +27,24 @@ export interface SignUpPayload {
   secondName?: string;
 }
 
+export interface UpdateEmailPayload {
+  currentPassword: string;
+  email: string;
+}
+
 export type LoginResponsePayload = z.output<typeof loginResponseSchema>;
 export type LogoutResponsePayload = z.output<typeof logoutResponseSchema>;
 export type SignUpResponsePayload = z.output<typeof signUpResponseSchema>;
 export type RefreshResponsePayload = z.output<typeof refreshResponseSchema>;
+export type UpdateEmailResponsePayload = z.output<typeof updateEmailResponseSchema>;
 
 export interface AuthExposedApi {
   authStatus: AuthStatus;
-  currentUser: UserView | null;
+  currentUser: CurrentUserView | null;
   isUserAuthenticated: boolean;
   signIn: (signInPayload: SignInPayload) => Promise<void>;
-  signUp: (signUpPayload: SignUpPayload) => Promise<SignUpResponsePayload>;
-  signOut: () => Promise<LogoutResponsePayload>;
+  signUp: (signUpPayload: SignUpPayload) => Promise<void>;
+  signOut: () => Promise<void>;
   updateProfile: (updateProfilePayload: UpdateProfilePayload) => Promise<void>;
+  updateEmail: (updateEmailPayload: UpdateEmailPayload) => Promise<void>;
 }
