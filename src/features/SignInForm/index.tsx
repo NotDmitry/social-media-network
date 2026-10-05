@@ -43,7 +43,7 @@ function SignInForm({ onSubmit }: SignInFormProps) {
       await signIn(signInPayload);
       showAlert(t(($) => $.signIn.alert.success), 'success');
     } catch (error) {
-      const errorMessage = error instanceof BackendResponseError && error.status === 401 ?
+      const errorMessage = error instanceof BackendResponseError && error.code === 'INVALID_CREDENTIALS' ?
         t(($) => $.signIn.alert.invalidCredentials) : t(($) => $.signIn.alert.error);
 
       showAlert(errorMessage, 'error');
