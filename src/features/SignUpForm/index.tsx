@@ -31,6 +31,7 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
   const {
     register,
     handleSubmit,
+    setError,
     formState: {
       errors,
       isSubmitted,
@@ -46,10 +47,15 @@ function SignUpForm({ onSubmit }: SignUpFormProps) {
       await signUp(signUpPayload);
       showAlert(t(($) => $.signUp.alert.success), 'success');
     } catch (error) {
-      const errorMessage = error instanceof BackendResponseError && error.code === 'EMAIL_TAKEN' ?
-        t(($) => $.signUp.alert.emailTaken) : t(($) => $.signUp.alert.error);
+      if (error instanceof BackendResponseError && error.code === 'EMAIL_TAKEN') {
+        setError('email', {
+          message: t(($) => $.signUp.input.email.validation.taken),
+        });
 
-      showAlert(errorMessage, 'error');
+        return;
+      }
+
+      showAlert(t(($) => $.signUp.alert.error), 'error');
       console.error(error);
       return;
     }

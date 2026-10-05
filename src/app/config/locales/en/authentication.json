@@ -48,8 +48,7 @@
     "link": "Sign in",
     "alert": {
       "success": "Account successfully created",
-      "error": "Sign up failed",
-      "emailTaken": "An account with this email already exists"
+      "error": "Sign up failed"
     },
     "button": {
       "default": "Sign Up",
@@ -67,7 +66,10 @@
       "email": {
         "label": "Email",
         "placeholder": "Enter email",
-        "tooltip": "Valid email example: example@gmail.com"
+        "tooltip": "Valid email example: example@gmail.com",
+        "validation": {
+          "taken": "Email is already in use"
+        }
       },
       "password": {
         "label": "Password",
