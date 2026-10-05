@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useInfiniteQuery, useQueries, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQueries, useQuery, type UseQueryResult } from '@tanstack/react-query';
 import Post from '@/entities/Post';
 import { useAuth } from '@/entities/auth/useAuth';
 import { getCurrentUserLikes } from '@/entities/Like/api/getCurrentUserLikes';
 import { getPosts } from '@/entities/Post/api/getPosts';
 import { getUserById } from '@/entities/User/api/getUserById';
 import { toUserView } from '@/entities/User/utilities';
-import type { UserView } from '@/entities/User/types';
+import type { PublicUserModel, UserView } from '@/entities/User/types';
 import FloatingActionButton from '@/shared/ui/FloatingActionButton';
 import Spinner from '@/shared/ui/Spinner';
 import { ChevronDownIcon } from '@/shared/icons';
@@ -15,8 +15,30 @@ import './style.css';
 
 const POSTS_PAGE_SIZE = 10;
 
+type AuthorQueryResult = Pick<UseQueryResult<UserView>, 'data' | 'isError' | 'isPending'>;
+
 function getLikedPostIdsSet(likedPostIds: number[]) {
   return new Set(likedPostIds);
+}
+
+function selectUserView(user: PublicUserModel) {
+  return toUserView(user);
+}
+
+function combineAuthorsQueries(authorsQueries: AuthorQueryResult[]) {
+  const authors = new Map<number, UserView>();
+
+  authorsQueries.forEach((authorQuery) => {
+    if (authorQuery.data) {
+      authors.set(authorQuery.data.id, authorQuery.data);
+    }
+  });
+
+  return {
+    data: authors,
+    isError: authorsQueries.some((authorQuery) => authorQuery.isError),
+    isPending: authorsQueries.some((authorQuery) => authorQuery.isPending),
+  };
 }
 
 function PostsFeed() {
@@ -77,23 +99,10 @@ function PostsFeed() {
       return {
         queryKey: ['author', authorId],
         queryFn: ({ signal }) => getUserById(authorId, signal),
+        select: selectUserView,
       };
     }),
-    combine: (authorsQueries) => {
-      const authors = new Map<number, UserView>();
-
-      authorsQueries.forEach((authorQuery) => {
-        if (authorQuery.data) {
-          authors.set(authorQuery.data.id, toUserView(authorQuery.data));
-        }
-      });
-
-      return {
-        data: authors,
-        isError: authorsQueries.some((authorQuery) => authorQuery.isError),
-        isPending: authorsQueries.some((authorQuery) => authorQuery.isPending),
-      };
-    },
+    combine: combineAuthorsQueries,
   });
 
   const isInitialPending = (

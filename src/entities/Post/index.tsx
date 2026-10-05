@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { animated, easings, useTransition } from '@react-spring/web';
 import { useMutation, useQueries, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
@@ -258,4 +258,4 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
   );
 }
 
-export default Post;
+export default memo(Post);
