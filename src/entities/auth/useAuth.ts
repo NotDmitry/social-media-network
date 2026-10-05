@@ -27,21 +27,17 @@ export function useAuth(): AuthExposedApi {
   }
 
   async function signUp(signUpPayload: SignUpPayload) {
-    const signUpResponsePayload = await signup(signUpPayload);
+    await signup(signUpPayload);
 
     await signIn({
       email: signUpPayload.email,
       password: signUpPayload.password,
     });
-
-    return signUpResponsePayload;
   }
 
   async function signOut() {
     try {
-      const logoutResponsePayload = await logout();
-
-      return logoutResponsePayload;
+      await logout();
     } finally {
       dispatch(sessionCleared());
     }

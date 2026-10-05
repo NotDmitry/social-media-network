@@ -43,8 +43,8 @@ export interface AuthExposedApi {
   currentUser: CurrentUserView | null;
   isUserAuthenticated: boolean;
   signIn: (signInPayload: SignInPayload) => Promise<void>;
-  signUp: (signUpPayload: SignUpPayload) => Promise<SignUpResponsePayload>;
-  signOut: () => Promise<LogoutResponsePayload>;
+  signUp: (signUpPayload: SignUpPayload) => Promise<void>;
+  signOut: () => Promise<void>;
   updateProfile: (updateProfilePayload: UpdateProfilePayload) => Promise<void>;
   updateEmail: (updateEmailPayload: UpdateEmailPayload) => Promise<void>;
 }
