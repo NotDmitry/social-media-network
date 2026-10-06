@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteComment } from '@/entities/Comment/api/deleteComment';
@@ -84,4 +85,4 @@ function Comment({ author, comment, canDelete }: CommentProps) {
   );
 }
 
-export default Comment;
+export default memo(Comment);
