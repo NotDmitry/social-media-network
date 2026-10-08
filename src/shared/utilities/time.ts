@@ -88,6 +88,10 @@ export function getRelativeTimePresentationString(dateTimeString: string, locale
   return relativeTimeFormatter.format(0, 'second');
 }
 
+/**
+ * Returns the month string in the short format e.g.: 'Jan', 'Aug'.
+ * @param locale A language code in the format accepted by Intl locales argument.
+ */
 export function getShortMonthPresentationString(date: Date, locale: string) {
   return getShortMonthFormatter(locale).format(date);
 }
