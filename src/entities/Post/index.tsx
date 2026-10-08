@@ -22,7 +22,7 @@ import type { PublicUserModel, UserView } from '@/entities/User/types';
 import { useAlert } from '@/shared/ui/Alert/useAlert';
 import Spinner from '@/shared/ui/Spinner';
 import { HeartIcon, CommentIcon, ChevronDownIcon } from '@/shared/icons';
-import { getRelativeTimePresentationString } from '@/shared/utilities/time';
+import { getRelativePastTimePresentationString } from '@/shared/utilities/time';
 import defaultPost from '@/assets/images/test_post_3.jpg';
 import type { PostModel, PostsPage } from './types';
 import './style.css';
@@ -184,7 +184,7 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
           className='post-time'
           dateTime={post.creationDate}
         >
-          {getRelativeTimePresentationString(post.creationDate, i18n.resolvedLanguage ?? i18n.language)}
+          {getRelativePastTimePresentationString(post.creationDate, i18n.resolvedLanguage ?? i18n.language)}
         </time>
       </header>
 
