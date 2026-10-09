@@ -59,12 +59,23 @@ function getShortMonthFormatter(locale: string) {
   return shortMonthFormatter;
 }
 
-export function getRelativeTimePresentationString(dateTimeString: string, locale: string) {
+/**
+ * Returns the presentation string of elapsed time in the past relative to the current time (now).
+ * The relative time thresholds are 'now', 'minutes', 'hours', 'days'.
+ * For the elapsed time under 1 minute returns 'now'.
+ * The amount is rounded to the nearest whole unit (like in Math.random rule).
+ * Exact half units rounds towards zero (5 min 30 seconds is '5 min. ago').
+ * If elapsed time is more than 7 days - the format changes to the full calendar date (e.g.: Oct 8, 2026)
+ * Returns 'null' for time in the future or invalid ISO string.
+ * @param dateTimeString A date time string in the ECMAScript supported format (ISO string).
+ * @param locale A language code in the format accepted by Intl locales argument.
+ */
+export function getRelativePastTimePresentationString(dateTimeString: string, locale: string) {
   const nowTimestamp = Date.now();
   const date = new Date(dateTimeString);
   const dateTimestamp = date.getTime();
 
-  if (Number.isNaN(dateTimestamp)) {
+  if (Number.isNaN(dateTimestamp) || dateTimestamp > nowTimestamp) {
     return null;
   }
 
@@ -88,6 +99,10 @@ export function getRelativeTimePresentationString(dateTimeString: string, locale
   return relativeTimeFormatter.format(0, 'second');
 }
 
+/**
+ * Returns the month string in the short format e.g.: 'Jan', 'Aug'.
+ * @param locale A language code in the format accepted by Intl locales argument.
+ */
 export function getShortMonthPresentationString(date: Date, locale: string) {
   return getShortMonthFormatter(locale).format(date);
 }

@@ -7,7 +7,7 @@ import type { UserView } from '@/entities/User/types';
 import type { CommentModel } from '@/entities/Comment/types';
 import { TrashIcon } from '@/shared/icons';
 import { useAlert } from '@/shared/ui/Alert/useAlert';
-import { getRelativeTimePresentationString } from '@/shared/utilities/time';
+import { getRelativePastTimePresentationString } from '@/shared/utilities/time';
 import './style.css';
 
 interface CommentProps {
@@ -66,7 +66,7 @@ function Comment({ author, comment, canDelete }: CommentProps) {
           className='comment-time'
           dateTime={comment.creationDate}
         >
-          {getRelativeTimePresentationString(comment.creationDate, i18n.resolvedLanguage ?? i18n.language)}
+          {getRelativePastTimePresentationString(comment.creationDate, i18n.resolvedLanguage ?? i18n.language)}
         </time>
         {canDelete &&
           <button
