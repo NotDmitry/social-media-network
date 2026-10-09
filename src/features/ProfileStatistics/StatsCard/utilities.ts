@@ -6,6 +6,16 @@ interface TrendLabels {
   weekOverWeek: string;
 }
 
+/**
+ * Returns a card view with the count of activities in the last 7 local calendar days including today.
+ * Compares current count with the preceding week to calculate the trend.
+ * When the preceding week doesn't have any data, uses the no-activity label;
+ * otherwise shows the rounded percentage change with the week-over-week label ('+X%' | '-X%' | '0%').
+ * @param title A title of the card
+ * @param activities Raw activity stats which include creationDate
+ * @param trendLabels A label describing the compared periods of data changing
+ * @returns
+ */
 export function toWeeklyStatsCardDataView(
   title: string,
   activities: Activity[],
