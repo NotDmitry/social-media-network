@@ -29,6 +29,7 @@ export default defineConfig({
         test: {
           name: 'browser',
           include: ['src/**/*.test.tsx'],
+          setupFiles: ['src/test/browser.i18n.config.ts'],
           browser: {
             enabled: true,
             provider: playwright(),
@@ -50,6 +51,7 @@ export default defineConfig({
         'src/main.tsx',
         'src/shared/schemas/**',
         'src/**/schema.ts',
+        'src/test/**',
       ],
     }
   }
