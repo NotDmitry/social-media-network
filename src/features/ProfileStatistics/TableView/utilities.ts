@@ -11,7 +11,7 @@ interface ActivityPeriod {
   endExclusive: Date;
 }
 
-interface ActivityTableOptions extends Pick<TableViewProps, 'caption' | 'columnHeaders'> {
+export interface ActivityTableOptions extends Pick<TableViewProps, 'caption' | 'columnHeaders'> {
   dataPeriod: DataPeriod;
   periodsCount: number;
   locale: string;
@@ -76,6 +76,13 @@ function getActivityPeriodTableHeading(activityPeriod: ActivityPeriod, dataPerio
   return getShortMonthPresentationString(activityPeriod.start, locale);
 }
 
+/**
+ * Returns tabular activity counts for the last local calendar period counts from oldest to newest.
+ * The periods are 'day' (format: '12 Oct'), 'week' (format: '12 Oct – 18 Oct') and 'month' (format: 'Oct').
+ * Empty periods defaults to zero count.
+ * @param activities Raw activity stats which include creationDate
+ * @param options Table labels (caption and column headers), the minimal period and its counts, locale.
+ */
 export function toActivityTableView(
   activities: Activity[],
   { caption, columnHeaders, dataPeriod, periodsCount, locale }: ActivityTableOptions
