@@ -14,7 +14,6 @@ interface TrendLabels {
  * @param title A title of the card
  * @param activities Raw activity stats which include creationDate
  * @param trendLabels A label describing the compared periods of data changing
- * @returns
  */
 export function toWeeklyStatsCardDataView(
   title: string,
