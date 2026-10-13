@@ -22,9 +22,12 @@ describe('toActivityTableView', () => {
   const fixedTestOptions = { caption, columnHeaders, locale };
 
   const activities = {
+    february28: { creationDate: new Date(2026, 1, 28).toISOString() },
     april13: { creationDate: new Date(2026, 3, 13, 9).toISOString() },
     april21: { creationDate: new Date(2026, 3, 21, 1).toISOString() },
+    april30: { creationDate: new Date(2026, 3, 30).toISOString() },
     may1: { creationDate: new Date(2026, 4, 1, 12).toISOString() },
+    may31: { creationDate: new Date(2026, 4, 31).toISOString() },
     june5: { creationDate: new Date(2026, 5, 5, 9).toISOString() },
     june6: { creationDate: new Date(2026, 5, 6, 12).toISOString() },
     june7Start: { creationDate: new Date(2026, 5, 7).toISOString() },
@@ -130,6 +133,27 @@ describe('toActivityTableView', () => {
       },
     },
     {
+      testDescription: 'counts end of the months',
+      activities: [
+        activities.february28,
+        activities.april30,
+        activities.may31,
+        activities.june13TodayAfternoon,
+      ],
+      options: { ...fixedTestOptions, dataPeriod: 'month', periodsCount: 5 },
+      expected: {
+        caption,
+        columnHeaders,
+        data: [
+          { rowHeading: 'Feb', dataSlots: [1] },
+          { rowHeading: 'Mar', dataSlots: [0] },
+          { rowHeading: 'Apr', dataSlots: [1] },
+          { rowHeading: 'May', dataSlots: [1] },
+          { rowHeading: 'Jun', dataSlots: [1] },
+        ]
+      },
+    },
+    {
       testDescription: 'utilizes provided non-english locale',
       activities: [
         activities.june13TodayMorning,
@@ -197,6 +221,35 @@ describe('toActivityTableView', () => {
   test.for(activityTableCases)('$testDescription', ({ activities, options, expected }) => {
     // Act
     const actualTableView = toActivityTableView(activities, options);
+
+    // Assert
+    expect(actualTableView).toEqual(expected);
+  });
+
+  test('month mode works when today is the 31st of May', () => {
+    // Arrange
+    vi.setSystemTime(new Date(2026, 4, 31, 23, 59, 59, 999));
+
+    const options: ActivityTableOptions = { ...fixedTestOptions, dataPeriod: 'month', periodsCount: 3 };
+    const expected: TableViewProps = {
+      caption,
+      columnHeaders,
+      data: [
+        { rowHeading: 'Mar', dataSlots: [0] },
+        { rowHeading: 'Apr', dataSlots: [2] },
+        { rowHeading: 'May', dataSlots: [1] },
+      ]
+    };
+
+    // Act
+    const actualTableView = toActivityTableView(
+      [
+        activities.april21,
+        activities.april30,
+        activities.may31,
+      ],
+      options
+    );
 
     // Assert
     expect(actualTableView).toEqual(expected);
