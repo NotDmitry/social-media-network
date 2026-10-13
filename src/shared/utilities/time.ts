@@ -78,11 +78,11 @@ function getDayShortMonthFormatter(locale: string) {
 /**
  * Returns the presentation string of elapsed time in the past relative to the current time (now).
  * The relative time thresholds are 'now', 'minutes', 'hours', 'days'.
- * For the elapsed time under 1 minute returns 'now'.
- * The amount is rounded to the nearest whole unit (like in Math.random rule).
+ * For the elapsed time under 1 minute or future time returns 'now'.
+ * The amount is rounded to the nearest whole unit (like in Math.round rule).
  * Exact half units rounds towards zero (5 min 30 seconds is '5 min. ago').
  * If elapsed time is more than 7 days - the format changes to the full calendar date (e.g.: Oct 8, 2026)
- * Returns 'null' for time in the future or invalid ISO string.
+ * Returns 'null' for invalid ISO string.
  * @param dateTimeString A date time string in the ECMAScript supported format (ISO string).
  * @param locale A language code in the format accepted by Intl locales argument.
  */
@@ -91,28 +91,35 @@ export function getRelativePastTimePresentationString(dateTimeString: string, lo
   const date = new Date(dateTimeString);
   const dateTimestamp = date.getTime();
 
-  if (Number.isNaN(dateTimestamp) || dateTimestamp > nowTimestamp) {
+  if (Number.isNaN(dateTimestamp)) {
     return null;
   }
 
-  const dateDiff = dateTimestamp - nowTimestamp;
-  const absoluteDateDiff = Math.abs(dateDiff);
+  const timestampDifference = Math.min(dateTimestamp - nowTimestamp, 0);
+  const elapsedTimeMs = Math.abs(timestampDifference);
 
-  if (absoluteDateDiff > MS_IN_WEEK) {
+  if (elapsedTimeMs > MS_IN_WEEK) {
     return getDateTimeFormatter(locale).format(date);
   }
 
   const relativeTimeFormatter = getRelativeTimeFormatter(locale);
 
-  for (const [unit, msThreshold] of Object.entries(displayedUnitsMsThresholds) as
-    [Intl.RelativeTimeFormatUnit, number][]) {
-
-    if (absoluteDateDiff >= msThreshold) {
-      return relativeTimeFormatter.format(Math.round(dateDiff / msThreshold), unit);
-    }
+  if (elapsedTimeMs < MS_IN_MINUTE) {
+    return relativeTimeFormatter.format(0, 'second');
   }
 
-  return relativeTimeFormatter.format(0, 'second');
+  const displayedUnits = Object.entries(displayedUnitsMsThresholds) as [Intl.RelativeTimeFormatUnit, number][];
+
+  for (let i = 0; i < displayedUnits.length; i++) {
+    const [unit, msThreshold] = displayedUnits[i];
+    const nextMsThreshold = displayedUnits.at(i + 1)?.[1];
+
+    const hasNextThreshold = nextMsThreshold !== undefined;
+
+    if (!hasNextThreshold || elapsedTimeMs > msThreshold - nextMsThreshold / 2) {
+      return relativeTimeFormatter.format(Math.round(timestampDifference / msThreshold), unit);
+    }
+  }
 }
 
 /**

@@ -57,6 +57,16 @@ describe('getRelativePastTimePresentationString', () => {
       expected: '59 min. ago'
     },
     {
+      elapsedTime: '59 minutes 30 seconds',
+      dateTimeString: new Date(2026, 5, 13, 8, 0, 30).toISOString(),
+      expected: '59 min. ago'
+    },
+    {
+      elapsedTime: '59 minutes 31 seconds',
+      dateTimeString: new Date(2026, 5, 13, 8, 0, 29).toISOString(),
+      expected: '1 hr. ago'
+    },
+    {
       elapsedTime: '1 hour',
       dateTimeString: new Date(2026, 5, 13, 8).toISOString(),
       expected: '1 hr. ago'
@@ -70,6 +80,16 @@ describe('getRelativePastTimePresentationString', () => {
       elapsedTime: '23 hours',
       dateTimeString: new Date(2026, 5, 12, 10).toISOString(),
       expected: '23 hr. ago'
+    },
+    {
+      elapsedTime: '23 hours 30 minutes',
+      dateTimeString: new Date(2026, 5, 12, 9, 30).toISOString(),
+      expected: '23 hr. ago'
+    },
+    {
+      elapsedTime: '23 hours 31 minutes',
+      dateTimeString: new Date(2026, 5, 12, 9, 29).toISOString(),
+      expected: 'yesterday'
     },
     {
       elapsedTime: '1 day',
@@ -147,7 +167,7 @@ describe('getRelativePastTimePresentationString', () => {
     expect(actualRelativeTimeString).toBeNull();
   });
 
-  test('returns null for the timestamp in the future', () => {
+  test('returns \'now\' for the timestamp in the future', () => {
     // Arrange
     const testDate = new Date(2026, 5, 13, 9, 0, 0, 1).toISOString();
 
@@ -155,7 +175,7 @@ describe('getRelativePastTimePresentationString', () => {
     const actualRelativeTimeString = getRelativePastTimePresentationString(testDate, 'en');
 
     // Assert
-    expect(actualRelativeTimeString).toBeNull();
+    expect(actualRelativeTimeString).toBe('now');
   });
 
   test('switches locales without stale cache', () => {
