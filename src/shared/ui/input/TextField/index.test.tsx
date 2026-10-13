@@ -78,6 +78,7 @@ describe('TextField', () => {
     const tooltip = screen.getByRole('tooltip');
 
     // Assert
+    await expect.element(tooltip).toBeVisible();
     await expect.element(tooltip).toHaveTextContent(tooltipMessage);
   });
 });
