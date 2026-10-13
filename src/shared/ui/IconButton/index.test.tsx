@@ -4,7 +4,7 @@ import { CloseIcon } from '@/shared/icons';
 import IconButton from './index';
 
 describe('IconButton', () => {
-  const label = 'Close'
+  const label = 'Close';
 
   test('has an accessible name', async () => {
     // Arrange
