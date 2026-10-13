@@ -153,7 +153,7 @@ describe('getUserDisplayName', () => {
 
 describe('isUserModel', () => {
   // Arrange
-  const testCurrentUser: UserModel = {
+  const testCurrentUser = Object.freeze<UserModel>({
     id: 1,
     firstName: 'Jane',
     secondName: 'Doe',
@@ -165,9 +165,9 @@ describe('isUserModel', () => {
     email: 'jane.doe@gmail.com',
     lastLogin: '2026-10-09T00:00:00.000Z',
     modifiedDate: '2026-10-09T00:00:00.000Z',
-  };
+  });
 
-  const testPublicUser: PublicUserModel = {
+  const testPublicUser = Object.freeze<PublicUserModel>({
     id: 2,
     firstName: 'John',
     secondName: 'Doe',
@@ -176,7 +176,7 @@ describe('isUserModel', () => {
     bio: null,
     creationDate: '2026-10-09T00:00:00.000Z',
     profileImage: null,
-  };
+  });
 
   test('accepts current user', () => {
     // Act
@@ -237,10 +237,26 @@ describe('isUserModel', () => {
     // Assert
     expect(isValidUserModel).toBe(true);
   });
+
+  test('rejects null', () => {
+    // Act
+    const isValidUserModel = isUserModel(null);
+
+    // Assert
+    expect(isValidUserModel).toBe(false);
+  });
+
+  test('rejects undefined', () => {
+    // Act
+    const isValidUserModel = isUserModel(undefined);
+
+    // Assert
+    expect(isValidUserModel).toBe(false);
+  });
 });
 
 describe('toUserView', () => {
-  const testCurrentUser: UserModel = {
+  const testCurrentUser = Object.freeze<UserModel>({
     id: 1,
     firstName: 'Jane',
     secondName: 'Doe',
@@ -252,7 +268,7 @@ describe('toUserView', () => {
     email: 'jane.doe@gmail.com',
     lastLogin: '2026-10-09T00:00:00.000Z',
     modifiedDate: '2026-10-09T00:00:00.000Z',
-  };
+  });
 
   test('returns user with displayName', () => {
     // Arrange
