@@ -27,6 +27,9 @@ export default defineConfig({
         },
       },
       {
+        optimizeDeps: {
+          entries: ['src/**/*.test.tsx'],
+        },
         test: {
           name: 'browser',
           include: ['src/**/*.test.tsx'],
