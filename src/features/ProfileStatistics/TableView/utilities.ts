@@ -1,4 +1,4 @@
-import { getShortMonthPresentationString } from '@/shared/utilities/time';
+import { getDayShortMonthPresentationString, getShortMonthPresentationString } from '@/shared/utilities/time';
 import type { Activity } from '../types';
 import type { TableRow, TableViewProps } from './index';
 
@@ -57,20 +57,19 @@ function getActivityPeriods(dataPeriod: DataPeriod, periodsCount: number): Activ
   return activityPeriods;
 }
 
-function formatDayAndMonth(date: Date, locale: string) {
-  return `${String(date.getDate())} ${getShortMonthPresentationString(date, locale)}`;
-}
-
 function getActivityPeriodTableHeading(activityPeriod: ActivityPeriod, dataPeriod: DataPeriod, locale: string) {
   if (dataPeriod === 'day') {
-    return formatDayAndMonth(activityPeriod.start, locale);
+    return getDayShortMonthPresentationString(activityPeriod.start, locale);
   }
 
   if (dataPeriod === 'week') {
     const weekEndInclusive = new Date(activityPeriod.endExclusive);
     weekEndInclusive.setDate(weekEndInclusive.getDate() - 1);
 
-    return `${formatDayAndMonth(activityPeriod.start, locale)} – ${formatDayAndMonth(weekEndInclusive, locale)}`;
+    const weekStartLabel = getDayShortMonthPresentationString(activityPeriod.start, locale);
+    const weekEndLabel = getDayShortMonthPresentationString(weekEndInclusive, locale);
+
+    return `${weekStartLabel} – ${weekEndLabel}`;
   }
 
   return getShortMonthPresentationString(activityPeriod.start, locale);

@@ -13,6 +13,7 @@ const displayedUnitsMsThresholds: Partial<Record<Intl.RelativeTimeFormatUnit, nu
 const relativeTimeFormatters = new Map<string, Intl.RelativeTimeFormat>();
 const dateTimeFormatters = new Map<string, Intl.DateTimeFormat>();
 const shortMonthFormatters = new Map<string, Intl.DateTimeFormat>();
+const dayShortMonthFormatters = new Map<string, Intl.DateTimeFormat>();
 
 function getRelativeTimeFormatter(locale: string) {
   let relativeTimeFormatter = relativeTimeFormatters.get(locale);
@@ -57,6 +58,21 @@ function getShortMonthFormatter(locale: string) {
   }
 
   return shortMonthFormatter;
+}
+
+function getDayShortMonthFormatter(locale: string) {
+  let dayShortMonthFormatter = dayShortMonthFormatters.get(locale);
+
+  if (dayShortMonthFormatter === undefined) {
+    dayShortMonthFormatter = new Intl.DateTimeFormat(locale, {
+      day: 'numeric',
+      month: 'short',
+    });
+
+    dayShortMonthFormatters.set(locale, dayShortMonthFormatter);
+  }
+
+  return dayShortMonthFormatter;
 }
 
 /**
@@ -105,4 +121,22 @@ export function getRelativePastTimePresentationString(dateTimeString: string, lo
  */
 export function getShortMonthPresentationString(date: Date, locale: string) {
   return getShortMonthFormatter(locale).format(date);
+}
+
+/**
+ * Returns the 'day short_month' date presentation string in day-first format.
+ * Month forms come from locale-aware day-month formatter
+ * E.g.: May 13th is '13 May' in English and '13 мая' in Russian.
+ * @param locale A language code in the format accepted by Intl locales argument.
+ */
+export function getDayShortMonthPresentationString(date: Date, locale: string) {
+  const dateParts = getDayShortMonthFormatter(locale).formatToParts(date);
+  const day = dateParts.find(({ type }) => type === 'day');
+  const month = dateParts.find(({ type }) => type === 'month');
+
+  if (day === undefined || month === undefined) {
+    throw new Error('Date formatter couldn\'t find date parts');
+  }
+
+  return `${day.value} ${month.value}`;
 }
