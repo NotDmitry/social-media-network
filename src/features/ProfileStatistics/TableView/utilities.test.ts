@@ -143,6 +143,47 @@ describe('toActivityTableView', () => {
         ]
       },
     },
+    {
+      testDescription: 'counts daily statistics in Russian (5 days)',
+      activities: [
+        activities.june9,
+        activities.june10,
+        activities.june13TodayMorning,
+        activities.june13TodayAfternoon,
+      ],
+      options: { ...fixedTestOptions, dataPeriod: 'day', periodsCount: 5, locale: 'ru' },
+      expected: {
+        caption,
+        columnHeaders,
+        data: [
+          { rowHeading: '9 июн.', dataSlots: [1] },
+          { rowHeading: '10 июн.', dataSlots: [1] },
+          { rowHeading: '11 июн.', dataSlots: [0] },
+          { rowHeading: '12 июн.', dataSlots: [0] },
+          { rowHeading: '13 июн.', dataSlots: [2] },
+        ]
+      },
+    },
+    {
+      testDescription: 'counts weekly statistics in Russian (2 weeks)',
+      activities: [
+        activities.june5,
+        activities.june6,
+        activities.june7Start,
+        activities.june10,
+        activities.june13TodayMorning,
+        activities.june13TodayAfternoon,
+      ],
+      options: { ...fixedTestOptions, dataPeriod: 'week', periodsCount: 2, locale: 'ru' },
+      expected: {
+        caption,
+        columnHeaders,
+        data: [
+          { rowHeading: '31 мая – 6 июн.', dataSlots: [2] },
+          { rowHeading: '7 июн. – 13 июн.', dataSlots: [4] },
+        ]
+      },
+    },
   ];
 
   beforeAll(() => {
