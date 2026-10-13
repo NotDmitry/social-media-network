@@ -1,5 +1,9 @@
 import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
-import { getRelativePastTimePresentationString, getShortMonthPresentationString } from './time';
+import {
+  getDayShortMonthPresentationString,
+  getRelativePastTimePresentationString,
+  getShortMonthPresentationString,
+} from './time';
 
 describe('getRelativePastTimePresentationString', () => {
   // Arrange
@@ -224,5 +228,31 @@ describe('getShortMonthPresentationString', () => {
 
     // Assert
     expect(() => getShortMonthPresentationString(testDate, invalidLocale)).toThrow();
+  });
+});
+
+describe('getDayShortMonthPresentationString', () => {
+  const testDate = new Date(2026, 4, 13);
+
+  test('returns day-first English locale-aware presentation', () => {
+    // Arrange
+    const expectedDayMonth = '13 May';
+
+    // Act
+    const actualDayMonth = getDayShortMonthPresentationString(testDate, 'en');
+
+    // Assert
+    expect(actualDayMonth).toBe(expectedDayMonth);
+  });
+
+  test('returns day-first Russian locale-aware presentation', () => {
+    // Arrange
+    const expectedDayMonth = '13 мая';
+
+    // Act
+    const actualDayMonth = getDayShortMonthPresentationString(testDate, 'ru');
+
+    // Assert
+    expect(actualDayMonth).toBe(expectedDayMonth);
   });
 });
