@@ -2,6 +2,7 @@ import i18next from 'i18next';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 import { useAuth } from '@/entities/auth/useAuth';
+import type { SignInPayload } from '@/entities/auth/types';
 import { BackendResponseError } from '@/shared/api/backendResponseError';
 import { useAlertStore } from '@/shared/ui/Alert/model/store';
 import AlertStack from '@/shared/ui/Alert/AlertStack';
@@ -28,6 +29,10 @@ describe('SignInForm', () => {
 
   test('accepts valid fields and calls onSubmit when signing in', async () => {
     // Arrange
+    const expectedPayload: SignInPayload = {
+      email: testEmail,
+      password: testPassword,
+    };
     const mockOnSubmit = vi.fn();
     const screen = await render(<SignInForm onSubmit={mockOnSubmit} />);
     const emailInput = screen.getByRole('textbox', { name: emailLabel });
@@ -41,10 +46,7 @@ describe('SignInForm', () => {
 
     // Assert
     expect(mockOnSubmit).toHaveBeenCalledOnce();
-    expect(mockUseAuthResult.signIn).toHaveBeenCalledExactlyOnceWith({
-      email: testEmail,
-      password: testPassword,
-    });
+    expect(mockUseAuthResult.signIn).toHaveBeenCalledExactlyOnceWith(expectedPayload);
   });
 
   test('reject an empty submission with visible errors', async () => {
