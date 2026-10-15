@@ -76,4 +76,29 @@ describe('DrawerNavigation', () => {
     await expect.element(profileStatisticsLink).toBeVisible();
     await expect.element(profileStatisticsLink).toHaveAttribute('href', ROUTES.statistics);
   });
+
+  test('doesn\'t render navigation links in closed state', async () => {
+    // Arrange
+    await page.viewport(mobileViewportSize.width, mobileViewportSize.height);
+    const screen = await renderWithRouterAndMuiStyles(
+      <DrawerNavigation variant='guest' isOpen={false} {...callbacks} />
+    );
+    const link = screen.getByRole('link');
+
+    // Assert
+    await expect.element(link).not.toBeInTheDocument();
+  });
+
+  test('shows the current user avatar in user mode', async () => {
+    // Arrange
+    vi.mocked(useAuth, { partial: true }).mockReturnValue({ currentUser });
+    await page.viewport(mobileViewportSize.width, mobileViewportSize.height);
+    const screen = await renderWithRouterAndMuiStyles(
+      <DrawerNavigation variant='user' isOpen={true} {...callbacks} />
+    );
+    const avatar = screen.getByRole('img', { name: new RegExp(currentUser.displayName) });
+
+    // Assert
+    await expect.element(avatar).toBeVisible();
+  });
 });
