@@ -22,7 +22,6 @@ describe('CreatePostModal', () => {
   const ACCEPTED_POST_FILE_TYPES = ['image/png', 'image/jpeg'];
   const MAX_POST_FILE_SIZE = 10 * 1024 * 1024;
 
-  const createPostModalTitleText = i18next.t(($) => $.createPost.title, { ns: 'posts' });
   const postTitleInputLabel = i18next.t(($) => $.createPost.input.title.label, { ns: 'posts' });
   const postDescriptionInputLabel = i18next.t(($) => $.createPost.input.description.label, { ns: 'posts' });
   const closeButtonLabel = i18next.t(($) => $.createPost.close, { ns: 'posts' });
@@ -65,11 +64,11 @@ describe('CreatePostModal', () => {
     const screen = await renderWithQueryClient(
       <CreatePostModal {...defaultProps} isOpen={false} />
     );
-    const createPostModalTitle = screen.getByText(createPostModalTitleText);
+    const createPostModal = screen.getByRole('dialog', { includeHidden: true });
 
     // Assert
-    await expect.element(createPostModalTitle).toBeInTheDocument();
-    await expect.element(createPostModalTitle).not.toBeVisible();
+    await expect.element(createPostModal).toBeInTheDocument();
+    await expect.element(createPostModal).not.toBeVisible();
   });
 
   test('opens with the provided initial description', async () => {
@@ -77,7 +76,7 @@ describe('CreatePostModal', () => {
     const screen = await renderWithQueryClient(
       <CreatePostModal {...defaultProps} initialDescription={testPost.content} />
     );
-    const createPostModal = screen.getByRole('dialog');
+    const createPostModal = screen.getByRole('dialog', { includeHidden: true });
     const postDescriptionInput = screen.getByRole('textbox', { name: postDescriptionInputLabel });
 
     // Assert
@@ -264,7 +263,7 @@ describe('CreatePostModal', () => {
         <AlertStack />
       </>
     );
-    const createPostModal = screen.getByRole('dialog');
+    const createPostModal = screen.getByRole('dialog', { includeHidden: true });
     const postTitleInput = screen.getByRole('textbox', { name: postTitleInputLabel });
     const postDescriptionInput = screen.getByRole('textbox', { name: postDescriptionInputLabel });
     const submitButton = screen.getByRole('button', { name: submitButtonLabel });
