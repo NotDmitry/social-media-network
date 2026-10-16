@@ -77,16 +77,17 @@ describe('DrawerNavigation', () => {
     await expect.element(profileStatisticsLink).toHaveAttribute('href', ROUTES.statistics);
   });
 
-  test('doesn\'t render navigation links in closed state', async () => {
+  test('is hidden in closed state', async () => {
     // Arrange
     await page.viewport(mobileViewportSize.width, mobileViewportSize.height);
     const screen = await renderWithRouterAndMuiStyles(
       <DrawerNavigation variant='guest' isOpen={false} {...callbacks} />
     );
-    const link = screen.getByRole('link');
+    const drawer = screen.getByRole('dialog', { includeHidden: true });
 
     // Assert
-    await expect.element(link).not.toBeInTheDocument();
+    await expect.element(drawer).toBeInTheDocument();
+    await expect.element(drawer).not.toBeVisible();
   });
 
   test('shows the current user avatar in user mode', async () => {
