@@ -8,9 +8,9 @@ type InputFieldTooltip = Omit<TooltipProps, 'children'>;
 function InputFieldTooltip(props: InputFieldTooltip) {
   return (
     <Tooltip {...props}>
-      <span className='input-field-tooltip-icon'>
+      <button className='input-field-tooltip-icon' type='button'>
         <InfoTooltipIcon />
-      </span>
+      </button>
     </Tooltip>
   );
 }

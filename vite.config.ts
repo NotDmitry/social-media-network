@@ -1,6 +1,7 @@
 /// <reference types="vitest/config" />
 import { defineConfig } from 'vite';
 import path from 'node:path';
+import { playwright } from '@vitest/browser-playwright'
 import react from '@vitejs/plugin-react';
 
 export default defineConfig({
@@ -16,6 +17,34 @@ export default defineConfig({
     }
   },
   test: {
+    projects: [
+      {
+        test: {
+          name: 'unit',
+          include: ['src/**/*.test.ts'],
+          environment: 'node',
+        },
+      },
+      {
+        optimizeDeps: {
+          entries: ['src/**/*.test.tsx'],
+          force: true,
+        },
+        test: {
+          name: 'browser',
+          include: ['src/**/*.test.tsx'],
+          setupFiles: ['src/test/browser.i18n.config.ts'],
+          browser: {
+            enabled: true,
+            provider: playwright(),
+            headless: true,
+            instances: [
+              { browser: 'chromium' },
+            ],
+          },
+        },
+      },
+    ],
     coverage: {
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
@@ -24,6 +53,9 @@ export default defineConfig({
         'src/**/*.d.ts',
         'src/shared/mocks/**',
         'src/main.tsx',
+        'src/shared/schemas/**',
+        'src/**/schema.ts',
+        'src/test/**',
       ],
     }
   }
