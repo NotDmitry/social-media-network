@@ -1,8 +1,8 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite';
 import path from 'node:path';
 import react from '@vitejs/plugin-react';
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
   resolve: {
@@ -13,6 +13,18 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': 'http://localhost:3000',
+    }
+  },
+  test: {
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: [
+        'src/**/types.ts',
+        'src/**/*.d.ts',
+        'src/shared/mocks/**',
+        'src/main.tsx',
+      ],
     }
   }
 });
