@@ -3,12 +3,7 @@ const MS_IN_MINUTE = 60 * MS_IN_SECOND;
 const MS_IN_HOUR = 60 * MS_IN_MINUTE;
 const MS_IN_DAY = 24 * MS_IN_HOUR;
 const MS_IN_WEEK = 7 * MS_IN_DAY;
-
-const displayedUnitsMsThresholds: Partial<Record<Intl.RelativeTimeFormatUnit, number>> = {
-  day: MS_IN_DAY,
-  hour: MS_IN_HOUR,
-  minute: MS_IN_MINUTE,
-};
+const MAX_DISPLAYED_HOURS = 23;
 
 const relativeTimeFormatters = new Map<string, Intl.RelativeTimeFormat>();
 const dateTimeFormatters = new Map<string, Intl.DateTimeFormat>();
@@ -76,18 +71,20 @@ function getDayShortMonthFormatter(locale: string) {
 }
 
 /**
- * Returns the presentation string of elapsed time in the past relative to the current time (now).
- * The relative time thresholds are 'now', 'minutes', 'hours', 'days'.
- * For the elapsed time under 1 minute or future time returns 'now'.
- * The amount is rounded to the nearest whole unit (like in Math.round rule).
- * Exact half units rounds towards zero (5 min 30 seconds is '5 min. ago').
+ * Returns the string representing how far in the past the activity occurred.
+ * If the activity occurred in previous calendar days they are displayed as 'yesterday',
+ * '2 days ago' - '7 days ago' regardless of the amount of time between calendar days change.
+ * Future timestamps and time under 1 minute ago during the day returns 'now'.
+ * Other timestamps are converted as 'hours' or 'minutes' ago rounded to the nearest whole unit
+ * Exact half units rounds towards zero (5 min 30 seconds is '5 min. ago') like in Math.round rule.
  * If elapsed time is more than 7 days - the format changes to the full calendar date (e.g.: Oct 8, 2026)
  * Returns 'null' for invalid ISO string.
  * @param dateTimeString A date time string in the ECMAScript supported format (ISO string).
  * @param locale A language code in the format accepted by Intl locales argument.
  */
 export function getRelativePastTimePresentationString(dateTimeString: string, locale: string) {
-  const nowTimestamp = Date.now();
+  const now = new Date();
+  const nowTimestamp = now.getTime();
   const date = new Date(dateTimeString);
   const dateTimestamp = date.getTime();
 
@@ -104,22 +101,31 @@ export function getRelativePastTimePresentationString(dateTimeString: string, lo
 
   const relativeTimeFormatter = getRelativeTimeFormatter(locale);
 
+  if (elapsedTimeMs === 0) {
+    return relativeTimeFormatter.format(0, 'second');
+  }
+
+  const todayStartTimestamp = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const providedDateStartTimestamp = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  const elapsedCalendarDays = (todayStartTimestamp - providedDateStartTimestamp) / MS_IN_DAY;
+
+  if (elapsedCalendarDays > 0) {
+    return relativeTimeFormatter.format(-elapsedCalendarDays, 'day');
+  }
+
   if (elapsedTimeMs < MS_IN_MINUTE) {
     return relativeTimeFormatter.format(0, 'second');
   }
 
-  const displayedUnits = Object.entries(displayedUnitsMsThresholds) as [Intl.RelativeTimeFormatUnit, number][];
+  if (elapsedTimeMs > MS_IN_HOUR - MS_IN_MINUTE / 2) {
+    const roundedHours = Math.abs(Math.round(timestampDifference / MS_IN_HOUR));
+    const displayedHours = Math.min(roundedHours, MAX_DISPLAYED_HOURS);
 
-  for (let i = 0; i < displayedUnits.length; i++) {
-    const [unit, msThreshold] = displayedUnits[i];
-    const nextMsThreshold = displayedUnits.at(i + 1)?.[1];
-
-    const hasNextThreshold = nextMsThreshold !== undefined;
-
-    if (!hasNextThreshold || elapsedTimeMs > msThreshold - nextMsThreshold / 2) {
-      return relativeTimeFormatter.format(Math.round(timestampDifference / msThreshold), unit);
-    }
+    return relativeTimeFormatter.format(-displayedHours, 'hour');
   }
+
+  const roundedMinutes = Math.abs(Math.round(timestampDifference / MS_IN_MINUTE));
+  return relativeTimeFormatter.format(-roundedMinutes, 'minute');
 }
 
 /**

@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import {
   getDayShortMonthPresentationString,
   getRelativePastTimePresentationString,
@@ -77,17 +77,17 @@ describe('getRelativePastTimePresentationString', () => {
       expected: '1 hr. ago'
     },
     {
-      elapsedTime: '23 hours',
+      elapsedTime: '23 hours through other day',
       dateTimeString: new Date(2026, 5, 12, 10).toISOString(),
-      expected: '23 hr. ago'
+      expected: 'yesterday'
     },
     {
-      elapsedTime: '23 hours 30 minutes',
+      elapsedTime: '23 hours 30 minutes through other day',
       dateTimeString: new Date(2026, 5, 12, 9, 30).toISOString(),
-      expected: '23 hr. ago'
+      expected: 'yesterday'
     },
     {
-      elapsedTime: '23 hours 31 minutes',
+      elapsedTime: '23 hours 31 minutes through other day',
       dateTimeString: new Date(2026, 5, 12, 9, 29).toISOString(),
       expected: 'yesterday'
     },
@@ -138,11 +138,11 @@ describe('getRelativePastTimePresentationString', () => {
     },
   ];
 
-  beforeAll(() => {
+  beforeEach(() => {
     vi.setSystemTime(fixedTestTime);
   });
 
-  afterAll(() => {
+  afterEach(() => {
     vi.useRealTimers();
   });
 
@@ -155,6 +155,45 @@ describe('getRelativePastTimePresentationString', () => {
       expect(actualRelativeTimeString).toBe(expected);
     }
   );
+
+  test('returns \'23 hr. ago\' for the 23 hr. elapsed time during the day', () => {
+    // Arrange
+    vi.setSystemTime(new Date(2026, 5, 13, 23, 59));
+    const activityTimeString = new Date(2026, 5, 13, 0, 28).toISOString();
+    const expected = '23 hr. ago';
+
+    // Act
+    const actualRelativeTimeString = getRelativePastTimePresentationString(activityTimeString, 'en');
+
+    // Assert
+    expect(actualRelativeTimeString).toBe(expected);
+  });
+
+  test('returns \'2 days ago\' for the day before yesterday', () => {
+    // Arrange
+    vi.setSystemTime(new Date(2026, 5, 13, 10));
+    const activityTimeString = new Date(2026, 5, 11, 22).toISOString();
+    const expected = '2 days ago';
+
+    // Act
+    const actualRelativeTimeString = getRelativePastTimePresentationString(activityTimeString, 'en');
+
+    // Assert
+    expect(actualRelativeTimeString).toBe(expected);
+  });
+
+  test('returns \'yesterday\' for the midnight calendar days transition', () => {
+    // Arrange
+    vi.setSystemTime(new Date(2026, 5, 13));
+    const activityTimeString = new Date(2026, 5, 12, 23, 59).toISOString();
+    const expected = 'yesterday';
+
+    // Act
+    const actualRelativeTimeString = getRelativePastTimePresentationString(activityTimeString, 'en');
+
+    // Assert
+    expect(actualRelativeTimeString).toBe(expected);
+  });
 
   test('returns null for the invalid date time string', () => {
     // Arrange
