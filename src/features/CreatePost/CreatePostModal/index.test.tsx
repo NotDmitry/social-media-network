@@ -1,13 +1,12 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
-import type { ReactNode } from 'react';
 import i18next from 'i18next';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createPost } from '@/entities/Post/api/createPost';
 import type { PostCreationPayload, PostModel } from '@/entities/Post/types';
 import AlertStack from '@/shared/ui/Alert/AlertStack';
 import { uploadImage } from '@/shared/api/uploadImage';
 import { useAlertStore } from '@/shared/ui/Alert/model/store';
+import { testPost } from '@/test/postFixture';
+import { renderWithQueryClient } from '@/test/renderWithQueryClient';
 import CreatePostModal from './index';
 import type { CreatePostModalProps } from './index';
 
@@ -30,18 +29,6 @@ describe('CreatePostModal', () => {
   const fileInputSelectLabel = i18next.t(($) => $.createPost.input.file.select, { ns: 'posts' });
   const submitButtonLabel = i18next.t(($) => $.createPost.button.default, { ns: 'posts' });
 
-  const testPost = Object.freeze<PostModel>({
-    id: 1,
-    title: 'New post',
-    content: 'I have some news to share',
-    image: null,
-    authorId: 1,
-    likesCount: 0,
-    commentsCount: 0,
-    creationDate: '2026-06-13T09:00:00.000Z',
-    modifiedDate: '2026-06-13T09:00:00.000Z',
-  });
-
   const mockOnClose = vi.fn();
 
   const defaultProps: CreatePostModalProps = {
@@ -51,16 +38,6 @@ describe('CreatePostModal', () => {
     acceptedFileTypes: ACCEPTED_POST_FILE_TYPES,
     onClose: mockOnClose,
   };
-
-  async function renderWithQueryClient(ui: ReactNode) {
-    const queryClient = new QueryClient();
-
-    return render(
-      <QueryClientProvider client={queryClient}>
-        {ui}
-      </QueryClientProvider>
-    );
-  }
 
   beforeEach(() => {
     mockOnClose.mockReset();
