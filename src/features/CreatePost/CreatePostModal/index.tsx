@@ -13,7 +13,7 @@ import TextAreaField, { type TextareaFieldStatus } from '@/shared/ui/input/Texta
 import { createPostFormSchema, type CreatePostFormFields } from './schema';
 import './style.css';
 
-interface CreatePostModalProps {
+export interface CreatePostModalProps {
   isOpen: boolean;
   initialDescription: string;
   maxFileSize: number;
