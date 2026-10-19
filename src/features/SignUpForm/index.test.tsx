@@ -22,9 +22,11 @@ describe('SignUpForm', () => {
   const testEmail = 'test_user@example.com';
   const testPassword = '12345678';
 
+  const mockOnSubmit = vi.fn();
   const mockUseAuthResult = { signUp: vi.fn() };
 
   beforeEach(() => {
+    mockOnSubmit.mockReset();
     mockUseAuthResult.signUp.mockReset();
     vi.mocked(useAuth, { partial: true }).mockReturnValue(mockUseAuthResult);
     useAlertStore.setState({ alerts: [] });
@@ -38,7 +40,6 @@ describe('SignUpForm', () => {
       firstName: 'John',
       secondName: 'Doe',
     };
-    const mockOnSubmit = vi.fn();
     const screen = await render(<SignUpForm onSubmit={mockOnSubmit} />);
     const fullNameInput = screen.getByRole('textbox', { name: fullNameLabel });
     const emailInput = screen.getByRole('textbox', { name: emailLabel });
@@ -60,7 +61,7 @@ describe('SignUpForm', () => {
 
   test('rejects an empty submission with visible errors', async () => {
     // Arrange
-    const screen = await render(<SignUpForm />);
+    const screen = await render(<SignUpForm onSubmit={mockOnSubmit} />);
     const submitButton = screen.getByRole('button', { name: submitButtonLabel });
     const fullNameErrorMessage = i18next.t(($) => $.input.name.validation.required);
     const emailErrorMessage = i18next.t(($) => $.input.email.validation.invalid);
@@ -83,6 +84,7 @@ describe('SignUpForm', () => {
     await expect.element(visibleEmailErrorMessage).toBeVisible();
     await expect.element(visiblePasswordErrorMessage).toBeVisible();
     await expect.element(visibleRepeatPasswordErrorMessage).toBeVisible();
+    expect(mockOnSubmit).not.toHaveBeenCalled();
     expect(mockUseAuthResult.signUp).not.toHaveBeenCalled();
   });
 
@@ -92,7 +94,7 @@ describe('SignUpForm', () => {
     mockUseAuthResult.signUp.mockRejectedValue(new Error('Network connection lost'));
     const screen = await render(
       <>
-        <SignUpForm />
+        <SignUpForm onSubmit={mockOnSubmit} />
         <AlertStack />
       </>
     );
@@ -112,6 +114,7 @@ describe('SignUpForm', () => {
 
     // Assert
     await expect.element(alert).toBeVisible();
+    expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 
   test('disables the form during pending sign up request', async () => {
@@ -165,7 +168,7 @@ describe('SignUpForm', () => {
       status: 409,
       code: 'EMAIL_TAKEN',
     }));
-    const screen = await render(<SignUpForm />);
+    const screen = await render(<SignUpForm onSubmit={mockOnSubmit} />);
     const fullNameInput = screen.getByRole('textbox', { name: fullNameLabel });
     const emailInput = screen.getByRole('textbox', { name: emailLabel });
     const passwordInput = screen.getByRole('textbox', { name: passwordLabel });
@@ -181,12 +184,13 @@ describe('SignUpForm', () => {
     await submitButton.click();
 
     // Assert
-    expect(mockUseAuthResult.signUp).toHaveBeenCalled();
     await expect.element(visibleEmailTakenErrorMessage).toBeVisible();
     await expect.element(fullNameInput).toHaveValue(testFullName);
     await expect.element(emailInput).toHaveValue(testEmail);
     await expect.element(passwordInput).toHaveValue(testPassword);
     await expect.element(repeatPasswordInput).toHaveValue(testPassword);
+    expect(mockOnSubmit).not.toHaveBeenCalled();
+    expect(mockUseAuthResult.signUp).toHaveBeenCalled();
   });
 
   test('rejects a password shorter than required 8 characters', async () => {
@@ -195,7 +199,7 @@ describe('SignUpForm', () => {
     const passwordMinLengthMessage = i18next.t(
       ($) => $.signUp.input.password.validation.minLength, { ns: 'authentication' }
     );
-    const screen = await render(<SignUpForm />);
+    const screen = await render(<SignUpForm onSubmit={mockOnSubmit} />);
     const fullNameInput = screen.getByRole('textbox', { name: fullNameLabel });
     const emailInput = screen.getByRole('textbox', { name: emailLabel });
     const passwordInput = screen.getByRole('textbox', { name: passwordLabel });
@@ -212,6 +216,7 @@ describe('SignUpForm', () => {
 
     // Assert
     await expect.element(visibleMinLengthErrorMessage).toBeVisible();
+    expect(mockOnSubmit).not.toHaveBeenCalled();
     expect(mockUseAuthResult.signUp).not.toHaveBeenCalled();
   });
 
@@ -220,7 +225,7 @@ describe('SignUpForm', () => {
     const repeatPasswordMismatchMessage = i18next.t(
       ($) => $.signUp.input.repeatPassword.validation.mismatch, { ns: 'authentication' }
     );
-    const screen = await render(<SignUpForm />);
+    const screen = await render(<SignUpForm onSubmit={mockOnSubmit} />);
     const fullNameInput = screen.getByRole('textbox', { name: fullNameLabel });
     const emailInput = screen.getByRole('textbox', { name: emailLabel });
     const passwordInput = screen.getByRole('textbox', { name: passwordLabel });
@@ -237,6 +242,7 @@ describe('SignUpForm', () => {
 
     // Assert
     await expect.element(visibleRepeatPasswordMismatchErrorMessage).toBeVisible();
+    expect(mockOnSubmit).not.toHaveBeenCalled();
     expect(mockUseAuthResult.signUp).not.toHaveBeenCalled();
   });
 });

@@ -19,9 +19,11 @@ describe('SignInForm', () => {
   const testEmail = 'test_user@example.com';
   const testPassword = '12345678';
 
+  const mockOnSubmit = vi.fn();
   const mockUseAuthResult = { signIn: vi.fn() };
 
   beforeEach(() => {
+    mockOnSubmit.mockReset();
     mockUseAuthResult.signIn.mockReset();
     vi.mocked(useAuth, { partial: true }).mockReturnValue(mockUseAuthResult);
     useAlertStore.setState({ alerts: [] });
@@ -33,7 +35,6 @@ describe('SignInForm', () => {
       email: testEmail,
       password: testPassword,
     };
-    const mockOnSubmit = vi.fn();
     const screen = await render(<SignInForm onSubmit={mockOnSubmit} />);
     const emailInput = screen.getByRole('textbox', { name: emailLabel });
     const passwordInput = screen.getByRole('textbox', { name: passwordLabel });
@@ -49,9 +50,9 @@ describe('SignInForm', () => {
     expect(mockUseAuthResult.signIn).toHaveBeenCalledExactlyOnceWith(expectedPayload);
   });
 
-  test('reject an empty submission with visible errors', async () => {
+  test('rejects an empty submission with visible errors', async () => {
     // Arrange
-    const screen = await render(<SignInForm />);
+    const screen = await render(<SignInForm onSubmit={mockOnSubmit} />);
     const submitButton = screen.getByRole('button', { name: submitButtonLabel });
     const emailErrorMessage = i18next.t(($) => $.input.email.validation.invalid);
     const passwordErrorMessage = i18next.t(
@@ -66,6 +67,7 @@ describe('SignInForm', () => {
     // Assert
     await expect.element(visibleEmailErrorMessage).toBeVisible();
     await expect.element(visiblePasswordErrorMessage).toBeVisible();
+    expect(mockOnSubmit).not.toHaveBeenCalled();
     expect(mockUseAuthResult.signIn).not.toHaveBeenCalled();
   });
 
@@ -79,7 +81,7 @@ describe('SignInForm', () => {
     }));
     const screen = await render(
       <>
-        <SignInForm />
+        <SignInForm onSubmit={mockOnSubmit} />
         <AlertStack />
       </>
     );
@@ -94,10 +96,11 @@ describe('SignInForm', () => {
     await submitButton.click();
 
     // Assert
-    expect(mockUseAuthResult.signIn).toHaveBeenCalled();
     await expect.element(alert).toBeVisible();
     await expect.element(emailInput).toHaveValue(testEmail);
     await expect.element(passwordInput).toHaveValue(testPassword);
+    expect(mockOnSubmit).not.toHaveBeenCalled();
+    expect(mockUseAuthResult.signIn).toHaveBeenCalled();
   });
 
   test('shows general sign in error alert', async () => {
@@ -106,7 +109,7 @@ describe('SignInForm', () => {
     mockUseAuthResult.signIn.mockRejectedValue(new Error('Network connection lost'));
     const screen = await render(
       <>
-        <SignInForm />
+        <SignInForm onSubmit={mockOnSubmit} />
         <AlertStack />
       </>
     );
@@ -122,6 +125,7 @@ describe('SignInForm', () => {
 
     // Assert
     await expect.element(alert).toBeVisible();
+    expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 
   test('disables the form during pending sign in request', async () => {
