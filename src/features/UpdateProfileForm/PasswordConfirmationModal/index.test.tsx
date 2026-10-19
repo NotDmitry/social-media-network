@@ -64,6 +64,7 @@ describe('PasswordConfirmationModal', () => {
     // Assert
     await expect.element(visiblePasswordRequiredErrorMessage).toBeVisible();
     expect(mockOnSubmit).not.toHaveBeenCalled();
+    expect(mockOnClose).not.toHaveBeenCalled();
   });
 
   test('submits with the valid current password', async () => {
@@ -116,6 +117,7 @@ describe('PasswordConfirmationModal', () => {
     await expect.element(passwordInput).toBeEnabled();
     await expect.element(closeButton).toBeEnabled();
     await expect.element(submitButton).toBeEnabled();
+    expect(mockOnClose).not.toHaveBeenCalled();
   });
 
   test('doesn\'t close and shows general error alert on failed submission', async () => {
@@ -170,5 +172,6 @@ describe('PasswordConfirmationModal', () => {
     await expect.element(confirmationModal).toBeVisible();
     await expect.element(passwordInput).toHaveValue(currentPassword);
     expect(mockOnSubmit).toHaveBeenCalledExactlyOnceWith(currentPassword);
+    expect(mockOnClose).not.toHaveBeenCalled();
   });
 });
