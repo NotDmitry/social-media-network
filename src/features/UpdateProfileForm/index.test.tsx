@@ -163,8 +163,9 @@ describe('UpdateProfileForm', () => {
     expect(mockUseAuthResult.updateProfile).toHaveBeenCalledExactlyOnceWith(expectedPayload);
   });
 
-  test('submits changed public profile fields and email after password confirmation', async () => {
+  test('submits changed public profile fields and email with alert after password confirmation', async () => {
     // Arrange
+    const successAlertMessage = i18next.t(($) => $.update.alert.success, { ns: 'profile' });
     const expectedEmailPayload: UpdateEmailPayload = {
       email: testEmail,
       currentPassword: testCurrentPassword,
@@ -172,13 +173,19 @@ describe('UpdateProfileForm', () => {
     const expectedProfilePayload: UpdateProfilePayload = {
       username: testUsername,
     };
-    const screen = await render(<UpdateProfileForm user={currentUser} onSubmit={mockOnSubmit} />);
+    const screen = await render(
+      <>
+        <UpdateProfileForm user={currentUser} onSubmit={mockOnSubmit} />
+        <AlertStack />
+      </>
+    );
     const usernameInput = screen.getByRole('textbox', { name: usernameInputLabel });
     const emailInput = screen.getByRole('textbox', { name: emailInputLabel });
     const saveButton = screen.getByRole('button', { name: saveButtonLabel });
     const confirmationModal = screen.getByRole('dialog', { includeHidden: true });
     const passwordInput = confirmationModal.getByRole('textbox', { name: passwordInputLabel });
     const confirmButton = confirmationModal.getByRole('button', { name: confirmButtonLabel });
+    const successAlert = screen.getByText(successAlertMessage);
 
     // Act
     await usernameInput.fill(testUsername);
@@ -196,6 +203,7 @@ describe('UpdateProfileForm', () => {
     await confirmButton.click();
 
     // Assert
+    await expect.element(successAlert).toBeVisible();
     await expect.element(confirmationModal).toBeInTheDocument();
     await expect.element(confirmationModal).not.toBeVisible();
     expect(mockOnSubmit).toHaveBeenCalledOnce();
@@ -377,5 +385,53 @@ describe('UpdateProfileForm', () => {
     expect(mockOnSubmit).toHaveBeenCalledOnce();
     expect(mockUseAuthResult.updateProfile).toHaveBeenCalledExactlyOnceWith(expectedPayload);
     expect(uploadImage).toHaveBeenCalledExactlyOnceWith(avatarFile);
+  });
+
+  test('accepts a description of exactly 200 characters', async () => {
+    // Arrange
+    const testDescription = '1'.repeat(200);
+    const successAlertMessage = i18next.t(($) => $.update.alert.success, { ns: 'profile' });
+    const expectedPayload: UpdateProfilePayload = {
+      description: testDescription
+    };
+    const screen = await render(
+      <>
+        <UpdateProfileForm user={currentUser} onSubmit={mockOnSubmit} />
+        <AlertStack />
+      </>
+    );
+    const descriptionInput = screen.getByRole('textbox', { name: descriptionInputLabel });
+    const saveButton = screen.getByRole('button', { name: saveButtonLabel });
+    const successAlert = screen.getByText(successAlertMessage);
+
+    // Act
+    await descriptionInput.fill(testDescription);
+    await saveButton.click();
+
+    // Assert
+    await expect.element(successAlert).toBeVisible();
+    expect(mockOnSubmit).toHaveBeenCalledOnce();
+    expect(mockUseAuthResult.updateProfile).toHaveBeenCalledExactlyOnceWith(expectedPayload);
+  });
+
+  test('rejects a description of 201 characters with visible error', async () => {
+    // Arrange
+    const testDescription = '1'.repeat(201);
+    const descriptionMaxLengthErrorMessage = i18next.t(
+      ($) => $.update.input.description.validation.maxLength, { ns: 'profile' }
+    );
+    const screen = await render(<UpdateProfileForm user={currentUser} onSubmit={mockOnSubmit} />);
+    const visibleDescriptionMaxLengthErrorMessage = screen.getByText(descriptionMaxLengthErrorMessage);
+    const descriptionInput = screen.getByRole('textbox', { name: descriptionInputLabel });
+    const saveButton = screen.getByRole('button', { name: saveButtonLabel });
+
+    // Act
+    await descriptionInput.fill(testDescription);
+    await saveButton.click();
+
+    // Assert
+    await expect.element(visibleDescriptionMaxLengthErrorMessage).toBeVisible();
+    expect(mockOnSubmit).not.toHaveBeenCalled();
+    expect(mockUseAuthResult.updateProfile).not.toHaveBeenCalled();
   });
 });
