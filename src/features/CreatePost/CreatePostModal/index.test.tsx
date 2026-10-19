@@ -106,6 +106,7 @@ describe('CreatePostModal', () => {
     await expect.element(visiblePostTitleErrorMessage).toBeVisible();
     await expect.element(visiblePostDescriptionErrorMessage).toBeVisible();
     expect(createPost).not.toHaveBeenCalled();
+    expect(mockOnClose).not.toHaveBeenCalled();
   });
 
   test('prevents submission if selected file is of unsupported type', async () => {
@@ -213,6 +214,7 @@ describe('CreatePostModal', () => {
     await expect.element(alert).toBeVisible();
     expect(uploadImage).toHaveBeenCalledExactlyOnceWith(imageFile);
     expect(createPost).toHaveBeenCalledExactlyOnceWith(expectedPayload);
+    expect(mockOnClose).toHaveBeenCalledOnce();
   });
 
   test('disables the form during pending post creation request', async () => {
@@ -249,7 +251,10 @@ describe('CreatePostModal', () => {
     resolvePendingPostCreation(testPost);
 
     // Assert
+    await expect.element(postTitleInput).toBeEnabled();
+    await expect.element(postDescriptionInput).toBeEnabled();
     await expect.element(closeButton).toBeEnabled();
+    await expect.element(submitButton).toBeEnabled();
     expect(mockOnClose).toHaveBeenCalledOnce();
   });
 
@@ -279,6 +284,116 @@ describe('CreatePostModal', () => {
     await expect.element(createPostModal).toBeVisible();
     await expect.element(postTitleInput).toHaveValue(testPost.title);
     await expect.element(postDescriptionInput).toHaveValue(testPost.content);
+    expect(mockOnClose).not.toHaveBeenCalled();
+  });
+
+  test('accepts a title of exactly 80 characters', async () => {
+    // Arrange
+    const testPostTitle = '1'.repeat(80);
+    const successAlertMessage = i18next.t(($) => $.createPost.alert.success, { ns: 'posts' });
+    const expectedPayload: PostCreationPayload = {
+      title: testPostTitle,
+      content: testPost.content,
+    };
+    vi.mocked(createPost).mockResolvedValue(testPost);
+    const screen = await renderWithQueryClient(
+      <>
+        <CreatePostModal {...defaultProps} />
+        <AlertStack />
+      </>
+    );
+    const postTitleInput = screen.getByRole('textbox', { name: postTitleInputLabel });
+    const postDescriptionInput = screen.getByRole('textbox', { name: postDescriptionInputLabel });
+    const submitButton = screen.getByRole('button', { name: submitButtonLabel });
+    const successAlert = screen.getByText(successAlertMessage);
+
+    // Act
+    await postTitleInput.fill(testPostTitle);
+    await postDescriptionInput.fill(testPost.content);
+    await submitButton.click();
+
+    // Assert
+    await expect.element(successAlert).toBeVisible();
+    expect(createPost).toHaveBeenCalledExactlyOnceWith(expectedPayload);
+  });
+
+  test('rejects a title of 81 characters with visible error', async () => {
+    // Arrange
+    const testPostTitle = '1'.repeat(81);
+    const postTitleMaxLengthErrorMessage = i18next.t(
+      ($) => $.createPost.input.title.validation.maxLength, { ns: 'posts' }
+    );
+    const screen = await renderWithQueryClient(
+      <CreatePostModal {...defaultProps} />
+    );
+    const postTitleInput = screen.getByRole('textbox', { name: postTitleInputLabel });
+    const postDescriptionInput = screen.getByRole('textbox', { name: postDescriptionInputLabel });
+    const submitButton = screen.getByRole('button', { name: submitButtonLabel });
+    const visiblePostTitleMaxLengthErrorMessage = screen.getByText(postTitleMaxLengthErrorMessage);
+
+    // Act
+    await postTitleInput.fill(testPostTitle);
+    await postDescriptionInput.fill(testPost.content);
+    await submitButton.click();
+
+    // Assert
+    await expect.element(visiblePostTitleMaxLengthErrorMessage).toBeVisible();
+    expect(createPost).not.toHaveBeenCalled();
+    expect(mockOnClose).not.toHaveBeenCalled();
+  });
+
+  test('accepts a description of exactly 500 characters', async () => {
+    // Arrange
+    const testPostDescription = '1'.repeat(500);
+    const successAlertMessage = i18next.t(($) => $.createPost.alert.success, { ns: 'posts' });
+    const expectedPayload: PostCreationPayload = {
+      title: testPost.title,
+      content: testPostDescription,
+    };
+    vi.mocked(createPost).mockResolvedValue(testPost);
+    const screen = await renderWithQueryClient(
+      <>
+        <CreatePostModal {...defaultProps} />
+        <AlertStack />
+      </>
+    );
+    const postTitleInput = screen.getByRole('textbox', { name: postTitleInputLabel });
+    const postDescriptionInput = screen.getByRole('textbox', { name: postDescriptionInputLabel });
+    const submitButton = screen.getByRole('button', { name: submitButtonLabel });
+    const successAlert = screen.getByText(successAlertMessage);
+
+    // Act
+    await postTitleInput.fill(testPost.title);
+    await postDescriptionInput.fill(testPostDescription);
+    await submitButton.click();
+
+    // Assert
+    await expect.element(successAlert).toBeVisible();
+    expect(createPost).toHaveBeenCalledExactlyOnceWith(expectedPayload);
+  });
+
+  test('rejects a description of 501 characters with visible error', async () => {
+    // Arrange
+    const testPostDescription = '1'.repeat(501);
+    const postDescriptionMaxLengthErrorMessage = i18next.t(
+      ($) => $.createPost.input.description.validation.maxLength, { ns: 'posts' }
+    );
+    const screen = await renderWithQueryClient(
+      <CreatePostModal {...defaultProps} />
+    );
+    const postTitleInput = screen.getByRole('textbox', { name: postTitleInputLabel });
+    const postDescriptionInput = screen.getByRole('textbox', { name: postDescriptionInputLabel });
+    const submitButton = screen.getByRole('button', { name: submitButtonLabel });
+    const visiblePostDescriptionMaxLengthErrorMessage = screen.getByText(postDescriptionMaxLengthErrorMessage);
+
+    // Act
+    await postTitleInput.fill(testPost.title);
+    await postDescriptionInput.fill(testPostDescription);
+    await submitButton.click();
+
+    // Assert
+    await expect.element(visiblePostDescriptionMaxLengthErrorMessage).toBeVisible();
+    expect(createPost).not.toHaveBeenCalled();
     expect(mockOnClose).not.toHaveBeenCalled();
   });
 });
