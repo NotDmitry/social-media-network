@@ -253,4 +253,165 @@ describe('SignUpForm', () => {
     expect(mockOnSubmit).not.toHaveBeenCalled();
     expect(mockUseAuthResult.signUp).not.toHaveBeenCalled();
   });
+
+  test('accepts firstName without secondName', async () => {
+    // Arrange
+    const testFirstName = 'John';
+    const successAlertMessage = i18next.t(($) => $.signUp.alert.success, { ns: 'authentication' });
+    const expectedPayload: SignUpPayload = {
+      email: testEmail,
+      password: testPassword,
+      firstName: testFirstName,
+    };
+    const screen = await render(
+      <>
+        <SignUpForm onSubmit={mockOnSubmit} />
+        <AlertStack />
+      </>
+    );
+    const fullNameInput = screen.getByRole('textbox', { name: fullNameLabel });
+    const emailInput = screen.getByRole('textbox', { name: emailLabel });
+    const passwordInput = screen.getByRole('textbox', { name: passwordLabel });
+    const repeatPasswordInput = screen.getByRole('textbox', { name: repeatPasswordLabel });
+    const submitButton = screen.getByRole('button', { name: submitButtonLabel });
+    const successAlert = screen.getByText(successAlertMessage);
+
+    // Act
+    await fullNameInput.fill(testFirstName);
+    await emailInput.fill(testEmail);
+    await passwordInput.fill(testPassword);
+    await repeatPasswordInput.fill(testPassword);
+    await submitButton.click();
+
+    // Assert
+    await expect.element(successAlert).toBeVisible();
+    expect(mockOnSubmit).toHaveBeenCalledOnce();
+    expect(mockUseAuthResult.signUp).toHaveBeenCalledExactlyOnceWith(expectedPayload);
+  });
+
+  test('rejects a fullName with more than 2 words with visible error', async () => {
+    // Arrange
+    const invalidFullName = 'John Doe Jr.';
+    const fullNameMaxWordsErrorMessage = i18next.t(
+      ($) => $.signUp.input.fullName.validation.maxWords, { ns: 'authentication' }
+    );
+    const screen = await render(<SignUpForm onSubmit={mockOnSubmit} />);
+    const visibleFullNameMaxWordsErrorMessage = screen.getByText(fullNameMaxWordsErrorMessage);
+    const fullNameInput = screen.getByRole('textbox', { name: fullNameLabel });
+    const emailInput = screen.getByRole('textbox', { name: emailLabel });
+    const passwordInput = screen.getByRole('textbox', { name: passwordLabel });
+    const repeatPasswordInput = screen.getByRole('textbox', { name: repeatPasswordLabel });
+    const submitButton = screen.getByRole('button', { name: submitButtonLabel });
+
+    // Act
+    await fullNameInput.fill(invalidFullName);
+    await emailInput.fill(testEmail);
+    await passwordInput.fill(testPassword);
+    await repeatPasswordInput.fill(testPassword);
+    await submitButton.click();
+
+    // Assert
+    await expect.element(visibleFullNameMaxWordsErrorMessage).toBeVisible();
+    expect(mockOnSubmit).not.toHaveBeenCalled();
+    expect(mockUseAuthResult.signUp).not.toHaveBeenCalled();
+  });
+
+  test('removes extra whitespaces inside fullName and submits', async () => {
+    // Arrange
+    const fullNameWithExtraSpaces = 'John        Doe';
+    const successAlertMessage = i18next.t(($) => $.signUp.alert.success, { ns: 'authentication' });
+    const expectedPayload: SignUpPayload = {
+      email: testEmail,
+      password: testPassword,
+      firstName: 'John',
+      secondName: 'Doe',
+    };
+    const screen = await render(
+      <>
+        <SignUpForm onSubmit={mockOnSubmit} />
+        <AlertStack />
+      </>
+    );
+    const fullNameInput = screen.getByRole('textbox', { name: fullNameLabel });
+    const emailInput = screen.getByRole('textbox', { name: emailLabel });
+    const passwordInput = screen.getByRole('textbox', { name: passwordLabel });
+    const repeatPasswordInput = screen.getByRole('textbox', { name: repeatPasswordLabel });
+    const submitButton = screen.getByRole('button', { name: submitButtonLabel });
+    const successAlert = screen.getByText(successAlertMessage);
+
+    // Act
+    await fullNameInput.fill(fullNameWithExtraSpaces);
+    await emailInput.fill(testEmail);
+    await passwordInput.fill(testPassword);
+    await repeatPasswordInput.fill(testPassword);
+    await submitButton.click();
+
+    // Assert
+    await expect.element(successAlert).toBeVisible();
+    expect(mockOnSubmit).toHaveBeenCalledOnce();
+    expect(mockUseAuthResult.signUp).toHaveBeenCalledExactlyOnceWith(expectedPayload);
+  });
+
+  test('accepts a password of exactly 128 characters', async () => {
+    // Arrange
+    const testMaxLengthPassword = '1'.repeat(128);
+    const successAlertMessage = i18next.t(($) => $.signUp.alert.success, { ns: 'authentication' });
+    const expectedPayload: SignUpPayload = {
+      email: testEmail,
+      password: testMaxLengthPassword,
+      firstName: 'John',
+      secondName: 'Doe',
+    };
+    const screen = await render(
+      <>
+        <SignUpForm onSubmit={mockOnSubmit} />
+        <AlertStack />
+      </>
+    );
+    const fullNameInput = screen.getByRole('textbox', { name: fullNameLabel });
+    const emailInput = screen.getByRole('textbox', { name: emailLabel });
+    const passwordInput = screen.getByRole('textbox', { name: passwordLabel });
+    const repeatPasswordInput = screen.getByRole('textbox', { name: repeatPasswordLabel });
+    const submitButton = screen.getByRole('button', { name: submitButtonLabel });
+    const successAlert = screen.getByText(successAlertMessage);
+
+    // Act
+    await fullNameInput.fill(testFullName);
+    await emailInput.fill(testEmail);
+    await passwordInput.fill(testMaxLengthPassword);
+    await repeatPasswordInput.fill(testMaxLengthPassword);
+    await submitButton.click();
+
+    // Assert
+    await expect.element(successAlert).toBeVisible();
+    expect(mockOnSubmit).toHaveBeenCalledOnce();
+    expect(mockUseAuthResult.signUp).toHaveBeenCalledExactlyOnceWith(expectedPayload);
+  });
+
+  test('rejects a password of 129 characters with visible error', async () => {
+    // Arrange
+    const testOversizedPassword = '1'.repeat(129);
+    const passwordMaxLengthErrorMessage = i18next.t(
+      ($) => $.signUp.input.password.validation.maxLength, { ns: 'authentication' }
+    );
+    const screen = await render(<SignUpForm onSubmit={mockOnSubmit} />);
+    const fullNameInput = screen.getByRole('textbox', { name: fullNameLabel });
+    const emailInput = screen.getByRole('textbox', { name: emailLabel });
+    const passwordInput = screen.getByRole('textbox', { name: passwordLabel });
+    const repeatPasswordInput = screen.getByRole('textbox', { name: repeatPasswordLabel });
+    const submitButton = screen.getByRole('button', { name: submitButtonLabel });
+    const visiblePasswordMaxLengthErrorMessage = screen.getByText(passwordMaxLengthErrorMessage);
+
+    // Act
+    await fullNameInput.fill(testFullName);
+    await emailInput.fill(testEmail);
+    await passwordInput.fill(testOversizedPassword);
+    await repeatPasswordInput.fill(testOversizedPassword);
+    await submitButton.click();
+
+    // Assert
+    await expect.element(visiblePasswordMaxLengthErrorMessage).toBeVisible();
+    expect(mockOnSubmit).not.toHaveBeenCalled();
+    expect(mockUseAuthResult.signUp).not.toHaveBeenCalled();
+  });
 });
