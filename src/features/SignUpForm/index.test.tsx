@@ -32,20 +32,27 @@ describe('SignUpForm', () => {
     useAlertStore.setState({ alerts: [] });
   });
 
-  test('accepts valid fields and calls onSubmit when signing up', async () => {
+  test('accepts valid fields and calls onSubmit with success alert when signing up', async () => {
     // Arrange
+    const successAlertMessage = i18next.t(($) => $.signUp.alert.success, { ns: 'authentication' });
     const expectedPayload: SignUpPayload = {
       email: testEmail,
       password: testPassword,
       firstName: 'John',
       secondName: 'Doe',
     };
-    const screen = await render(<SignUpForm onSubmit={mockOnSubmit} />);
+    const screen = await render(
+      <>
+        <SignUpForm onSubmit={mockOnSubmit} />
+        <AlertStack />
+      </>
+    );
     const fullNameInput = screen.getByRole('textbox', { name: fullNameLabel });
     const emailInput = screen.getByRole('textbox', { name: emailLabel });
     const passwordInput = screen.getByRole('textbox', { name: passwordLabel });
     const repeatPasswordInput = screen.getByRole('textbox', { name: repeatPasswordLabel });
     const submitButton = screen.getByRole('button', { name: submitButtonLabel });
+    const successAlert = screen.getByText(successAlertMessage);
 
     // Act
     await fullNameInput.fill(testFullName);
@@ -55,6 +62,7 @@ describe('SignUpForm', () => {
     await submitButton.click();
 
     // Assert
+    await expect.element(successAlert).toBeVisible();
     expect(mockOnSubmit).toHaveBeenCalledOnce();
     expect(mockUseAuthResult.signUp).toHaveBeenCalledExactlyOnceWith(expectedPayload);
   });
@@ -90,7 +98,7 @@ describe('SignUpForm', () => {
 
   test('shows general sign up error alert', async () => {
     // Arrange
-    const expectedAlertMessage = i18next.t(($) => $.signUp.alert.error, { ns: 'authentication' });
+    const errorAlertMessage = i18next.t(($) => $.signUp.alert.error, { ns: 'authentication' });
     mockUseAuthResult.signUp.mockRejectedValue(new Error('Network connection lost'));
     const screen = await render(
       <>
@@ -103,7 +111,7 @@ describe('SignUpForm', () => {
     const passwordInput = screen.getByRole('textbox', { name: passwordLabel });
     const repeatPasswordInput = screen.getByRole('textbox', { name: repeatPasswordLabel });
     const submitButton = screen.getByRole('button', { name: submitButtonLabel });
-    const alert = screen.getByText(expectedAlertMessage);
+    const errorAlert = screen.getByText(errorAlertMessage);
 
     // Act
     await fullNameInput.fill(testFullName);
@@ -113,7 +121,7 @@ describe('SignUpForm', () => {
     await submitButton.click();
 
     // Assert
-    await expect.element(alert).toBeVisible();
+    await expect.element(errorAlert).toBeVisible();
     expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 

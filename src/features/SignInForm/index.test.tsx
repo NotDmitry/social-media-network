@@ -29,16 +29,23 @@ describe('SignInForm', () => {
     useAlertStore.setState({ alerts: [] });
   });
 
-  test('accepts valid fields and calls onSubmit when signing in', async () => {
+  test('accepts valid fields and calls onSubmit with success alert when signing in', async () => {
     // Arrange
+    const successAlertMessage = i18next.t(($) => $.signIn.alert.success, { ns: 'authentication' });
     const expectedPayload: SignInPayload = {
       email: testEmail,
       password: testPassword,
     };
-    const screen = await render(<SignInForm onSubmit={mockOnSubmit} />);
+    const screen = await render(
+      <>
+        <SignInForm onSubmit={mockOnSubmit} />
+        <AlertStack />
+      </>
+    );
     const emailInput = screen.getByRole('textbox', { name: emailLabel });
     const passwordInput = screen.getByRole('textbox', { name: passwordLabel });
     const submitButton = screen.getByRole('button', { name: submitButtonLabel });
+    const successAlert = screen.getByText(successAlertMessage);
 
     // Act
     await emailInput.fill(testEmail);
@@ -46,6 +53,7 @@ describe('SignInForm', () => {
     await submitButton.click();
 
     // Assert
+    await expect.element(successAlert).toBeVisible();
     expect(mockOnSubmit).toHaveBeenCalledOnce();
     expect(mockUseAuthResult.signIn).toHaveBeenCalledExactlyOnceWith(expectedPayload);
   });
@@ -73,7 +81,7 @@ describe('SignInForm', () => {
 
   test('shows invalid-credentials alert without fields reset', async () => {
     // Arrange
-    const expectedAlertMessage = i18next.t(($) => $.signIn.alert.invalidCredentials, { ns: 'authentication' });
+    const errorAlertMessage = i18next.t(($) => $.signIn.alert.invalidCredentials, { ns: 'authentication' });
     mockUseAuthResult.signIn.mockRejectedValue(new BackendResponseError({
       message: 'Invalid credentials',
       status: 401,
@@ -88,7 +96,7 @@ describe('SignInForm', () => {
     const emailInput = screen.getByRole('textbox', { name: emailLabel });
     const passwordInput = screen.getByRole('textbox', { name: passwordLabel });
     const submitButton = screen.getByRole('button', { name: submitButtonLabel });
-    const alert = screen.getByText(expectedAlertMessage);
+    const errorAlert = screen.getByText(errorAlertMessage);
 
     // Act
     await emailInput.fill(testEmail);
@@ -96,7 +104,7 @@ describe('SignInForm', () => {
     await submitButton.click();
 
     // Assert
-    await expect.element(alert).toBeVisible();
+    await expect.element(errorAlert).toBeVisible();
     await expect.element(emailInput).toHaveValue(testEmail);
     await expect.element(passwordInput).toHaveValue(testPassword);
     expect(mockOnSubmit).not.toHaveBeenCalled();
@@ -105,7 +113,7 @@ describe('SignInForm', () => {
 
   test('shows general sign in error alert', async () => {
     // Arrange
-    const expectedAlertMessage = i18next.t(($) => $.signIn.alert.error, { ns: 'authentication' });
+    const errorAlertMessage = i18next.t(($) => $.signIn.alert.error, { ns: 'authentication' });
     mockUseAuthResult.signIn.mockRejectedValue(new Error('Network connection lost'));
     const screen = await render(
       <>
@@ -116,7 +124,7 @@ describe('SignInForm', () => {
     const emailInput = screen.getByRole('textbox', { name: emailLabel });
     const passwordInput = screen.getByRole('textbox', { name: passwordLabel });
     const submitButton = screen.getByRole('button', { name: submitButtonLabel });
-    const alert = screen.getByText(expectedAlertMessage);
+    const errorAlert = screen.getByText(errorAlertMessage);
 
     // Act
     await emailInput.fill(testEmail);
@@ -124,7 +132,7 @@ describe('SignInForm', () => {
     await submitButton.click();
 
     // Assert
-    await expect.element(alert).toBeVisible();
+    await expect.element(errorAlert).toBeVisible();
     expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 
