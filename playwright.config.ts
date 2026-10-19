@@ -11,8 +11,13 @@ export default defineConfig({
   },
   projects: [
     {
+      name: 'setup db',
+      testMatch: /db\.setup\.ts/,
+    },
+    {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+      dependencies: ['setup db'],
     },
   ],
   webServer: [
@@ -23,10 +28,10 @@ export default defineConfig({
       reuseExistingServer: !process.env.CI,
     },
     {
-      command: 'npm run backend',
+      command: 'npm run backend:test',
       url: 'http://localhost:3000/api/posts',
       name: 'Backend',
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: false,
     }
   ],
 });

@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 .pglite-data/
+.pglite-e2e/
 
 # Editor directories and files
 .vscode/*
