@@ -11,6 +11,16 @@ export const testComment = Object.freeze<CommentModel>({
   modifiedDate: '2026-06-13T09:00:00.000Z',
 });
 
+export const testNewComment = Object.freeze<CommentModel>({
+  id: 12,
+  text: 'A new comment from the current user',
+  authorId: currentUser.id,
+  postId: testPost.id,
+  creationDate: '2026-06-13T15:00:00.000Z',
+  modifiedDate: '2026-06-13T15:00:00.000Z',
+});
+
+
 export const testOtherComment = Object.freeze<CommentModel>({
   id: 2,
   text: 'Other user has something to say',

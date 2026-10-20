@@ -5,9 +5,10 @@ import { createComment } from '@/entities/Comment/api/createComment';
 import { deleteComment } from '@/entities/Comment/api/deleteComment';
 import { getPostComments } from '@/entities/Comment/api/getPostComments';
 import { getUserById } from '@/entities/User/api/getUserById';
+import type { CommentModel } from '@/entities/Comment/types';
 import { useAlertStore } from '@/shared/ui/Alert/model/store';
 import AlertStack from '@/shared/ui/Alert/AlertStack';
-import { testComment, testOtherComment } from '@/test/commentFixtures';
+import { testComment, testNewComment, testOtherComment } from '@/test/commentFixtures';
 import { currentUser, testCurrentPublicUser, testOtherPublicUser } from '@/test/userFixtures';
 import { testPost } from '@/test/postFixtures';
 import { renderWithQueryClient } from '@/test/renderWithQueryClient';
@@ -52,11 +53,13 @@ describe('Post comments', () => {
 
   test('opens the comments section and loads comments', async () => {
     // Arrange
+    const loadedCommentsCountLabel = i18next.t(($) => $.post.comments.count, { ns: 'posts', count: 1 });
     const screen = await renderWithQueryClient(
       <Post post={testPost} author={currentUser} isLiked={false} isLikeDisabled={false} />
     );
     const commentsToggleButton = screen.getByRole('button', { name: commentsToggleButtonLabel });
     const commentText = screen.getByText(testComment.text);
+    const loadedCommentsCount = screen.getByText(loadedCommentsCountLabel);
 
     // Assert
     await expect.element(commentText).not.toBeInTheDocument();
@@ -67,7 +70,32 @@ describe('Post comments', () => {
 
     // Assert
     await expect.element(commentText).toBeVisible();
+    await expect.element(loadedCommentsCount).toBeVisible();
     expect(getPostComments).toHaveBeenCalledOnce();
+  });
+
+  test('updates displayed comments count on opening', async () => {
+    // Arrange
+    const testPostWithCommentsCount = { ...testPost, commentsCount: 2 };
+    const initialCommentsCountLabel = i18next.t(($) => $.post.comments.count, { ns: 'posts', count: 2 });
+    const loadedCommentsCountLabel = i18next.t(($) => $.post.comments.count, { ns: 'posts', count: 1 });
+    const screen = await renderWithQueryClient(
+      <Post post={testPostWithCommentsCount} author={currentUser} isLiked={false} isLikeDisabled={false} />
+    );
+    const commentsToggleButton = screen.getByRole('button', { name: commentsToggleButtonLabel });
+    const initialCommentsCount = screen.getByText(initialCommentsCountLabel);
+    const loadedCommentsCount = screen.getByText(loadedCommentsCountLabel);
+
+    // Assert
+    await expect.element(initialCommentsCount).toBeVisible();
+    await expect.element(loadedCommentsCount).not.toBeInTheDocument();
+
+    // Act
+    await commentsToggleButton.click();
+
+    // Assert
+    await expect.element(initialCommentsCount).not.toBeInTheDocument();
+    await expect.element(loadedCommentsCount).toBeVisible();
   });
 
   test('shows fallback message for post without comments', async () => {
@@ -106,32 +134,66 @@ describe('Post comments', () => {
     expect(getPostComments).toHaveBeenCalledOnce();
   });
 
-  test('creates a new comment and opens the comments section with success alert', async () => {
+  test('auto-opens the comments section after creating a comment', async () => {
     // Arrange
     vi.mocked(createComment).mockResolvedValue(testComment);
-    const successAlertMessage = i18next.t(($) => $.comment.create.alert.success, { ns: 'posts' });
     const screen = await renderWithQueryClient(
-      <>
-        <Post post={testPost} author={currentUser} isLiked={false} isLikeDisabled={false} />
-        <AlertStack />
-      </>
+      <Post post={testPost} author={currentUser} isLiked={false} isLikeDisabled={false} />
     );
     const commentText = screen.getByText(testComment.text);
     const commentInput = screen.getByRole('textbox', { name: commentInputLabel });
     const commentSubmitButton = screen.getByRole('button', { name: commentSubmitButtonLabel });
-    const successAlert = screen.getByText(successAlertMessage);
 
     // Assert
     await expect.element(commentText).not.toBeInTheDocument();
+    expect(getPostComments).not.toHaveBeenCalled();
 
     // Act
     await commentInput.fill(testComment.text);
     await commentSubmitButton.click();
 
     // Assert
+    await expect.element(commentText).toBeVisible();
+    expect(createComment).toHaveBeenCalledOnce();
+    expect(getPostComments).toHaveBeenCalledOnce();
+  });
+
+  test('creates a new comment in an open comments section with success alert', async () => {
+    // Arrange
+    vi.mocked(createComment).mockResolvedValue(testNewComment);
+    const successAlertMessage = i18next.t(($) => $.comment.create.alert.success, { ns: 'posts' });
+    const newCommentsCountLabel = i18next.t(($) => $.post.comments.count, { ns: 'posts', count: 2 });
+    const screen = await renderWithQueryClient(
+      <>
+        <Post post={testPost} author={currentUser} isLiked={false} isLikeDisabled={false} />
+        <AlertStack />
+      </>
+    );
+    const commentsToggleButton = screen.getByRole('button', { name: commentsToggleButtonLabel });
+    const commentText = screen.getByText(testComment.text);
+    const newCommentText = screen.getByText(testNewComment.text);
+    const commentInput = screen.getByRole('textbox', { name: commentInputLabel });
+    const commentSubmitButton = screen.getByRole('button', { name: commentSubmitButtonLabel });
+    const successAlert = screen.getByText(successAlertMessage);
+    const newCommentsCount = screen.getByText(newCommentsCountLabel);
+
+    // Act
+    await commentsToggleButton.click();
+
+    // Assert
+    await expect.element(commentText).toBeVisible();
+    await expect.element(newCommentText).not.toBeInTheDocument();
+
+    // Act
+    await commentInput.fill(testNewComment.text);
+    await commentSubmitButton.click();
+
+    // Assert
     await expect.element(successAlert).toBeVisible();
     await expect.element(commentText).toBeVisible();
+    await expect.element(newCommentText).toBeVisible();
     await expect.element(commentInput).toHaveValue('');
+    await expect.element(newCommentsCount).toBeVisible();
     expect(createComment).toHaveBeenCalledOnce();
   });
 
@@ -142,6 +204,8 @@ describe('Post comments', () => {
       .mockResolvedValueOnce(testCurrentPublicUser)
       .mockResolvedValueOnce(testOtherPublicUser);
     const successAlertMessage = i18next.t(($) => $.comment.delete.alert.success, { ns: 'posts' });
+    const loadedCommentsCountLabel = i18next.t(($) => $.post.comments.count, { ns: 'posts', count: 2 });
+    const newCommentsCountLabel = i18next.t(($) => $.post.comments.count, { ns: 'posts', count: 1 });
     const screen = await renderWithQueryClient(
       <>
         <Post post={testPost} author={currentUser} isLiked={false} isLikeDisabled={false} />
@@ -153,6 +217,8 @@ describe('Post comments', () => {
     const deleteCommentButton = screen.getByRole('button', { name: deleteCommentButtonLabel });
     const otherUserCommentText = screen.getByText(testOtherComment.text);
     const successAlert = screen.getByText(successAlertMessage);
+    const loadedCommentsCount = screen.getByText(loadedCommentsCountLabel);
+    const newCommentsCount = screen.getByText(newCommentsCountLabel);
 
     // Act
     await commentsToggleButton.click();
@@ -160,6 +226,7 @@ describe('Post comments', () => {
     // Assert
     await expect.element(currentUserCommentText).toBeVisible();
     await expect.element(otherUserCommentText).toBeVisible();
+    await expect.element(loadedCommentsCount).toBeVisible();
     expect(getUserById).toHaveBeenCalledTimes(2);
 
     // Act
@@ -169,6 +236,7 @@ describe('Post comments', () => {
     await expect.element(successAlert).toBeVisible();
     await expect.element(currentUserCommentText).not.toBeInTheDocument();
     await expect.element(otherUserCommentText).toBeVisible();
+    await expect.element(newCommentsCount).toBeVisible();
     expect(deleteComment).toHaveBeenCalledExactlyOnceWith(testComment.id);
   });
 
@@ -221,6 +289,65 @@ describe('Post comments', () => {
 
     // Assert
     await expect.element(unknownAuthor).toBeVisible();
+    await expect.element(commentText).toBeVisible();
+  });
+
+  test('shows a sign-in prompt instead of comments section for guests', async () => {
+    // Arrange
+    vi.mocked(useAuth, { partial: true }).mockReturnValue({
+      currentUser: null,
+      isUserAuthenticated: false,
+    });
+    const testPostWithCommentsCount = { ...testPost, commentsCount: 2 };
+    const signInPromptMessage = i18next.t(($) => $.post.comments.authenticationRequired, { ns: 'posts' });
+    const initialCommentsCountLabel = i18next.t(($) => $.post.comments.count, { ns: 'posts', count: 2 });
+    const screen = await renderWithQueryClient(
+      <Post post={testPostWithCommentsCount} author={currentUser} isLiked={false} isLikeDisabled={false} />
+    );
+    const commentsToggleButton = screen.getByRole('button', { name: commentsToggleButtonLabel });
+    const signInPrompt = screen.getByText(signInPromptMessage);
+    const initialCommentsCount = screen.getByText(initialCommentsCountLabel);
+    const commentInput = screen.getByRole('textbox', { name: commentInputLabel, includeHidden: true });
+
+    // Assert
+    await expect.element(commentsToggleButton).toBeDisabled();
+    await expect.element(signInPrompt).toBeVisible();
+    await expect.element(initialCommentsCount).not.toBeInTheDocument();
+    await expect.element(commentInput).not.toBeInTheDocument();
+    expect(getPostComments).not.toHaveBeenCalled();
+  });
+
+  test('shows spinner on pending comments loading request', async () => {
+    // Arrange
+    let resolveCommentsLoading!: (comments: CommentModel[]) => void;
+
+    vi.mocked(getPostComments).mockReturnValue(new Promise<CommentModel[]>((resolve) => {
+      resolveCommentsLoading = resolve;
+    }));
+
+    const commentsLoadingLabelText = i18next.t(($) => $.post.comments.loading, { ns: 'posts' });
+    const screen = await renderWithQueryClient(
+      <Post post={testPost} author={currentUser} isLiked={false} isLikeDisabled={false} />
+    );
+    const commentsToggleButton = screen.getByRole('button', { name: commentsToggleButtonLabel });
+    const loadingSpinner = screen.getByRole('progressbar');
+    const commentsLoadingLabel = screen.getByText(commentsLoadingLabelText);
+    const commentText = screen.getByText(testComment.text);
+
+    // Act
+    await commentsToggleButton.click();
+
+    // Assert
+    await expect.element(loadingSpinner).toBeVisible();
+    await expect.element(commentsLoadingLabel).toBeVisible();
+    await expect.element(commentText).not.toBeInTheDocument();
+
+    // Act
+    resolveCommentsLoading([testComment]);
+
+    // Assert
+    await expect.element(loadingSpinner).not.toBeInTheDocument();
+    await expect.element(commentsLoadingLabel).not.toBeInTheDocument();
     await expect.element(commentText).toBeVisible();
   });
 });
