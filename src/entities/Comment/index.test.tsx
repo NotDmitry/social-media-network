@@ -3,8 +3,8 @@ import i18next from 'i18next';
 import { deleteComment } from '@/entities/Comment/api/deleteComment';
 import { useAlertStore } from '@/shared/ui/Alert/model/store';
 import AlertStack from '@/shared/ui/Alert/AlertStack';
-import { currentUser } from '@/test/currentUserFixture';
-import { testComment } from '@/test/commentFixture';
+import { currentUser } from '@/test/userFixtures';
+import { testComment } from '@/test/commentFixtures';
 import { renderWithQueryClient } from '@/test/renderWithQueryClient';
 import Comment from './index';
 

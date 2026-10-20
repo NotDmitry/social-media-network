@@ -4,7 +4,7 @@ import { createComment } from '@/entities/Comment/api/createComment';
 import type { CommentCreationPayload, CommentModel } from '@/entities/Comment/types';
 import { useAlertStore } from '@/shared/ui/Alert/model/store';
 import AlertStack from '@/shared/ui/Alert/AlertStack';
-import { testComment } from '@/test/commentFixture';
+import { testComment } from '@/test/commentFixtures';
 import { renderWithQueryClient } from '@/test/renderWithQueryClient';
 import CreateCommentForm from './index';
 
