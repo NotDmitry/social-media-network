@@ -206,9 +206,9 @@ describe('getRelativePastTimePresentationString', () => {
     expect(actualRelativeTimeString).toBeNull();
   });
 
-  test('returns \'now\' for the timestamp in the future', () => {
+  test('returns \'now\' for a timestamp 10 days in the future', () => {
     // Arrange
-    const testDate = new Date(2026, 5, 13, 9, 0, 0, 1).toISOString();
+    const testDate = new Date(2026, 5, 23, 9).toISOString();
 
     // Act
     const actualRelativeTimeString = getRelativePastTimePresentationString(testDate, 'en');
