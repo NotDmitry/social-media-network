@@ -16,6 +16,7 @@ export default defineConfig({
     }
   },
   test: {
+    globalSetup: ['tests/globalSetup.ts'],
     coverage: {
       provider: 'v8',
       include: ['src/**/*.{ts,tsx}'],
