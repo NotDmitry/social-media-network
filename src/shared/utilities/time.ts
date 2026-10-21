@@ -105,8 +105,8 @@ export function getRelativePastTimePresentationString(dateTimeString: string, lo
     return relativeTimeFormatter.format(0, 'second');
   }
 
-  const todayStartTimestamp = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-  const providedDateStartTimestamp = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  const todayStartTimestamp = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  const providedDateStartTimestamp = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
   const elapsedCalendarDays = (todayStartTimestamp - providedDateStartTimestamp) / MS_IN_DAY;
 
   if (elapsedCalendarDays > 0) {
