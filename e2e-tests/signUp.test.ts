@@ -11,13 +11,13 @@ test.describe('Sign Up', () => {
   const submitButtonLabel = authenticationTranslations.signUp.button.default;
 
   const testFullName = 'John Doe';
-  const testEmail = 'john.doe@example.com';
   const testPassword = '12345678';
   const profileNavigationLinkFragment = new RegExp(testFullName, 'i');
 
   test('creates new user account and navigates to the Home page for authenticated user', async ({ page }) => {
     // Arrange
     await page.goto('/');
+    const testEmail = `test.user.${crypto.randomUUID()}@example.com`;
     const successAlertMessage = authenticationTranslations.signUp.alert.success;
     const signUpNavigationLink = page.getByRole('banner').getByRole('link', { name: signUpNavigationLabel });
     const fullNameInput = page.getByRole('textbox', { name: fullNameInputLabel });
@@ -78,9 +78,7 @@ test.describe('Sign Up', () => {
   test('new account session survives page reload', async ({ page }) => {
     // Arrange
     await page.goto('/#/sign-up');
-    const testFullName = 'Reload User';
-    const testEmail = 'reload.user@example.com';
-    const profileNavigationLinkFragment = new RegExp(testFullName, 'i');
+    const testEmail = `reload.user.${crypto.randomUUID()}@example.com`;
     const fullNameInput = page.getByRole('textbox', { name: fullNameInputLabel });
     const emailInput = page.getByRole('textbox', { name: emailInputLabel });
     const passwordInput = page.getByRole('textbox', { name: passwordInputLabel, exact: true });
