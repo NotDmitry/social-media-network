@@ -2,7 +2,7 @@ import type { PostModel } from '@/entities/Post/types';
 import { currentUser } from './userFixtures';
 
 export const testPost = Object.freeze<PostModel>({
-  id: 1,
+  id: 101,
   title: 'New post',
   content: 'I have some news to share',
   image: null,

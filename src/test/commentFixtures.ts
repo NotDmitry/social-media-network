@@ -3,7 +3,7 @@ import { testPost } from './postFixtures';
 import { currentUser, testOtherPublicUser } from './userFixtures';
 
 export const testComment = Object.freeze<CommentModel>({
-  id: 1,
+  id: 10101,
   text: 'The opinion everyone cares about',
   authorId: currentUser.id,
   postId: testPost.id,
@@ -12,7 +12,7 @@ export const testComment = Object.freeze<CommentModel>({
 });
 
 export const testNewComment = Object.freeze<CommentModel>({
-  id: 12,
+  id: 10102,
   text: 'A new comment from the current user',
   authorId: currentUser.id,
   postId: testPost.id,
@@ -20,9 +20,8 @@ export const testNewComment = Object.freeze<CommentModel>({
   modifiedDate: '2026-06-13T15:00:00.000Z',
 });
 
-
 export const testOtherComment = Object.freeze<CommentModel>({
-  id: 2,
+  id: 20101,
   text: 'Other user has something to say',
   authorId: testOtherPublicUser.id,
   postId: testPost.id,
