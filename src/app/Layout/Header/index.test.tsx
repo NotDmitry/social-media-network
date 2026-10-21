@@ -66,14 +66,26 @@ describe('Header', () => {
 
   test('renders only the Home link on desktop in default mode', async () => {
     // Arrange
+    vi.mocked(useAuth, { partial: true }).mockReturnValue({ currentUser });
+    const homeLinkLogoAccessibleName = 'Sidekick';
+    const desktopProfileInfoLinkAccessibleName = new RegExp(currentUser.displayName);
     await page.viewport(desktopViewportSize.width, desktopViewportSize.height);
     const screen = await renderWithRouterAndMuiStyles(<Header variant='default' />);
     const header = screen.getByRole('banner');
-    const homeLink = header.getByRole('link');
+    const homeLink = header.getByRole('link', { name: homeLinkLogoAccessibleName });
+    const desktopSignInLink = header.getByRole('link', { name: signInNavigationLabel, includeHidden: true });
+    const desktopSignUpLink = header.getByRole('link', { name: signUpNavigationLabel, includeHidden: true });
+    const desktopProfileInfoLink = header.getByRole('link', {
+      name: desktopProfileInfoLinkAccessibleName,
+      includeHidden: true
+    });
 
     // Assert
     await expect.element(homeLink).toBeVisible();
     await expect.element(homeLink).toHaveAttribute('href', ROUTES.home);
+    await expect.element(desktopSignInLink).not.toBeInTheDocument();
+    await expect.element(desktopSignUpLink).not.toBeInTheDocument();
+    await expect.element(desktopProfileInfoLink).not.toBeInTheDocument();
   });
 
   test('doesn\'t render burger menu button in default mode', async () => {
@@ -88,30 +100,42 @@ describe('Header', () => {
 
   test('renders auth navigation links on desktop in guest mode', async () => {
     // Arrange
+    vi.mocked(useAuth, { partial: true }).mockReturnValue({ currentUser });
+    const desktopProfileInfoLinkAccessibleName = new RegExp(currentUser.displayName);
     await page.viewport(desktopViewportSize.width, desktopViewportSize.height);
     const screen = await renderWithRouterAndMuiStyles(<Header variant='guest' />);
     const header = screen.getByRole('banner');
     const desktopSignInLink = header.getByRole('link', { name: signInNavigationLabel });
     const desktopSignUpLink = header.getByRole('link', { name: signUpNavigationLabel });
+    const desktopProfileInfoLink = header.getByRole('link', {
+      name: desktopProfileInfoLinkAccessibleName,
+      includeHidden: true
+    });
 
     // Assert
     await expect.element(desktopSignInLink).toBeVisible();
     await expect.element(desktopSignInLink).toHaveAttribute('href', ROUTES.signIn);
     await expect.element(desktopSignUpLink).toBeVisible();
     await expect.element(desktopSignUpLink).toHaveAttribute('href', ROUTES.signUp);
+    await expect.element(desktopProfileInfoLink).not.toBeInTheDocument();
   });
 
   test('renders Profile Info navigation link on desktop in user mode', async () => {
     // Arrange
     vi.mocked(useAuth, { partial: true }).mockReturnValue({ currentUser });
+    const desktopProfileInfoLinkAccessibleName = new RegExp(currentUser.displayName);
     await page.viewport(desktopViewportSize.width, desktopViewportSize.height);
     const screen = await renderWithRouterAndMuiStyles(<Header variant='user' />);
     const header = screen.getByRole('banner');
-    const desktopProfileInfoLink = header.getByRole('link', { name: new RegExp(currentUser.displayName) });
+    const desktopProfileInfoLink = header.getByRole('link', { name: desktopProfileInfoLinkAccessibleName });
+    const desktopSignInLink = header.getByRole('link', { name: signInNavigationLabel, includeHidden: true });
+    const desktopSignUpLink = header.getByRole('link', { name: signUpNavigationLabel, includeHidden: true });
 
     // Assert
     await expect.element(desktopProfileInfoLink).toBeVisible();
     await expect.element(desktopProfileInfoLink).toHaveAttribute('href', ROUTES.profile);
+    await expect.element(desktopSignInLink).not.toBeInTheDocument();
+    await expect.element(desktopSignUpLink).not.toBeInTheDocument();
   });
 
   test('closes mobile drawer after a route change in guest mode', async () => {
@@ -195,5 +219,17 @@ describe('Header', () => {
     // Assert
     await expect.element(drawer).toBeInTheDocument();
     await expect.element(drawer).not.toBeVisible();
+  });
+
+  test('doesn\'t render desktop profile link in user mode when current user is null', async () => {
+    // Arrange
+    await page.viewport(desktopViewportSize.width, desktopViewportSize.height);
+    const screen = await renderWithRouterAndMuiStyles(<Header variant='user' />);
+    const header = screen.getByRole('banner');
+    const desktopProfileInfoLink = header.getByRole('navigation').getByRole('link', { includeHidden: true })
+
+    // Assert
+    await expect.element(header).toBeVisible();
+    await expect.element(desktopProfileInfoLink).not.toBeInTheDocument();
   });
 });
