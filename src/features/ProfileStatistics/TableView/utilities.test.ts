@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import type { Activity } from '../types';
 import { toActivityTableView } from './utilities';
 import type { ActivityTableOptions } from './utilities';
@@ -210,11 +210,11 @@ describe('toActivityTableView', () => {
     },
   ];
 
-  beforeAll(() => {
+  beforeEach(() => {
     vi.setSystemTime(fixedTestTime);
   });
 
-  afterAll(() => {
+  afterEach(() => {
     vi.useRealTimers();
   });
 

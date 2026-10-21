@@ -1,4 +1,4 @@
-import { afterAll, beforeAll, describe, expect, test, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import type { Activity } from '../types';
 import { toWeeklyStatsCardDataView } from './utilities';
 import type { StatsCardProps } from './index';
@@ -92,11 +92,11 @@ describe('toWeeklyStatsCardDataView', () => {
     },
   ];
 
-  beforeAll(() => {
+  beforeEach(() => {
     vi.setSystemTime(fixedTestTime);
   });
 
-  afterAll(() => {
+  afterEach(() => {
     vi.useRealTimers();
   });
 
