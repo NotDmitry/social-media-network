@@ -26,3 +26,4 @@ dist-ssr
 
 # Vitest artifacts
 coverage/
+.vitest/
