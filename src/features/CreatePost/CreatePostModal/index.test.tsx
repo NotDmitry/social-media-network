@@ -212,7 +212,13 @@ describe('CreatePostModal', () => {
 
     // Assert
     await expect.element(alert).toBeVisible();
-    expect(uploadImage).toHaveBeenCalledExactlyOnceWith(imageFile);
+    expect(uploadImage).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({
+        size: imageFile.size,
+        name: imageFile.name,
+        type: imageFile.type,
+      })
+    );
     expect(createPost).toHaveBeenCalledExactlyOnceWith(expectedPayload);
     expect(mockOnClose).toHaveBeenCalledOnce();
   });
