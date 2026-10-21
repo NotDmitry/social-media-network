@@ -233,6 +233,42 @@ describe('getRelativePastTimePresentationString', () => {
   });
 });
 
+describe('getRelativePastTimePresentationString DST', () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  test('returns 2 days ago across spring change (March 29 02:00 to 03:00 for Berlin)', () => {
+    // Arrange
+    vi.setSystemTime(new Date(2026, 2, 30, 9));
+    const activityTimeString = new Date(2026, 2, 28, 9).toISOString();
+    const expected = '2 days ago';
+
+    // Act
+    const actualRelativeTimeString = getRelativePastTimePresentationString(activityTimeString, 'en');
+
+    // Assert
+    expect(actualRelativeTimeString).toBe(expected);
+  });
+
+  test('returns 2 days ago across autumn change (October 25 03:00 to 02:00 for Berlin)', () => {
+    // Arrange
+    vi.setSystemTime(new Date(2026, 9, 26, 9));
+    const activityTimeString = new Date(2026, 9, 24, 9).toISOString();
+    const expected = '2 days ago';
+
+    // Act
+    const actualRelativeTimeString = getRelativePastTimePresentationString(activityTimeString, 'en');
+
+    // Assert
+    expect(actualRelativeTimeString).toBe(expected);
+  });
+});
+
 describe('getShortMonthPresentationString', () => {
   const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const shortMonthCases = shortMonths.map((expectedMonth, monthIndex) => ({ expectedMonth, monthIndex }));
