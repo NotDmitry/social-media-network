@@ -92,7 +92,7 @@ function DrawerNavigation({ variant, isOpen, onOpen, onClose }: DrawerNavigation
             </ListItemButton>
           </>
         }
-        {variant === 'user' &&
+        {variant === 'user' && currentUser &&
           <>
             <ListItemButton
               className='drawer-navigation-link'
