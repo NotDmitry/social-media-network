@@ -16,6 +16,7 @@ describe('CreatePost', () => {
   const quickPostSubmitButtonLabel = i18next.t(($) => $.quickPost.button.default, { ns: 'homePage' });
   const postTitleInputLabel = i18next.t(($) => $.createPost.input.title.label, { ns: 'posts' });
   const postDescriptionInputLabel = i18next.t(($) => $.createPost.input.description.label, { ns: 'posts' });
+  const fileInputSelectLabel = i18next.t(($) => $.createPost.input.file.select, { ns: 'posts' });
   const closeModalButtonLabel = i18next.t(($) => $.createPost.close, { ns: 'posts' });
   const createPostButtonLabel = i18next.t(($) => $.createPost.button.default, { ns: 'posts' });
 
@@ -154,5 +155,99 @@ describe('CreatePost', () => {
     // Assert
     await expect.element(createPostModal).not.toBeVisible();
     expect(createPost).toHaveBeenCalledExactlyOnceWith(expectedPayload);
+  });
+
+  test('reopens post creation modal with new quick post description and cleared file selection', async () => {
+    // Arrange
+    const imageFile = new File([new Uint8Array(16)], 'test_post.png', { type: 'image/png' });
+    const firstQuickPostDescription = 'First quick description';
+    const secondQuickPostDescription = 'Second quick description';
+    const screen = await renderWithQueryClient(<CreatePost currentUser={currentUser} />);
+    const quickPostInput = screen.getByRole('textbox');
+    const quickPostSubmitButton = screen.getByRole('button', { name: quickPostSubmitButtonLabel });
+    const createPostModal = screen.getByRole('dialog', { includeHidden: true });
+    const postTitleInput = screen.getByRole('textbox', { name: postTitleInputLabel });
+    const postDescriptionInput = screen.getByRole('textbox', { name: postDescriptionInputLabel });
+    const closeModalButton = screen.getByRole('button', { name: closeModalButtonLabel });
+    const fileInput = screen.getByLabelText(new RegExp(fileInputSelectLabel));
+    const fileName = screen.getByText(imageFile.name);
+    const fileSelectPrompt = screen.getByText(fileInputSelectLabel);
+
+    // Act
+    await quickPostInput.fill(firstQuickPostDescription);
+    await quickPostSubmitButton.click();
+
+    // Assert
+    await expect.element(createPostModal).toBeVisible();
+    await expect.element(postTitleInput).toHaveValue('');
+    await expect.element(postDescriptionInput).toHaveValue(firstQuickPostDescription);
+    await expect.element(fileSelectPrompt).toBeVisible();
+
+    // Act
+    await postTitleInput.fill(testPost.title);
+    await fileInput.upload(imageFile);
+
+    // Assert
+    await expect.element(postTitleInput).toHaveValue(testPost.title);
+    await expect.element(fileName).toBeVisible();
+
+    // Act
+    await closeModalButton.click();
+
+    // Assert
+    await expect.element(createPostModal).not.toBeVisible();
+
+    // Act
+    await quickPostInput.fill(secondQuickPostDescription);
+    await quickPostSubmitButton.click();
+
+    // Assert
+    await expect.element(createPostModal).toBeVisible();
+    await expect.element(postTitleInput).toHaveValue('');
+    await expect.element(postDescriptionInput).toHaveValue(secondQuickPostDescription);
+    await expect.element(fileSelectPrompt).toBeVisible();
+    await expect.element(fileName).not.toBeInTheDocument();
+  });
+
+  test('reopens post creation modal with cleared file errors and unblocked submit button', async () => {
+    // Arrange
+    const unsupportedFile = new File([new Uint8Array(16)], 'notes.midi', { type: 'audio/midi' });
+    const fileUnsupportedErrorMessage = i18next.t(($) => $.createPost.input.file.unsupported, { ns: 'posts' });
+    const screen = await renderWithQueryClient(<CreatePost currentUser={currentUser} />);
+    const quickPostSubmitButton = screen.getByRole('button', { name: quickPostSubmitButtonLabel });
+    const createPostModal = screen.getByRole('dialog', { includeHidden: true });
+    const closeModalButton = screen.getByRole('button', { name: closeModalButtonLabel });
+    const fileInput = screen.getByLabelText(new RegExp(fileInputSelectLabel));
+    const fileUnsupportedError = screen.getByText(fileUnsupportedErrorMessage);
+    const fileSelectPrompt = screen.getByText(fileInputSelectLabel);
+    const createPostButton = screen.getByRole('button', { name: createPostButtonLabel });
+
+    // Act
+    await quickPostSubmitButton.click();
+
+    // Assert
+    await expect.element(createPostModal).toBeVisible();
+
+    // Act
+    await fileInput.upload(unsupportedFile);
+
+    // Assert
+    await expect.element(fileUnsupportedError).toBeVisible();
+    await expect.element(createPostButton).toBeDisabled();
+
+    // Act
+    await closeModalButton.click();
+
+    // Assert
+    await expect.element(createPostModal).not.toBeVisible();
+
+    // Act
+    await quickPostSubmitButton.click();
+
+    // Assert
+    await expect.element(createPostModal).toBeVisible();
+    await expect.element(fileUnsupportedError).not.toBeInTheDocument();
+    await expect.element(fileSelectPrompt).toBeVisible();
+    await expect.element(createPostButton).toBeEnabled();
   });
 });
