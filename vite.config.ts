@@ -56,6 +56,11 @@ export default defineConfig({
         'src/main.tsx',
         'src/test/**',
       ],
+      thresholds: {
+        statements: 58,
+        branches: 58,
+        functions: 58,
+      }
     }
   }
 });

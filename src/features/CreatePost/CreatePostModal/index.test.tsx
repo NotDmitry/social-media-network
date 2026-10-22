@@ -5,7 +5,7 @@ import type { PostCreationPayload, PostModel } from '@/entities/Post/types';
 import AlertStack from '@/shared/ui/Alert/AlertStack';
 import { uploadImage } from '@/shared/api/uploadImage';
 import { useAlertStore } from '@/shared/ui/Alert/model/store';
-import { testPost } from '@/test/postFixture';
+import { testPost } from '@/test/postFixtures';
 import { renderWithQueryClient } from '@/test/renderWithQueryClient';
 import CreatePostModal from './index';
 import type { CreatePostModalProps } from './index';

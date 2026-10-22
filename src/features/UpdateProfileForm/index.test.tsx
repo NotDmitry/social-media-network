@@ -9,7 +9,7 @@ import { useAlertStore } from '@/shared/ui/Alert/model/store';
 import { BackendResponseError } from '@/shared/api/backendResponseError';
 import { uploadImage } from '@/shared/api/uploadImage';
 import AlertStack from '@/shared/ui/Alert/AlertStack';
-import { currentUser } from '@/test/currentUserFixture';
+import { currentUser } from '@/test/userFixtures';
 import UpdateProfileForm from './index';
 
 vi.mock(import('@/entities/auth/useAuth'), () => ({
