@@ -311,6 +311,51 @@ describe('UpdateProfileForm', () => {
     expect(mockUseAuthResult.updateProfile).not.toHaveBeenCalled();
   });
 
+  test('shows password confirmation error in modal field without general alert', async () => {
+    // Arrange
+    mockUseAuthResult.updateEmail.mockRejectedValue(new BackendResponseError({
+      message: 'Invalid current password',
+      status: 403,
+      code: 'INVALID_CURRENT_PASSWORD',
+    }));
+    const passwordInvalidErrorMessage = i18next.t(
+      ($) => $.update.confirmation.input.password.validation.invalid, { ns: 'profile' }
+    );
+    const errorAlertMessage = i18next.t(($) => $.update.alert.error, { ns: 'profile' });
+    const screen = await render(
+      <>
+        <UpdateProfileForm user={currentUser} onSubmit={mockOnSubmit} />
+        <AlertStack />
+      </>
+    );
+    const emailInput = screen.getByRole('textbox', { name: emailInputLabel });
+    const saveButton = screen.getByRole('button', { name: saveButtonLabel });
+    const confirmationModal = screen.getByRole('dialog', { includeHidden: true });
+    const passwordInput = confirmationModal.getByRole('textbox', { name: passwordInputLabel });
+    const passwordInvalidError = screen.getByText(passwordInvalidErrorMessage);
+    const confirmButton = confirmationModal.getByRole('button', { name: confirmButtonLabel });
+    const errorAlert = screen.getByText(errorAlertMessage);
+
+    // Act
+    await emailInput.fill(testEmail);
+    await saveButton.click();
+
+    // Assert
+    await expect.element(confirmationModal).toBeVisible();
+
+    // Act
+    await passwordInput.fill(testCurrentPassword);
+    await confirmButton.click();
+
+    // Assert
+    await expect.element(confirmationModal).toBeVisible();
+    await expect.element(passwordInvalidError).toBeVisible();
+    await expect.element(errorAlert).not.toBeInTheDocument();
+    expect(mockOnSubmit).not.toHaveBeenCalled();
+    expect(mockUseAuthResult.updateEmail).toHaveBeenCalledOnce();
+    expect(mockUseAuthResult.updateProfile).not.toHaveBeenCalled();
+  });
+
   test('disables profile fields during a pending update request', async () => {
     // Arrange
     let resolvePendingUpdate!: () => void;
