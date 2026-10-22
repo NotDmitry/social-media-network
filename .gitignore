@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 .pglite-data/
+.pglite-e2e/
 
 # Editor directories and files
 .vscode/*
@@ -27,3 +28,10 @@ dist-ssr
 # Vitest artifacts
 coverage/
 .vitest/
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
