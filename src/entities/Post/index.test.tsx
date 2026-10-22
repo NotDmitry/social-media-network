@@ -3,9 +3,12 @@ import i18next from 'i18next';
 import { useAuth } from '@/entities/auth/useAuth';
 import { createComment } from '@/entities/Comment/api/createComment';
 import { deleteComment } from '@/entities/Comment/api/deleteComment';
+import { dislikePost } from '@/entities/Like/api/dislikePost';
 import { getPostComments } from '@/entities/Comment/api/getPostComments';
 import { getUserById } from '@/entities/User/api/getUserById';
+import { likePost } from '@/entities/Like/api/likePost';
 import type { CommentModel } from '@/entities/Comment/types';
+import type { LikeStatus } from '@/entities/Like/types';
 import { useAlertStore } from '@/shared/ui/Alert/model/store';
 import AlertStack from '@/shared/ui/Alert/AlertStack';
 import { testComment, testNewComment, testOtherComment } from '@/test/commentFixtures';
@@ -26,6 +29,10 @@ vi.mock(import('@/entities/Comment/api/deleteComment'), () => ({
   deleteComment: vi.fn(),
 }));
 
+vi.mock(import('@/entities/Like/api/dislikePost'), () => ({
+  dislikePost: vi.fn(),
+}));
+
 vi.mock(import('@/entities/Comment/api/getPostComments'), () => ({
   getPostComments: vi.fn(),
 }));
@@ -34,6 +41,19 @@ vi.mock(import('@/entities/User/api/getUserById'), () => ({
   getUserById: vi.fn(),
 }));
 
+vi.mock(import('@/entities/Like/api/likePost'), () => ({
+  likePost: vi.fn(),
+}));
+
+beforeEach(() => {
+  vi.resetAllMocks();
+  vi.mocked(useAuth, { partial: true }).mockReturnValue({
+    currentUser,
+    isUserAuthenticated: true,
+  });
+  useAlertStore.setState({ alerts: [] });
+});
+
 describe('Post comments', () => {
   const commentsToggleButtonLabel = i18next.t(($) => $.post.comments.toggle, { ns: 'posts' });
   const deleteCommentButtonLabel = i18next.t(($) => $.comment.delete.action, { ns: 'posts' });
@@ -41,14 +61,8 @@ describe('Post comments', () => {
   const commentSubmitButtonLabel = i18next.t(($) => $.comment.create.button.default, { ns: 'posts' });
 
   beforeEach(() => {
-    vi.resetAllMocks();
-    vi.mocked(useAuth, { partial: true }).mockReturnValue({
-      currentUser,
-      isUserAuthenticated: true,
-    });
     vi.mocked(getPostComments).mockResolvedValue([testComment]);
     vi.mocked(getUserById).mockResolvedValue(testCurrentPublicUser);
-    useAlertStore.setState({ alerts: [] });
   });
 
   test('opens the comments section and loads comments', async () => {
@@ -349,5 +363,169 @@ describe('Post comments', () => {
     await expect.element(loadingSpinner).not.toBeInTheDocument();
     await expect.element(commentsLoadingLabel).not.toBeInTheDocument();
     await expect.element(commentText).toBeVisible();
+  });
+});
+
+describe('Post likes', () => {
+  const likeButtonLabel = i18next.t(($) => $.post.like.action, { ns: 'posts' });
+
+  test('explicitly disables like button', async () => {
+    // Arrange
+    const screen = await renderWithQueryClient(
+      <Post post={testPost} author={currentUser} isLiked={false} isLikeDisabled={true} />
+    );
+    const likeButton = screen.getByRole('button', { name: likeButtonLabel });
+
+    // Assert
+    await expect.element(likeButton).toBeDisabled();
+  });
+
+  test('shows like count with disabled button for guests', async () => {
+    // Arrange
+    vi.mocked(useAuth, { partial: true }).mockReturnValue({
+      currentUser: null,
+      isUserAuthenticated: false,
+    });
+    const testPostWithLikesCount = { ...testPost, likesCount: 5 };
+    const likesCountLabel = i18next.t(($) => $.post.like.count, { ns: 'posts', count: 5 });
+    const screen = await renderWithQueryClient(
+      <Post post={testPostWithLikesCount} author={currentUser} isLiked={false} isLikeDisabled={false} />
+    );
+    const likeButton = screen.getByRole('button', { name: likeButtonLabel });
+    const likesCount = screen.getByText(likesCountLabel);
+
+    // Assert
+    await expect.element(likeButton).toBeDisabled();
+    await expect.element(likesCount).toBeVisible();
+  });
+
+  test('shows an optimistic like status during pending like request', async () => {
+    // Arrange
+    const newLikeStatus: LikeStatus = {
+      status: 'liked',
+      postId: testPost.id,
+      newLikesCount: 1,
+    }
+
+    let resolvePendingLike!: (status: LikeStatus) => void;
+
+    vi.mocked(likePost).mockReturnValue(new Promise<LikeStatus>((resolve) => {
+      resolvePendingLike = resolve;
+    }));
+
+    const initialLikesCountLabel = i18next.t(($) => $.post.like.count, { ns: 'posts', count: 0 });
+    const optimisticLikesCountLabel = i18next.t(($) => $.post.like.count, { ns: 'posts', count: 1 });
+    const screen = await renderWithQueryClient(
+      <Post post={testPost} author={currentUser} isLiked={false} isLikeDisabled={false} />
+    );
+    const likeButton = screen.getByRole('button', { name: likeButtonLabel });
+    const initialLikesCount = screen.getByText(initialLikesCountLabel);
+    const optimisticLikesCount = screen.getByText(optimisticLikesCountLabel);
+
+    // Assert
+    await expect.element(initialLikesCount).toBeVisible();
+    await expect.element(optimisticLikesCount).not.toBeInTheDocument();
+
+    // Act
+    await likeButton.click();
+
+    // Assert
+    await expect.element(likeButton).toBeDisabled();
+    await expect.element(initialLikesCount).not.toBeInTheDocument();
+    await expect.element(optimisticLikesCount).toBeVisible();
+
+    // Act
+    resolvePendingLike(newLikeStatus);
+
+    // Assert
+    await expect.element(likeButton).toBeEnabled();
+    expect(likePost).toHaveBeenCalledExactlyOnceWith(testPost.id);
+  });
+
+  test('shows an optimistic like status during pending dislike request', async () => {
+    // Arrange
+    const newLikeStatus: LikeStatus = {
+      status: 'disliked',
+      postId: testPost.id,
+      newLikesCount: 4,
+    }
+    const testPostWithLikesCount = { ...testPost, likesCount: 5 };
+
+    let resolvePendingDislike!: (status: LikeStatus) => void;
+
+    vi.mocked(dislikePost).mockReturnValue(new Promise<LikeStatus>((resolve) => {
+      resolvePendingDislike = resolve;
+    }));
+
+    const initialLikesCountLabel = i18next.t(($) => $.post.like.count, { ns: 'posts', count: 5 });
+    const optimisticLikesCountLabel = i18next.t(($) => $.post.like.count, { ns: 'posts', count: 4 });
+    const screen = await renderWithQueryClient(
+      <Post post={testPostWithLikesCount} author={currentUser} isLiked={true} isLikeDisabled={false} />
+    );
+    const likeButton = screen.getByRole('button', { name: likeButtonLabel });
+    const initialLikesCount = screen.getByText(initialLikesCountLabel);
+    const optimisticLikesCount = screen.getByText(optimisticLikesCountLabel);
+
+    // Assert
+    await expect.element(initialLikesCount).toBeVisible();
+    await expect.element(optimisticLikesCount).not.toBeInTheDocument();
+
+    // Act
+    await likeButton.click();
+
+    // Assert
+    await expect.element(likeButton).toBeDisabled();
+    await expect.element(initialLikesCount).not.toBeInTheDocument();
+    await expect.element(optimisticLikesCount).toBeVisible();
+
+    // Act
+    resolvePendingDislike(newLikeStatus);
+
+    // Assert
+    await expect.element(likeButton).toBeEnabled();
+    expect(dislikePost).toHaveBeenCalledExactlyOnceWith(testPost.id);
+    expect(likePost).not.toHaveBeenCalled();
+  });
+
+  test('restores the like count on failed optimistic update request and shows an error alert', async () => {
+    // Arrange
+    let rejectPendingLike!: (error: Error) => void;
+
+    vi.mocked(likePost).mockReturnValue(new Promise<LikeStatus>((_, reject) => {
+      rejectPendingLike = reject;
+    }));
+
+    const errorAlertMessage = i18next.t(($) => $.post.like.alert.error, { ns: 'posts' });
+    const initialLikesCountLabel = i18next.t(($) => $.post.like.count, { ns: 'posts', count: 0 });
+    const optimisticLikesCountLabel = i18next.t(($) => $.post.like.count, { ns: 'posts', count: 1 });
+    const screen = await renderWithQueryClient(
+      <>
+        <Post post={testPost} author={currentUser} isLiked={false} isLikeDisabled={false} />
+        <AlertStack />
+      </>
+    );
+    const likeButton = screen.getByRole('button', { name: likeButtonLabel });
+    const initialLikesCount = screen.getByText(initialLikesCountLabel);
+    const optimisticLikesCount = screen.getByText(optimisticLikesCountLabel);
+    const errorAlert = screen.getByText(errorAlertMessage);
+
+    // Assert
+    await expect.element(initialLikesCount).toBeVisible();
+
+    // Act
+    await likeButton.click();
+
+    // Assert
+    await expect.element(optimisticLikesCount).toBeVisible();
+
+    // Act
+    rejectPendingLike(new Error('Network connection lost'));
+
+    // Assert
+    await expect.element(errorAlert).toBeVisible();
+    await expect.element(likeButton).toBeEnabled();
+    await expect.element(initialLikesCount).toBeVisible();
+    await expect.element(optimisticLikesCount).not.toBeInTheDocument();
+    expect(likePost).toHaveBeenCalledExactlyOnceWith(testPost.id);
   });
 });
