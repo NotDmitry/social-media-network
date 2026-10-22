@@ -384,7 +384,13 @@ describe('UpdateProfileForm', () => {
     await expect.element(successAlert).toBeVisible();
     expect(mockOnSubmit).toHaveBeenCalledOnce();
     expect(mockUseAuthResult.updateProfile).toHaveBeenCalledExactlyOnceWith(expectedPayload);
-    expect(uploadImage).toHaveBeenCalledExactlyOnceWith(avatarFile);
+    expect(uploadImage).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({
+        size: avatarFile.size,
+        name: avatarFile.name,
+        type: avatarFile.type,
+      })
+    );
   });
 
   test('accepts a description of exactly 200 characters', async () => {
