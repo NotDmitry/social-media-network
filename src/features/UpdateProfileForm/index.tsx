@@ -97,6 +97,7 @@ function UpdateProfileForm({ user, onSubmit }: UpdateProfileFormProps) {
     }
 
     setSelectedAvatar(null);
+    setSelectedAvatarErrorMessage(null);
 
     if (emailUpdate !== undefined) {
       handlePasswordConfirmationClose();
