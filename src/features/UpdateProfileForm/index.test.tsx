@@ -113,23 +113,41 @@ describe('UpdateProfileForm', () => {
     expect(mockUseAuthResult.updateProfile).not.toHaveBeenCalled();
   });
 
-  test('prevents submission if selected avatar file is of unsupported type', async () => {
+  test('clears unsupported selected avatar file error and submits username change', async () => {
     // Arrange
     const unsupportedFile = new File([new Uint8Array(16)], 'notes.midi', { type: 'audio/midi' });
     const avatarErrorMessage = i18next.t(($) => $.update.input.avatar.error, { ns: 'profile' });
-    const screen = await render(<UpdateProfileForm user={currentUser} onSubmit={mockOnSubmit} />);
-    const visibleAvatarErrorMessage = screen.getByText(avatarErrorMessage);
+    const successAlertMessage = i18next.t(($) => $.update.alert.success, { ns: 'profile' });
+    const expectedPayload: UpdateProfilePayload = {
+      username: testUsername,
+    };
+    const screen = await render(
+      <>
+        <UpdateProfileForm user={currentUser} onSubmit={mockOnSubmit} />
+        <AlertStack />
+      </>
+    );
+    const avatarError = screen.getByText(avatarErrorMessage);
     const avatarInput = screen.getByLabelText(avatarInputLabel);
+    const usernameInput = screen.getByRole('textbox', { name: usernameInputLabel });
     const saveButton = screen.getByRole('button', { name: saveButtonLabel });
+    const successAlert = screen.getByText(successAlertMessage);
 
     // Act
     await avatarInput.upload(unsupportedFile);
+
+    // Assert
+    await expect.element(avatarError).toBeVisible();
+
+    // Act
+    await usernameInput.fill(testUsername);
     await saveButton.click();
 
     // Assert
-    await expect.element(visibleAvatarErrorMessage).toBeVisible();
-    expect(mockOnSubmit).not.toHaveBeenCalled();
-    expect(mockUseAuthResult.updateProfile).not.toHaveBeenCalled();
+    await expect.element(successAlert).toBeVisible()
+    await expect.element(avatarError).not.toBeInTheDocument();
+    expect(mockOnSubmit).toHaveBeenCalledOnce();
+    expect(mockUseAuthResult.updateProfile).toHaveBeenCalledExactlyOnceWith(expectedPayload);
     expect(uploadImage).not.toHaveBeenCalled();
   });
 
