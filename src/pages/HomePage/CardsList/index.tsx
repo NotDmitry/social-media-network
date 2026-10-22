@@ -9,7 +9,7 @@ export interface CardData {
   subtitle: string;
 }
 
-interface CardsListProps {
+export interface CardsListProps {
   title: string;
   cardsData?: CardData[];
   isDataFetchPending: boolean;
