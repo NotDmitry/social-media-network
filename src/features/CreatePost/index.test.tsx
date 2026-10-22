@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 import i18next from 'i18next';
 import { createPost } from '@/entities/Post/api/createPost';
-import type { PostCreationPayload } from '@/entities/Post/types';
+import type { PostCreationPayload, PostModel } from '@/entities/Post/types';
 import { currentUser } from '@/test/currentUserFixture';
 import { testPost } from '@/test/postFixture';
 import { renderWithQueryClient } from '@/test/renderWithQueryClient';
@@ -79,6 +79,51 @@ describe('CreatePost', () => {
 
     // Assert
     await expect.element(createPostModal).not.toBeVisible();
+  });
+
+  test('doesn\'t close modal on Escape key press during pending request', async () => {
+    // Arrange
+    let resolvePendingPostCreation!: (post: PostModel) => void;
+
+    vi.mocked(createPost).mockReturnValue(new Promise<PostModel>((resolve) => {
+      resolvePendingPostCreation = resolve;
+    }));
+
+    const pendingCreatePostButtonLabel = i18next.t(($) => $.createPost.button.pending, { ns: 'posts' });
+    const screen = await renderWithQueryClient(<CreatePost currentUser={currentUser} />);
+    const quickPostSubmitButton = screen.getByRole('button', { name: quickPostSubmitButtonLabel });
+    const createPostModal = screen.getByRole('dialog', { includeHidden: true });
+    const postTitleInput = screen.getByRole('textbox', { name: postTitleInputLabel });
+    const postDescriptionInput = screen.getByRole('textbox', { name: postDescriptionInputLabel });
+    const createPostButton = screen.getByRole('button', { name: createPostButtonLabel });
+    const pendingCreatePostButton = screen.getByRole('button', { name: pendingCreatePostButtonLabel });
+
+    // Act
+    await quickPostSubmitButton.click();
+
+    // Assert
+    await expect.element(createPostModal).toBeVisible();
+
+    // Act
+    await postTitleInput.fill(testPost.title);
+    await postDescriptionInput.fill(testPost.content);
+    await createPostButton.click();
+
+    // Assert
+    await expect.element(pendingCreatePostButton).toBeDisabled();
+
+    // Act
+    await userEvent.keyboard('{Escape}');
+
+    // Assert
+    await expect.element(createPostModal).toBeVisible();
+
+    // Act
+    resolvePendingPostCreation(testPost);
+
+    // Assert
+    await expect.element(createPostModal).not.toBeVisible();
+    expect(createPost).toHaveBeenCalledOnce();
   });
 
   test('closes post creation modal after a successful submission', async () => {
