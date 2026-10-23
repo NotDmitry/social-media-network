@@ -1,4 +1,4 @@
-import type { CurrentUserView, PublicUserModel } from '@/entities/User/types';
+import type { CurrentUserView, PublicUserModel, UserView } from '@/entities/User/types';
 
 export const testCurrentPublicUser = Object.freeze<PublicUserModel>({
   id: 1,
@@ -28,4 +28,9 @@ export const testOtherPublicUser = Object.freeze<PublicUserModel>({
   bio: null,
   profileImage: null,
   creationDate: null,
+});
+
+export const otherUser = Object.freeze<UserView>({
+  ...testOtherPublicUser,
+  displayName: 'Jane Doe',
 });
