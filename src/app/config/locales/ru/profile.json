@@ -24,7 +24,10 @@
       "email": {
         "label": "Электронная почта",
         "placeholder": "email@domain.com",
-        "tooltip": "Пример корректного адреса: example@gmail.com"
+        "tooltip": "Пример корректного адреса: example@gmail.com",
+        "validation": {
+          "taken": "Данная почта уже используется"
+        }
       },
       "description": {
         "label": "О себе",
@@ -38,6 +41,24 @@
     "button": {
       "default": "Сохранить изменения",
       "pending": "Сохранение..."
+    },
+    "confirmation": {
+      "title": "Подтвердите пароль",
+      "close": "Закрыть подтверждение пароля",
+      "input": {
+        "password": {
+          "label": "Текущий пароль",
+          "placeholder": "Введите свой текущий пароль",
+          "validation": {
+            "required": "Необходимо ввести пароль",
+            "invalid": "Неверный текущий пароль"
+          }
+        }
+      },
+      "button": {
+        "default": "Подтвердить",
+        "pending": "Подтверждаем..."
+      }
     }
   },
   "statistics": {

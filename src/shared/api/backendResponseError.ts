@@ -1,20 +1,22 @@
 import { z } from 'zod';
+import { backendErrorCodeSchema } from './backendErrorCode';
+import type { BackendErrorCode } from './backendErrorCode';
 
 const backendResponseErrorSchema = z.object({
   message: z.string(),
-  code: z.string().optional(),
+  code: backendErrorCodeSchema,
 });
 
 interface BackendResponseErrorOptions {
   message: string;
   status: number;
-  code?: string;
+  code?: BackendErrorCode;
   cause?: unknown;
 }
 
 export class BackendResponseError extends Error {
   public readonly status: number;
-  public readonly code?: string;
+  public readonly code?: BackendErrorCode;
 
   constructor({ message, status, code, cause }: BackendResponseErrorOptions) {
     super(message, { cause });

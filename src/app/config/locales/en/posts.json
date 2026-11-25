@@ -64,6 +64,7 @@
   },
   "createPost": {
     "title": "Create a new post",
+    "close": "Close post creation",
     "alert": {
       "success": "Post successfully created",
       "error": "Post creation failed"

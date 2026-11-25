@@ -9,6 +9,9 @@ const signUpPasswordSchema = z.string()
   })
   .min(8, {
     error: () => i18next.t(($) => $.signUp.input.password.validation.minLength, { ns: 'authentication' }),
+  })
+  .max(128, {
+    error: () => i18next.t(($) => $.signUp.input.password.validation.maxLength, { ns: 'authentication' }),
   });
 
 const repeatPasswordSchema = z.string()

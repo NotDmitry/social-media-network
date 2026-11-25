@@ -6,6 +6,7 @@ export const groupModelSchema = z.object({
   title: z.string().nonempty(),
   photo: imageUrlSchema.nullable(),
   membersCount: z.int().nonnegative(),
+  ownerId: idSchema.nullable(),
 });
 
 export const groupsSchema = z.array(groupModelSchema);

@@ -3,6 +3,7 @@ import { refresh } from '@/entities/auth/api/refresh';
 import { sessionCleared } from '@/entities/auth/model/authSlice';
 import { accessToken } from './accessToken';
 import { BackendResponseError } from './backendResponseError';
+import { isRefreshTokenErrorCode } from './backendErrorCode';
 
 export function invalidateAuthSession() {
   store.dispatch(sessionCleared());
@@ -32,10 +33,7 @@ export async function refreshExpiredAccessToken(providedAccessToken: string) {
       accessToken.set(refreshResponsePayload.token);
     }
   } catch (error) {
-    if (
-      error instanceof BackendResponseError
-      && (error.status === 400 || error.status === 401)
-    ) {
+    if (error instanceof BackendResponseError && isRefreshTokenErrorCode(error.code)) {
       invalidateAuthSession();
     }
 

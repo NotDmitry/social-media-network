@@ -8,6 +8,7 @@ import { getCurrentUser } from '@/entities/User/api/getCurrentUser';
 import { useAlert } from '@/shared/ui/Alert/useAlert';
 import { accessToken } from '@/shared/api/accessToken';
 import { BackendResponseError } from '@/shared/api/backendResponseError';
+import { isRefreshTokenErrorCode } from '@/shared/api/backendErrorCode';
 
 function AppInitializer() {
   const { t } = useTranslation('authentication');
@@ -48,7 +49,7 @@ function AppInitializer() {
           return;
         }
 
-        if (error instanceof BackendResponseError && (error.status === 400 || error.status === 401)) {
+        if (error instanceof BackendResponseError && isRefreshTokenErrorCode(error.code)) {
           if (error.code !== 'REFRESH_TOKEN_REQUIRED') {
             showSessionTokenError();
             console.error(error);

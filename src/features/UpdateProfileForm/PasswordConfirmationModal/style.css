@@ -1,0 +1,101 @@
+html:has(.password-confirmation-modal[open]),
+body:has(.password-confirmation-modal[open]) {
+  overflow: hidden;
+}
+
+.password-confirmation-modal {
+  position: fixed;
+  max-width: min(400px, calc(100vw - 22px));
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--component-stroke-dark-soft);
+  background-color: var(--background-fill-surface);
+  transition: all 0.25s ease-in-out;
+
+  &::backdrop {
+    backdrop-filter: blur(20px);
+    background: rgba(27, 32, 55, 0.5);
+    transition: all 0.25s ease-in-out;
+  }
+}
+
+.password-confirmation-modal[open] {
+  transform: translateY(0);
+
+  &::backdrop {
+    opacity: 1;
+  }
+
+  @starting-style {
+    transform: translateY(100%);
+
+    &::backdrop {
+      opacity: 0;
+    }
+  }
+}
+
+.password-confirmation-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(12px, 3vw, 24px);
+  padding: clamp(12px, 3vw, 24px);
+}
+
+.password-confirmation-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.password-confirmation-modal-title {
+  margin: 0;
+  color: var(--component-text-dark);
+  font-family: var(--font-family);
+  font-size: clamp(0.875rem, 3vw, 1.5rem);
+  font-weight: 400;
+  line-height: 144%;
+}
+
+.password-confirmation-modal-close-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--icon-dark);
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover:not(:disabled) {
+    color: var(--color-feedback-positive-500);
+  }
+
+  &:disabled {
+    color: var(--icon-disabled);
+    cursor: not-allowed;
+  }
+}
+
+.password-confirmation-modal-close-icon {
+  width: clamp(14px, 3vw, 20px);
+  height: auto;
+}
+
+.password-confirmation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.password-confirmation-form-actions {
+  display: flex;
+}
+
+@media screen and (width < 480px) {
+  .password-confirmation-modal-title {
+    line-height: 150%;
+  }
+}

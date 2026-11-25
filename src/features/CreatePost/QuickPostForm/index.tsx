@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { getProfileImageFallbackUrl } from '@/entities/User/utilities';
-import type { UserView } from '@/entities/User/types';
+import type { CurrentUserView } from '@/entities/User/types';
 import Button from '@/shared/ui/Button';
 import './style.css';
 
 interface QuickPostFormProps {
-  currentUser: UserView;
+  currentUser: CurrentUserView;
   onSubmit: (description: string) => void;
 }
 

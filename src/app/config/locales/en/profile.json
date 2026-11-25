@@ -24,7 +24,10 @@
       "email": {
         "label": "Email",
         "placeholder": "email@domain.com",
-        "tooltip": "Valid email example: example@gmail.com"
+        "tooltip": "Valid email example: example@gmail.com",
+        "validation": {
+          "taken": "This email is already taken"
+        }
       },
       "description": {
         "label": "Description",
@@ -38,6 +41,24 @@
     "button": {
       "default": "Save Profile Changes",
       "pending": "Saving..."
+    },
+    "confirmation": {
+      "title": "Confirm password",
+      "close": "Close password confirmation",
+      "input": {
+        "password": {
+          "label": "Current password",
+          "placeholder": "Enter your current password",
+          "validation": {
+            "required": "Current password is required",
+            "invalid": "Wrong current password"
+          }
+        }
+      },
+      "button": {
+        "default": "Confirm",
+        "pending": "Confirming..."
+      }
     }
   },
   "statistics": {
