@@ -54,8 +54,6 @@ export default defineConfig({
         'src/**/*.d.ts',
         'src/shared/mocks/**',
         'src/main.tsx',
-        'src/shared/schemas/**',
-        'src/**/schema.ts',
         'src/test/**',
       ],
     }
