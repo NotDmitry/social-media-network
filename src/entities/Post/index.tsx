@@ -1,7 +1,14 @@
-import { useState } from 'react';
+import { memo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { animated, easings, useTransition } from '@react-spring/web';
-import { useMutation, useQueries, useQuery, useQueryClient, type InfiniteData } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueries,
+  useQuery,
+  useQueryClient,
+  type InfiniteData,
+  type UseQueryResult,
+} from '@tanstack/react-query';
 import CreateCommentForm from '@/features/CreateCommentForm';
 import { useAuth } from '@/entities/auth/useAuth';
 import Comment from '@/entities/Comment';
@@ -11,7 +18,7 @@ import { dislikePost } from '@/entities/Like/api/dislikePost';
 import { getUserById } from '@/entities/User/api/getUserById';
 import { getProfileImageFallbackUrl } from '@/entities/User/utilities';
 import { toUserView } from '@/entities/User/utilities';
-import type { UserView } from '@/entities/User/types';
+import type { PublicUserModel, UserView } from '@/entities/User/types';
 import { useAlert } from '@/shared/ui/Alert/useAlert';
 import Spinner from '@/shared/ui/Spinner';
 import { HeartIcon, CommentIcon, ChevronDownIcon } from '@/shared/icons';
@@ -25,6 +32,27 @@ interface PostProps {
   author: UserView;
   isLiked: boolean;
   isLikeDisabled: boolean;
+}
+
+type AuthorQueryResult = Pick<UseQueryResult<UserView>, 'data' | 'isPending'>;
+
+function selectUserView(user: PublicUserModel) {
+  return toUserView(user);
+}
+
+function combineAuthorsQueries(authorsQueries: AuthorQueryResult[]) {
+  const authors = new Map<number, UserView>();
+
+  authorsQueries.forEach((authorQuery) => {
+    if (authorQuery.data) {
+      authors.set(authorQuery.data.id, authorQuery.data);
+    }
+  });
+
+  return {
+    data: authors,
+    isPending: authorsQueries.some((authorQuery) => authorQuery.isPending),
+  };
 }
 
 function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
@@ -95,23 +123,11 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
       return {
         queryKey: ['author', authorId],
         queryFn: ({ signal }) => getUserById(authorId, signal),
+        select: selectUserView,
         enabled: isUserAuthenticated && isCommentsOpen,
       };
     }),
-    combine: (authorsQueries) => {
-      const authors = new Map<number, UserView>();
-
-      authorsQueries.forEach((authorQuery) => {
-        if (authorQuery.data) {
-          authors.set(authorQuery.data.id, toUserView(authorQuery.data));
-        }
-      });
-
-      return {
-        data: authors,
-        isPending: authorsQueries.some((authorQuery) => authorQuery.isPending),
-      };
-    },
+    combine: combineAuthorsQueries,
   });
 
   const displayedCommentsCount = comments?.length ?? post.commentsCount;
@@ -258,4 +274,4 @@ function Post({ post, author, isLiked, isLikeDisabled }: PostProps) {
   );
 }
 
-export default Post;
+export default memo(Post);
