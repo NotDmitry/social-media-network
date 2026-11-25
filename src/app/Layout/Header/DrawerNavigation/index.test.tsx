@@ -3,7 +3,7 @@ import { page } from 'vitest/browser';
 import i18next from 'i18next';
 import { ROUTES } from '@/app/routes';
 import { useAuth } from '@/entities/auth/useAuth';
-import { currentUser } from '@/test/currentUserFixture';
+import { currentUser } from '@/test/userFixtures';
 import { renderWithRouterAndMuiStyles } from '@/test/renderWithRouterAndMuiStyles';
 import DrawerNavigation from './index';
 

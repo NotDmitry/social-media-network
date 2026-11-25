@@ -3,8 +3,8 @@ import { userEvent } from 'vitest/browser';
 import i18next from 'i18next';
 import { createPost } from '@/entities/Post/api/createPost';
 import type { PostCreationPayload, PostModel } from '@/entities/Post/types';
-import { currentUser } from '@/test/currentUserFixture';
-import { testPost } from '@/test/postFixture';
+import { currentUser } from '@/test/userFixtures';
+import { testPost } from '@/test/postFixtures';
 import { renderWithQueryClient } from '@/test/renderWithQueryClient';
 import CreatePost from './index';
 

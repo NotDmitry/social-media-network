@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { currentUser } from '@/test/currentUserFixture';
+import { currentUser } from '@/test/userFixtures';
 import QuickPostForm from './index';
 
 describe('QuickPostForm', () => {
