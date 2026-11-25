@@ -1,4 +1,4 @@
-import { getShortMonthPresentationString } from '@/shared/utilities/time';
+import { getDayShortMonthPresentationString, getShortMonthPresentationString } from '@/shared/utilities/time';
 import type { Activity } from '../types';
 import type { TableRow, TableViewProps } from './index';
 
@@ -11,7 +11,7 @@ interface ActivityPeriod {
   endExclusive: Date;
 }
 
-interface ActivityTableOptions extends Pick<TableViewProps, 'caption' | 'columnHeaders'> {
+export interface ActivityTableOptions extends Pick<TableViewProps, 'caption' | 'columnHeaders'> {
   dataPeriod: DataPeriod;
   periodsCount: number;
   locale: string;
@@ -57,25 +57,31 @@ function getActivityPeriods(dataPeriod: DataPeriod, periodsCount: number): Activ
   return activityPeriods;
 }
 
-function formatDayAndMonth(date: Date, locale: string) {
-  return `${String(date.getDate())} ${getShortMonthPresentationString(date, locale)}`;
-}
-
 function getActivityPeriodTableHeading(activityPeriod: ActivityPeriod, dataPeriod: DataPeriod, locale: string) {
   if (dataPeriod === 'day') {
-    return formatDayAndMonth(activityPeriod.start, locale);
+    return getDayShortMonthPresentationString(activityPeriod.start, locale);
   }
 
   if (dataPeriod === 'week') {
     const weekEndInclusive = new Date(activityPeriod.endExclusive);
     weekEndInclusive.setDate(weekEndInclusive.getDate() - 1);
 
-    return `${formatDayAndMonth(activityPeriod.start, locale)} – ${formatDayAndMonth(weekEndInclusive, locale)}`;
+    const weekStartLabel = getDayShortMonthPresentationString(activityPeriod.start, locale);
+    const weekEndLabel = getDayShortMonthPresentationString(weekEndInclusive, locale);
+
+    return `${weekStartLabel} – ${weekEndLabel}`;
   }
 
   return getShortMonthPresentationString(activityPeriod.start, locale);
 }
 
+/**
+ * Returns tabular activity counts for the last local calendar period counts from oldest to newest.
+ * The periods are 'day' (format: '12 Oct'), 'week' (format: '12 Oct – 18 Oct') and 'month' (format: 'Oct').
+ * Empty periods defaults to zero count.
+ * @param activities Raw activity stats which include creationDate
+ * @param options Table labels (caption and column headers), the minimal period and its counts, locale.
+ */
 export function toActivityTableView(
   activities: Activity[],
   { caption, columnHeaders, dataPeriod, periodsCount, locale }: ActivityTableOptions
